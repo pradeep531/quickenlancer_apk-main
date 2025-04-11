@@ -58,38 +58,18 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _showFilterBottomSheet() {
+  void showFilterSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) => FilterBottomSheet(
         onApplyFilters: (filters) {
-          setState(() {
-            _currentFilters = filters;
-            // You can access specific filter values here
-            print('Applied Filters: $filters');
-            print('Skills: ${filters['skills']}');
-
-            print('Currency: ${filters['currency']}');
-            print('Location: ${filters['location']}');
-            print('Job Type: ${filters['jobType']}');
-            print('Project Type: ${filters['projectType']}');
-            print('Requirement Type: ${filters['requirementType']}');
-            print('Connect Type: ${filters['connectType']}');
-            print('Admin Profile: ${filters['adminProfile']}');
-            print('Bidding Criteria: ${filters['biddingCriteria']}');
-            print('Freshness: ${filters['freshness']}');
-            print('Tags: ${filters['tags']}');
-          });
-          // Optionally close the bottom sheet after applying filters
-          Navigator.pop(context);
+          // Handle the filters here (e.g., update your job list)
+          print('Received filters: $filters');
         },
         onClearFilters: () {
-          setState(() {
-            _currentFilters = {};
-            print('Filters cleared');
-          });
-          Navigator.pop(context);
+          // Clear filters logic here
+          print('Filters cleared');
         },
       ),
     );
@@ -254,7 +234,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 width: 24.0,
                                 child: Image.asset('assets/filter 1.png'),
                               ),
-                              onPressed: _showFilterBottomSheet,
+                              onPressed: () => showFilterSheet(context),
                             ),
                           ),
                         ),

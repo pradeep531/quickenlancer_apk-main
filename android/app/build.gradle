@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.quickenlancer_apk"
-    compileSdkVersion 34
+    compileSdkVersion 35
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
