@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:quickenlancer_apk/Onboarding/onboarding_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Added SharedPreferences import
-
-import 'home_page.dart'; // Add this import for MyHomePage
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http; // Added for HTTP requests
+import 'dart:convert'; // Added for jsonEncode
+import 'api/network/uri.dart';
+import 'home_page.dart'; // Import for MyHomePage
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -41,6 +43,7 @@ class _SplashScreenState extends State<SplashScreen>
     // Get SharedPreferences instance
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? isLoggedIn = prefs.getInt('is_logged_in');
+    final String? userId = prefs.getString('user_id'); // Retrieve user_id
 
     _animationController.forward();
 
@@ -50,6 +53,31 @@ class _SplashScreenState extends State<SplashScreen>
           _showSplash = true;
           _hideLogo = true;
         });
+
+        // If user is logged in, call the API
+        if (isLoggedIn == 1 && userId != null) {
+          try {
+            final String searchUrl = URLS().initiate_search_project_data_api;
+            final searchRequestBody = jsonEncode({
+              "user_id": userId,
+            });
+
+            print('Search API Request body: $searchRequestBody');
+
+            final searchResponse = await http.post(
+              Uri.parse(searchUrl),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: searchRequestBody,
+            );
+
+            print('Search API Response status: ${searchResponse.statusCode}');
+            print('Search API Response body: ${searchResponse.body}');
+          } catch (e) {
+            print('Search API Error: $e');
+          }
+        }
 
         Timer(const Duration(seconds: 2), () {
           // Check if user is logged in

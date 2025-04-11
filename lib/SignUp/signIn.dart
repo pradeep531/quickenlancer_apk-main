@@ -27,7 +27,8 @@ class _SignInPageState extends State<SignInPage> {
   // Error message variables
   String? _emailError;
   String? _passwordError;
-  bool _isLoading = false; // Add loading state
+  bool _isLoading = false;
+  bool _obscurePassword = true; // Variable to toggle password visibility
 
   // Function to validate inputs
   bool _validateInputs() {
@@ -55,10 +56,10 @@ class _SignInPageState extends State<SignInPage> {
     }
 
     setState(() {
-      _isLoading = true; // Show loader
+      _isLoading = true;
     });
 
-    final String url = URLS().agent_login_apiUrl;
+    final String url = URLS().login_apiUrl;
     final requestBody = jsonEncode({
       "email": _emailController.text,
       "password": _passwordController.text,
@@ -78,21 +79,62 @@ class _SignInPageState extends State<SignInPage> {
       print('Response status: ${response.statusCode}');
       log('Response body: ${response.body}');
 
-      if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && responseData['status'] == "true") {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        // Store login status
         await prefs.setInt('is_logged_in', 1);
 
-        // Print the stored value
-        int? isLoggedIn = prefs.getInt('is_logged_in');
-        print('Shared Preference is_logged_in set to: $isLoggedIn');
+        // Store id, f_name, l_name, and email from responseData['data']
+        final data = responseData['data'];
+        await prefs.setString('user_id', data['id'] ?? '');
+        await prefs.setString('first_name', data['f_name'] ?? '');
+        await prefs.setString('last_name', data['l_name'] ?? '');
+        await prefs.setString('email', data['email'] ?? '');
+        await prefs.setString('country', data['country'] ?? '');
 
+        // Verify stored values (optional for debugging)
+        print('Shared Preferences set:');
+        print('is_logged_in: ${prefs.getInt('is_logged_in')}');
+        print('user_id: ${prefs.getString('user_id')}');
+        print('first_name: ${prefs.getString('first_name')}');
+        print('last_name: ${prefs.getString('last_name')}');
+        print('email: ${prefs.getString('email')}');
+
+        // Call the initiate_search_project_data_api
+        final String searchUrl = URLS().initiate_search_project_data_api;
+        final String userId =
+            data['id'] ?? '0'; // Fallback to '0' if user_id is null
+        final searchRequestBody = jsonEncode({
+          "user_id": userId,
+        });
+
+        log('Search API Request body: $searchRequestBody');
+
+        try {
+          final searchResponse = await http.post(
+            Uri.parse(searchUrl),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: searchRequestBody,
+          );
+
+          print('Search API Response status: ${searchResponse.statusCode}');
+          print('Search API Response body: ${searchResponse.body}');
+        } catch (e) {
+          print('Search API Error: $e');
+        }
+
+        // Rest of your dialog and navigation code remains unchanged
         showDialog(
           context: context,
-          barrierDismissible: false, // Prevents tapping outside to dismiss
+          barrierDismissible: false,
           builder: (BuildContext context) {
             return WillPopScope(
-              onWillPop: () async =>
-                  false, // Prevents back button from dismissing
+              onWillPop: () async => false,
               child: AlertDialog(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -147,18 +189,26 @@ class _SignInPageState extends State<SignInPage> {
           MaterialPageRoute(builder: (context) => MyHomePage()),
         );
       } else {
-        setState(() {
-          _emailError = 'Login failed. Please check your credentials';
-        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(responseData['message'] ?? 'Login failed'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
       }
     } catch (e) {
       print('Error: $e');
-      setState(() {
-        _emailError = 'An error occurred. Please try again';
-      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred. Please try again'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
     } finally {
       setState(() {
-        _isLoading = false; // Hide loader
+        _isLoading = false;
       });
     }
   }
@@ -275,12 +325,25 @@ class _SignInPageState extends State<SignInPage> {
                     children: [
                       TextField(
                         controller: _passwordController,
-                        obscureText: true,
+                        obscureText: _obscurePassword, // Toggle visibility
                         decoration: InputDecoration(
                           labelText: '',
                           filled: true,
                           fillColor: Colors.white.withOpacity(0.7),
                           border: OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
                         ),
                       ),
                       if (_passwordError != null)
@@ -347,9 +410,7 @@ class _SignInPageState extends State<SignInPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: ElevatedButton(
-                    onPressed: _isLoading
-                        ? null
-                        : signIn, // Disable button when loading
+                    onPressed: _isLoading ? null : signIn,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colorfile.primaryColor,
                       padding: EdgeInsets.symmetric(vertical: 12),
