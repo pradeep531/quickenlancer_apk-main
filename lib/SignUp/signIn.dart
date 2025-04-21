@@ -94,7 +94,7 @@ class _SignInPageState extends State<SignInPage> {
         await prefs.setString('last_name', data['l_name'] ?? '');
         await prefs.setString('email', data['email'] ?? '');
         await prefs.setString('country', data['country'] ?? '');
-
+        await prefs.setString('auth_token', data['auth_token'] ?? '');
         // Verify stored values (optional for debugging)
         print('Shared Preferences set:');
         print('is_logged_in: ${prefs.getInt('is_logged_in')}');
@@ -102,32 +102,9 @@ class _SignInPageState extends State<SignInPage> {
         print('first_name: ${prefs.getString('first_name')}');
         print('last_name: ${prefs.getString('last_name')}');
         print('email: ${prefs.getString('email')}');
+        print('auth_token: ${prefs.getString('auth_token')}');
 
-        // Call the initiate_search_project_data_api
-        final String searchUrl = URLS().initiate_search_project_data_api;
-        final String userId =
-            data['id'] ?? '0'; // Fallback to '0' if user_id is null
-        final searchRequestBody = jsonEncode({
-          "user_id": userId,
-        });
-
-        log('Search API Request body: $searchRequestBody');
-
-        try {
-          final searchResponse = await http.post(
-            Uri.parse(searchUrl),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: searchRequestBody,
-          );
-
-          print('Search API Response status: ${searchResponse.statusCode}');
-          print('Search API Response body: ${searchResponse.body}');
-        } catch (e) {
-          print('Search API Error: $e');
-        }
-
+        await initiateSearchProjectData(data['id'] ?? '0');
         // Rest of your dialog and navigation code remains unchanged
         showDialog(
           context: context,
@@ -210,6 +187,35 @@ class _SignInPageState extends State<SignInPage> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> initiateSearchProjectData(String userId) async {
+    try {
+      // Retrieve the JWT token from SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final String? authToken = prefs.getString('auth_token');
+
+      final String searchUrl = URLS().initiate_search_project_data_api;
+      final searchRequestBody = jsonEncode({
+        "user_id": userId,
+      });
+
+      log('Search API Request body: $searchRequestBody');
+
+      final searchResponse = await http.post(
+        Uri.parse(searchUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          if (authToken != null) 'Authorization': 'Bearer $authToken',
+        },
+        body: searchRequestBody,
+      );
+
+      print('Search API Response status: ${searchResponse.statusCode}');
+      print('Search API Response body: ${searchResponse.body}');
+    } catch (e) {
+      print('Search API Error: $e');
     }
   }
 
