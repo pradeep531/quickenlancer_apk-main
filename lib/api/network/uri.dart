@@ -8,4 +8,13 @@ class URLS {
   String get_currency_api = baseUrl + "get_currency_api";
   String initiate_search_project_data_api =
       baseUrl + "initiate_search_project_data_api";
+  String allocate_chat_call = baseUrl + "user/allocate-hustlefree-tokens";
+  String set_call_entry = baseUrl + "user/set-call-entry";
+  String user_chats = baseUrl + "user/chats";
+  String user_send_message = baseUrl + "user/send-message";
+  String buy_tokens = baseUrl + "user/buy-hustlefree-tokens";
+  String payment_amounts = baseUrl + "payment-amounts";
+  String get_history = baseUrl + "user/hustlefree-tokens";
+  String posted_project = baseUrl + "user/posted-project";
+  String recieved_project = baseUrl + "user/received-project";
 }

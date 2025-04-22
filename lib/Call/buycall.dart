@@ -76,7 +76,8 @@ class _BuychatState extends State<Buycall> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => const Callpage()), // Navigate to the new page
+            builder: (context) =>
+                const Buycallpage()), // Navigate to the new page
       );
     }
     if (index == 3) {
@@ -84,7 +85,8 @@ class _BuychatState extends State<Buycall> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => const Chatpage()), // Navigate to the new page
+            builder: (context) =>
+                const Buychatpage()), // Navigate to the new page
       );
     }
     if (index == 4) {
@@ -92,7 +94,8 @@ class _BuychatState extends State<Buycall> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => const Callpage()), // Navigate to the new page
+            builder: (context) =>
+                const Buycallpage()), // Navigate to the new page
       );
     }
     if (index == 4) {

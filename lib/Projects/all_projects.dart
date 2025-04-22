@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quickenlancer_apk/BottomBar/bottom_bar.dart';
+import 'package:quickenlancer_apk/Call/buycalltab.dart';
+import 'package:quickenlancer_apk/Call/callhistorytab.dart';
 import 'package:quickenlancer_apk/Call/callpage.dart';
 import 'package:quickenlancer_apk/Chat/buychat_tab.dart';
 import 'package:quickenlancer_apk/Chat/chatpage.dart';
 import 'package:quickenlancer_apk/Chat/historeytab_chat.dart';
+import 'package:quickenlancer_apk/Colors/colorfile.dart';
+import 'package:quickenlancer_apk/Projects/posted.dart';
+import 'package:quickenlancer_apk/Projects/recieved.dart';
 import 'package:quickenlancer_apk/home_page.dart';
 import 'package:quickenlancer_apk/editprofilepage.dart';
-import 'package:quickenlancer_apk/Colors/colorfile.dart';
 
 class GradientTabIndicator extends Decoration {
   final Gradient gradient;
@@ -37,15 +41,15 @@ class _GradientBoxPainter extends BoxPainter {
   }
 }
 
-class Buychat extends StatefulWidget {
-  const Buychat({super.key});
+class AllProjects extends StatefulWidget {
+  const AllProjects({super.key});
 
   @override
-  _BuychatState createState() => _BuychatState();
+  _AllProjectsState createState() => _AllProjectsState();
 }
 
-class _BuychatState extends State<Buychat> {
-  int _selectedIndex = 3;
+class _AllProjectsState extends State<AllProjects> {
+  int _selectedIndex = 1;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -53,48 +57,29 @@ class _BuychatState extends State<Buychat> {
     });
 
     if (index == 0) {
-      // Check if the 3rd index is selected
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) =>
-                const MyHomePage()), // Navigate to the new page
+          builder: (context) => const MyHomePage(),
+        ),
       );
     }
     if (index == 2) {
-      // Check if the 3rd index is selected
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const Buycallpage()), // Navigate to the new page
+        MaterialPageRoute(builder: (context) => const Buycallpage()),
       );
     }
     if (index == 3) {
-      // Check if the 3rd index is selected
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const Buychatpage()), // Navigate to the new page
+        MaterialPageRoute(builder: (context) => const Buychatpage()),
       );
     }
     if (index == 4) {
-      // Check if the 3rd index is selected
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const Buycallpage()), // Navigate to the new page
-      );
-    }
-    if (index == 4) {
-      // Check if the 3rd index is selected
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const Editprofilepage()), // Navigate to the new page
+        MaterialPageRoute(builder: (context) => const Editprofilepage()),
       );
     }
   }
@@ -108,7 +93,7 @@ class _BuychatState extends State<Buychat> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           title: Text(
-            'Buy Hassle Free Chat',
+            'My Projects',
             style: GoogleFonts.montserrat(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -135,19 +120,15 @@ class _BuychatState extends State<Buychat> {
               fontWeight: FontWeight.w600,
             ),
             tabs: const [
-              Tab(text: '        Buy Chat        '),
-              Tab(text: '        History        '),
+              Tab(text: 'Posted Project'),
+              Tab(text: 'Received Project'),
             ],
           ),
         ),
         body: TabBarView(
           children: [
-            SingleChildScrollView(
-              child: const BuyChatTab(), // Buy Chat tab content
-            ),
-            SingleChildScrollView(
-              child: const HistoryTab(), // History tab content
-            ),
+            PostedProjectsTab(),
+            ReceivedProjectsTab(),
           ],
         ),
         bottomNavigationBar: AnimatedSwitcher(

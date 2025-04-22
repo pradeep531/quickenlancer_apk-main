@@ -2,6 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quickenlancer_apk/Colors/colorfile.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../api/network/uri.dart';
+import '../home_page.dart';
 
 class Buycalltab extends StatefulWidget {
   const Buycalltab({super.key});
@@ -11,7 +17,66 @@ class Buycalltab extends StatefulWidget {
 }
 
 class _BuyCallTabState extends State<Buycalltab> {
-  int itemCount = 0; // This will keep track of the count of items.
+  int itemCount = 0; // Tracks the count of items
+  bool _isLoading = false; // Tracks loading state
+  double callAmountInInr = 1.0; // Default INR amount
+  double callAmountInDollar = 1.0; // Default USD amount
+  String currency = 'USD'; // Default currency
+  String country = ''; // Store country from SharedPreferences
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPaymentAmounts(); // Fetch payment amounts on initialization
+  }
+
+  // API call to fetch payment amounts
+  Future<void> _fetchPaymentAmounts() async {
+    final String apiUrl = URLS().payment_amounts;
+    final prefs = await SharedPreferences.getInstance();
+    final String? authToken = prefs.getString('auth_token');
+    final String userId = prefs.getString('user_id') ?? '';
+    country =
+        prefs.getString('country') ?? ''; // Get country from SharedPreferences
+
+    // Set currency based on country
+    setState(() {
+      currency = country == "101" ? 'INR' : 'USD';
+    });
+
+    final Map<String, dynamic> requestBody = {
+      "user_id": userId,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $authToken',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      print('Payment Amounts API Response Status: ${response.statusCode}');
+      print('Payment Amounts API Response Body: ${response.body}');
+
+      // Parse the response
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+        if (responseData['status'] == "true") {
+          setState(() {
+            callAmountInInr =
+                double.parse(responseData['data']['call_amount_in_inr']);
+            callAmountInDollar =
+                double.parse(responseData['data']['call_amount_in_dollar']);
+          });
+        }
+      }
+    } catch (e) {
+      print('Error during payment amounts API call: $e');
+    }
+  }
 
   void _increaseItem() {
     setState(() {
@@ -25,6 +90,109 @@ class _BuyCallTabState extends State<Buycalltab> {
         itemCount--;
       });
     }
+  }
+
+  // Calculate total amount based on currency
+  double _calculateTotalAmount() {
+    if (currency == 'INR') {
+      return itemCount * callAmountInInr;
+    } else {
+      return itemCount * callAmountInDollar;
+    }
+  }
+
+  // API call to buy tokens
+  Future<void> _buyTokens() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final String apiUrl = URLS().buy_tokens;
+    final prefs = await SharedPreferences.getInstance();
+    final String? authToken = prefs.getString('auth_token');
+    final String userId = prefs.getString('user_id') ?? '';
+    final String country = prefs.getString('country') ?? '';
+
+    final String paidVia = country == "101" ? "2" : "1";
+
+    final Map<String, dynamic> requestBody = {
+      "user_id": userId,
+      "token_for": "2",
+      "quantity": itemCount,
+      "paid_via": paidVia,
+      "purchase_type": "0",
+      "project_id": "",
+    };
+
+    print('Request Body: ${jsonEncode(requestBody)}');
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $authToken',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      print('Response Status: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
+      final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+
+      if (response.statusCode == 200 && responseData['status'] == "true") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Chat unlocked successfully!")),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error occurred")),
+        );
+      }
+    } catch (e) {
+      print('Error during API call: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error occurred")),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  // Show confirmation dialog
+  void _showConfirmationDialog() {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text('Confirm Purchase'),
+          content: Text(
+              'Are you sure you want to purchase $itemCount token(s) for ${currency == 'INR' ? '₹' : '\$'}${_calculateTotalAmount().toStringAsFixed(2)}?'),
+          actions: [
+            CupertinoDialogAction(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text('Confirm'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _buyTokens();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -161,31 +329,44 @@ class _BuyCallTabState extends State<Buycalltab> {
                         ),
                       ),
                     ),
+                    // Display total amount below the counter
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        'Total: ${currency == 'INR' ? '₹' : '\$'}${_calculateTotalAmount().toStringAsFixed(2)}',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colorfile.textColor,
+                        ),
+                      ),
+                    ),
                     Container(
                       width: 250,
                       height: 48,
                       margin: EdgeInsets.only(top: 16.0),
                       child: CupertinoButton(
-                        onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) =>
-                          //           const Buychat()), // Navigate to the new page
-                          // );
-                        },
+                        onPressed: _isLoading || itemCount == 0
+                            ? null
+                            : () {
+                                _showConfirmationDialog();
+                              },
                         padding:
                             EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                        color: Colorfile.textColor, // Background color
+                        color: Colorfile.textColor,
                         borderRadius: BorderRadius.circular(8),
-                        child: Text(
-                          'Update Profile To Buy Token',
-                          style: GoogleFonts.montserrat(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
+                        child: _isLoading
+                            ? CupertinoActivityIndicator(
+                                color: Colors.white,
+                              )
+                            : Text(
+                                'Update Profile To Buy Token',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
                       ),
                     ),
                   ],
@@ -196,9 +377,8 @@ class _BuyCallTabState extends State<Buycalltab> {
         ),
         Container(
           width: double.infinity,
-          padding: EdgeInsets.all(15), // Increased padding from all sides
+          padding: EdgeInsets.all(15),
           margin: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -206,18 +386,18 @@ class _BuyCallTabState extends State<Buycalltab> {
                 'Buy Hassle Free Call',
                 style: GoogleFonts.montserrat(
                   fontSize: 14,
-                  fontWeight: FontWeight.bold, // Heading
+                  fontWeight: FontWeight.bold,
                   color: Colorfile.textColor,
                 ),
               ),
-              SizedBox(height: 5), // Space between title and subtitle
+              SizedBox(height: 5),
               Text(
                 'With Hassle-Free Chat, you can purchase bulk chats that grant you pre-approved access to projects. This allows you to seamlessly connect with project partners without encountering any obstacles in the process.',
                 style: GoogleFonts.montserrat(
                   fontSize: 14,
-                  fontWeight: FontWeight.w500, // Subtitle
+                  fontWeight: FontWeight.w500,
                   color: Colorfile.textColor,
-                  height: 1.5, // Adjust the line height here
+                  height: 1.5,
                 ),
               ),
             ],
@@ -234,12 +414,10 @@ class _BuyCallTabState extends State<Buycalltab> {
           ),
           child: Column(
             children: [
-              SizedBox(height: 30), // Space between rows
-              // First row
+              SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(2, (index) {
-                  // List of image paths and labels
                   List<String> imagePaths = [
                     'assets/Group 237731.png',
                     'assets/Group 237732.png',
@@ -254,30 +432,27 @@ class _BuyCallTabState extends State<Buycalltab> {
                       color: Color(0xFFF5F7FA),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    width: (MediaQuery.of(context).size.width - 40) /
-                        2, // Adjust width for two items per row
+                    width: (MediaQuery.of(context).size.width - 40) / 2,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image.asset(
-                          imagePaths[index], // Use the respective image
-                          width: 75, // Image width
-                          height: 75, // Image height
+                          imagePaths[index],
+                          width: 75,
+                          height: 75,
                           fit: BoxFit.cover,
                         ),
                         SizedBox(height: 8),
                         Text(
-                          labels[index], // Use the respective label
+                          labels[index],
                           style: TextStyle(
-                            fontFamily:
-                                'Montserrat', // Set the font family to Montserrat
-                            fontSize: 14, // Font size 14px
-                            fontWeight: FontWeight.w500, // Font weight 500
-                            height:
-                                1.43, // line-height (14/20 = 0.7, so 1.43 for better control)
-                            color: Colorfile.textColor, // Text color #191E3E
-                            decoration: TextDecoration.none, // No underline
+                            fontFamily: 'Montserrat',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            height: 1.43,
+                            color: Colorfile.textColor,
+                            decoration: TextDecoration.none,
                           ),
                         ),
                       ],
@@ -285,12 +460,10 @@ class _BuyCallTabState extends State<Buycalltab> {
                   );
                 }),
               ),
-              SizedBox(height: 40), // Space between rows
-              // Second row
+              SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(2, (index) {
-                  // List of image paths and labels
                   List<String> imagePaths = [
                     'assets/Group 237733.png',
                     'assets/Group 237734.png',
@@ -305,30 +478,27 @@ class _BuyCallTabState extends State<Buycalltab> {
                       color: Color(0xFFF5F7FA),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    width: (MediaQuery.of(context).size.width - 40) /
-                        2, // Adjust width for two items per row
+                    width: (MediaQuery.of(context).size.width - 40) / 2,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image.asset(
-                          imagePaths[index], // Use the respective image
-                          width: 75, // Image width
-                          height: 75, // Image height
+                          imagePaths[index],
+                          width: 75,
+                          height: 75,
                           fit: BoxFit.cover,
                         ),
                         SizedBox(height: 8),
                         Text(
-                          labels[index], // Use the respective label
+                          labels[index],
                           style: TextStyle(
-                            fontFamily:
-                                'Montserrat', // Set the font family to Montserrat
-                            fontSize: 14, // Font size 14px
-                            fontWeight: FontWeight.w500, // Font weight 500
-                            height:
-                                1.43, // line-height (14/20 = 0.7, so 1.43 for better control)
-                            color: Colorfile.textColor, // Text color #191E3E
-                            decoration: TextDecoration.none, // No underline
+                            fontFamily: 'Montserrat',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            height: 1.43,
+                            color: Colorfile.textColor,
+                            decoration: TextDecoration.none,
                           ),
                         ),
                       ],

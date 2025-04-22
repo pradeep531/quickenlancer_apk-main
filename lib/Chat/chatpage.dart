@@ -7,18 +7,38 @@ import 'package:quickenlancer_apk/Chat/buychat.dart';
 import 'package:quickenlancer_apk/Colors/colorfile.dart';
 import 'package:quickenlancer_apk/home_page.dart';
 import 'package:quickenlancer_apk/editprofilepage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Chatpage extends StatefulWidget {
-  const Chatpage({super.key});
+import '../api/network/uri.dart';
+
+class Buychatpage extends StatefulWidget {
+  final String? id;
+
+  const Buychatpage({super.key, this.id});
 
   @override
-  _ChatpageState createState() => _ChatpageState();
+  _BuyChatpageState createState() => _BuyChatpageState();
 }
 
-class _ChatpageState extends State<Chatpage> {
+class _BuyChatpageState extends State<Buychatpage> {
   int _selectedIndex = 3;
   bool _isChecked1 = false;
   bool _isChecked2 = false;
+  bool _isLoading = false; // Track loading state for the button
+
+  @override
+  void initState() {
+    super.initState();
+    // Check if id has data, set _isChecked1; if null, set _isChecked2
+    if (widget.id != null && widget.id!.isNotEmpty) {
+      _isChecked1 = true;
+    } else {
+      _isChecked2 = true;
+    }
+    print('ID: ${widget.id}');
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -32,259 +52,376 @@ class _ChatpageState extends State<Chatpage> {
       );
     }
     if (index == 2) {
-      // Check if the 3rd index is selected
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => const Callpage()), // Navigate to the new page
+        MaterialPageRoute(builder: (context) => const Buycallpage()),
       );
     }
     if (index == 4) {
-      // Check if the 3rd index is selected
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const Editprofilepage()), // Navigate to the new page
+        MaterialPageRoute(builder: (context) => const Editprofilepage()),
       );
     }
+  }
+
+  // Function to call the buy_tokens API
+  Future<void> _buyTokens() async {
+    setState(() {
+      _isLoading = true; // Show loader
+    });
+
+    final String apiUrl = URLS().buy_tokens; // Your API URL
+    final prefs = await SharedPreferences.getInstance();
+    final String? authToken = prefs.getString('auth_token');
+    final String userId = prefs.getString('user_id') ?? '';
+    final String country = prefs.getString('country') ?? '';
+
+    // Determine paid_via based on country
+    final String paidVia = country == "101" ? "2" : "1";
+
+    // Construct the request body
+    final Map<String, dynamic> requestBody = {
+      "user_id": userId,
+      "token_for": "1",
+      "quantity": "1",
+      "paid_via": paidVia, // Dynamically set based on country
+      "purchase_type": "1",
+      "project_id": _isChecked1 ? widget.id ?? "" : "",
+    };
+
+    // Print the request body
+    print('Request Body: ${jsonEncode(requestBody)}');
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $authToken',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      // Print the response body
+      print('Response Status: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
+      // Parse the response body
+      final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+
+      if (response.statusCode == 200 && responseData['status'] == "true") {
+        // Handle successful response
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Chat unlocked successfully!")),
+        );
+        // Navigate to the chat page (MyHomePage)
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
+        );
+      } else {
+        // Handle failure (either non-200 or status: false)
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error occurred")),
+        );
+      }
+    } catch (e) {
+      // Handle network or other errors
+      print('Error during API call: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error occurred")),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false; // Hide loader
+      });
+    }
+  }
+
+  // Function to show confirmation dialog
+  Future<void> _showConfirmationDialog() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dismissing by tapping outside
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Confirm Purchase',
+            style: GoogleFonts.montserrat(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colorfile.textColor,
+            ),
+          ),
+          content: Text(
+            'Are you sure you want to purchase?',
+            style: GoogleFonts.montserrat(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colorfile.textColor,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog on "No"
+              },
+              child: Text(
+                'No',
+                style: GoogleFonts.montserrat(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.red,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+                _buyTokens(); // Proceed with API call
+              },
+              child: Text(
+                'Yes',
+                style: GoogleFonts.montserrat(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.green,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFFFFFF), // Applying the color
+      backgroundColor: Color(0xFFFFFFFF),
       appBar: AppBar(
-        backgroundColor: Color(0xFFFFFFFF), // Applying the color
+        backgroundColor: Color(0xFFFFFFFF),
         title: Text(
           'Unlock Your Chat',
           style: GoogleFonts.montserrat(
             fontSize: 18,
             fontWeight: FontWeight.w600,
-            height: 23.4 /
-                18, // line-height: 23.4px (calculated as height/line-height)
+            height: 23.4 / 18,
             textBaseline: TextBaseline.alphabetic,
-            letterSpacing: 0, // for no text-underline-position
-            color: Colorfile.textColor, // Applying the color
+            letterSpacing: 0,
+            color: Colorfile.textColor,
           ),
         ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Container just below the AppBar, no gap
             Container(
-              width: double.infinity, // Full width
-              height: 75,
+              width: double.infinity,
+              // height: 75,
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [Color(0xFFB7D7F9), Color(0xFFE5ACCB)],
-                  stops: [0.0256, 0.9932], // gradient angles
+                  stops: [0.0256, 0.9932],
                 ),
               ),
               child: Text(
-                'By unlocking chat you can easily chat with [person name].',
+                'By unlocking chat you can easily chat',
                 style: GoogleFonts.montserrat(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
-                  height: 26 / 15, // line-height: 26px
+                  height: 26 / 15,
                   decoration: TextDecoration.none,
                   color: Colors.black,
                 ),
               ),
             ),
-            // New container with checkmark items
             Container(
               width: double.infinity,
-              margin: EdgeInsets.symmetric(
-                  vertical: 10, horizontal: 15), // Added margin
+              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               padding: EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Feature 1
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isChecked1 = !_isChecked1;
-                      });
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(
-                            10), // Border radius for feature
-                        border: Border.all(
-                          color: Color(0xFFE0E0E0),
-                          width: 1,
-                        ),
-                      ),
-                      child: ListTile(
-                        leading: Container(
-                          width: 40, // Avatar size width
-                          height: 40, // Avatar size height
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: LinearGradient(
-                              colors: [
-                                Color(0xFFB7D7F9),
-                                Color(0xFFE5ACCB),
-                              ], // Gradient colors
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
+                  // Feature 1: Buy Chat for this Project
+                  if (widget.id?.isNotEmpty ?? false)
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isChecked1 = !_isChecked1;
+                          if (_isChecked1) _isChecked2 = false;
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Color(0xFFE0E0E0),
+                            width: 1,
                           ),
-                          child: ClipOval(
-                            child: Padding(
-                              padding: const EdgeInsets.all(
-                                  6.0), // Padding inside the circle
-                              child: Image.asset(
-                                'assets/chat.png', // Replace with your PNG file path
-                                fit: BoxFit
-                                    .cover, // Make sure the image covers the circle
+                        ),
+                        child: ListTile(
+                          leading: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFFB7D7F9),
+                                  Color(0xFFE5ACCB),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+                            child: ClipOval(
+                              child: Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: Image.asset(
+                                  'assets/chat.png',
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        title: Text(
-                          'Buy Chat for this Project',
-                          style: GoogleFonts.montserrat(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            height: 20 / 13, // Line height based on font size
-                            letterSpacing: 0.01,
-                            color: Colorfile.textColor,
-                            decoration: TextDecoration
-                                .none, // To ensure no text decoration
+                          title: Text(
+                            'Buy Chat for this Project',
+                            style: GoogleFonts.montserrat(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              height: 20 / 13,
+                              letterSpacing: 0.01,
+                              color: Colorfile.textColor,
+                              decoration: TextDecoration.none,
+                            ),
                           ),
-                        ),
-                        subtitle: Text(
-                          'You can buy a chat just for this project.',
-                          style: GoogleFonts.montserrat(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                            height: 20 / 11, // Line height based on font size
-                            decoration: TextDecoration
-                                .none, // To ensure no text decoration
+                          subtitle: Text(
+                            'You can buy a chat just for this project.',
+                            style: GoogleFonts.montserrat(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                              height: 20 / 11,
+                              decoration: TextDecoration.none,
+                            ),
                           ),
-                        ),
-                        trailing: Checkbox(
-                          value: _isChecked1,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _isChecked1 = value ?? false;
-                            });
-                          },
-                          activeColor: Colors.green, // Green color when checked
-                          checkColor: Colors.white, // White tick when checked
-                          fillColor:
-                              MaterialStateProperty.resolveWith((states) {
-                            if (states.contains(MaterialState.selected)) {
-                              return Colors.green; // Green color when selected
-                            }
-                            return Color(
-                                0xFFD9D9D9); // Transparent when not selected, no border
-                          }),
-                          shape: CircleBorder(), // Make the checkbox round
-                          side: BorderSide.none, // Remove border
+                          trailing: Checkbox(
+                            value: _isChecked1,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isChecked1 = value ?? false;
+                                if (_isChecked1) _isChecked2 = false;
+                              });
+                            },
+                            activeColor: Colors.green,
+                            checkColor: Colors.white,
+                            fillColor:
+                                MaterialStateProperty.resolveWith((states) {
+                              if (states.contains(MaterialState.selected)) {
+                                return Colors.green;
+                              }
+                              return Color(0xFFD9D9D9);
+                            }),
+                            shape: CircleBorder(),
+                            side: BorderSide.none,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  // Feature 2
-                  SizedBox(height: 10), // Added space between features
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isChecked2 = !_isChecked2;
-                      });
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(
-                            10), // Border radius for feature
-                        border: Border.all(
-                          color: Color(0xFFE0E0E0),
-                          width: 1,
-                        ),
-                      ),
-                      child: ListTile(
-                        leading: Container(
-                          width: 40, // Avatar size width
-                          height: 40, // Avatar size height
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: LinearGradient(
-                              colors: [
-                                Color(0xFFB7D7F9),
-                                Color(0xFFE5ACCB),
-                              ], // Gradient colors
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
+                  if (widget.id?.isNotEmpty ?? false) SizedBox(height: 10),
+                  // Feature 2: Buy hassle free chat for multiple projects
+                  if (widget.id == null ||
+                      widget.id!.isEmpty ||
+                      (widget.id?.isNotEmpty ?? false))
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isChecked2 = !_isChecked2;
+                          if (_isChecked2) _isChecked1 = false;
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Color(0xFFE0E0E0),
+                            width: 1,
                           ),
-                          child: ClipOval(
-                            child: Padding(
-                              padding: const EdgeInsets.all(
-                                  6.0), // Padding inside the circle
-                              child: Image.asset(
-                                'assets/chat.png', // Replace with your PNG file path
-                                fit: BoxFit
-                                    .cover, // Make sure the image covers the circle
+                        ),
+                        child: ListTile(
+                          leading: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xFFB7D7F9),
+                                  Color(0xFFE5ACCB),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+                            child: ClipOval(
+                              child: Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: Image.asset(
+                                  'assets/chat.png',
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        title: Text(
-                          'Buy hassle free chat for multiple projects',
-                          style: GoogleFonts.montserrat(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            height: 20 / 13, // Line height based on font size
-                            letterSpacing: 0.01,
-                            color: Colorfile.textColor,
-                            decoration: TextDecoration
-                                .none, // To ensure no text decoration
+                          title: Text(
+                            'Buy hassle free chat for multiple projects',
+                            style: GoogleFonts.montserrat(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              height: 20 / 13,
+                              letterSpacing: 0.01,
+                              color: Colorfile.textColor,
+                              decoration: TextDecoration.none,
+                            ),
                           ),
-                        ),
-                        subtitle: Text(
-                          'Simplify payments with a chat bundle avoid multiple transactions.',
-                          style: GoogleFonts.montserrat(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                            height: 20 / 11, // Line height based on font size
-                            decoration: TextDecoration
-                                .none, // To ensure no text decoration
+                          subtitle: Text(
+                            'Simplify payments with a chat bundle avoid multiple transactions.',
+                            style: GoogleFonts.montserrat(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                              height: 20 / 11,
+                              decoration: TextDecoration.none,
+                            ),
                           ),
-                        ),
-                        trailing: Checkbox(
-                          value: _isChecked2,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _isChecked2 = value ?? false;
-                            });
-                          },
-                          activeColor: Colors.green, // Green color when checked
-                          checkColor: Colors.white, // White tick when checked
-                          fillColor:
-                              MaterialStateProperty.resolveWith((states) {
-                            if (states.contains(MaterialState.selected)) {
-                              return Colors.green; // Green color when selected
-                            }
-                            return Color(
-                                0xFFD9D9D9); // Transparent when not selected, no border
-                          }),
-                          shape: CircleBorder(), // Make the checkbox round
-                          side: BorderSide.none, // Remove border
+                          trailing: Checkbox(
+                            value: _isChecked2,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isChecked2 = value ?? false;
+                                if (_isChecked2) _isChecked1 = false;
+                              });
+                            },
+                            activeColor: Colors.green,
+                            checkColor: Colors.white,
+                            fillColor:
+                                MaterialStateProperty.resolveWith((states) {
+                              if (states.contains(MaterialState.selected)) {
+                                return Colors.green;
+                              }
+                              return Color(0xFFD9D9D9);
+                            }),
+                            shape: CircleBorder(),
+                            side: BorderSide.none,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  // New container below second GestureDetector
                   Column(
                     children: [
                       Container(
@@ -303,8 +440,7 @@ class _ChatpageState extends State<Chatpage> {
                                 text: 'Warning: ',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 14,
-                                  fontWeight: FontWeight
-                                      .bold, // Make only "Warning" bold
+                                  fontWeight: FontWeight.bold,
                                   color: Colorfile.textColor,
                                 ),
                               ),
@@ -315,7 +451,7 @@ class _ChatpageState extends State<Chatpage> {
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Colorfile.textColor,
-                                  height: 1.5, // Adjust the line height here
+                                  height: 1.5,
                                 ),
                               ),
                             ],
@@ -323,30 +459,54 @@ class _ChatpageState extends State<Chatpage> {
                         ),
                       ),
                       Container(
-                        width: double.infinity, // Ensures button is full width
+                        width: double.infinity,
                         height: 48,
                         child: CupertinoButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const Buychat()), // Navigate to the new page
-                            );
-                            // Action to perform when the button is pressed
-                          },
+                          onPressed: _isLoading
+                              ? null // Disable button during loading
+                              : () {
+                                  if (_isChecked1) {
+                                    // Show confirmation dialog for first option
+                                    _showConfirmationDialog();
+                                  } else if (_isChecked2) {
+                                    // Navigate to Buychat for second option
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const Buychat()),
+                                    );
+                                  } else {
+                                    // Show message if no option is selected
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                            "Please select an option to proceed."),
+                                      ),
+                                    );
+                                  }
+                                },
                           padding: EdgeInsets.symmetric(
                               vertical: 12, horizontal: 20),
-                          color: Colorfile.textColor, // Background color
+                          color: Colorfile.textColor,
                           borderRadius: BorderRadius.circular(8),
-                          child: Text(
-                            'Unlock Your Chat Now',
-                            style: GoogleFonts.montserrat(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
+                          child: _isLoading
+                              ? SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Text(
+                                  'Unlock Your Chat Now',
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
                         ),
                       ),
                     ],
@@ -354,7 +514,6 @@ class _ChatpageState extends State<Chatpage> {
                 ],
               ),
             ),
-            // Other widgets go here
           ],
         ),
       ),

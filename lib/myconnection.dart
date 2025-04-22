@@ -110,7 +110,11 @@ class InviteFriends extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ChatPage(),
+                    builder: (context) => ChatPage(
+                      projectId: '',
+                      chatSender: '',
+                      chatReceiver: '',
+                    ),
                   ),
                 );
               },
@@ -123,7 +127,11 @@ class InviteFriends extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ChatPage(),
+                    builder: (context) => ChatPage(
+                      projectId: '',
+                      chatSender: '',
+                      chatReceiver: '',
+                    ),
                   ),
                 );
               },
