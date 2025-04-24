@@ -161,9 +161,9 @@ class _ChatPageState extends State<ChatPage> {
             _isLoadingMore = false;
             _hasMoreMessages = false;
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to load chat data')),
-          );
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   const SnackBar(content: Text('Failed to load chat data')),
+          // );
         }
       } else {
         log('Fetch Chat Error: ${response.statusCode}');

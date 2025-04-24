@@ -8,6 +8,7 @@ import 'package:quickenlancer_apk/Chat/chatpage.dart';
 import 'package:quickenlancer_apk/Colors/colorfile.dart';
 import 'package:quickenlancer_apk/home_page.dart';
 
+import 'edit_profile_page.dart';
 import 'profilepage.dart';
 
 class Editprofilepage extends StatefulWidget {
@@ -1137,6 +1138,12 @@ class _ProfilePageState extends State<Editprofilepage> {
                   left: screenWidth * 0.05,
                   child: ElevatedButton(
                     onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UpdateProfilePage(),
+                        ),
+                      );
                       // Handle edit profile action
                     },
                     style: ElevatedButton.styleFrom(

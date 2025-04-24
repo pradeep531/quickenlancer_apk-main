@@ -17,4 +17,7 @@ class URLS {
   String get_history = baseUrl + "user/hustlefree-tokens";
   String posted_project = baseUrl + "user/posted-project";
   String recieved_project = baseUrl + "user/received-project";
+  String notify_bidder = baseUrl + "user/notify-bidder";
+  String set_project_time_availability =
+      baseUrl + "user/project-time-availability";
 }

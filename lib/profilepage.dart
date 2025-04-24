@@ -5,6 +5,7 @@ import 'package:quickenlancer_apk/editprofilepage.dart';
 import 'BottomBar/bottom_bar.dart';
 import 'Call/callpage.dart';
 import 'Chat/chatpage.dart';
+import 'edit_profile_page.dart';
 import 'home_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -185,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Editprofilepage(),
+                      builder: (context) => UpdateProfilePage(),
                     ),
                   );
                   print("Edit Profile tapped");

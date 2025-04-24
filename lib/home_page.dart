@@ -18,6 +18,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'SignUp/signIn.dart';
 import 'chat_page.dart';
+import 'editprofilepage.dart';
 import 'profilepage.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -230,10 +231,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void _onItemTapped(int index) {
     setState(() => _selectedIndex = index);
     final routes = {
+      0: MyHomePage(),
       1: AllProjects(),
       2: Buycallpage(),
       3: Buychatpage(),
-      4: ProfilePage(),
+      4: Editprofilepage(),
     };
     if (routes.containsKey(index)) {
       Navigator.push(
