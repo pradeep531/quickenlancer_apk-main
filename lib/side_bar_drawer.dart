@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:quickenlancer_apk/PostProject/post_project.dart';
-import 'package:quickenlancer_apk/PostProject/posted_projects.dart';
 import 'package:quickenlancer_apk/SignUp/signIn.dart';
+import 'package:quickenlancer_apk/hire_company.dart';
 import 'package:quickenlancer_apk/myconnection.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Add this for SharedPreferences
+import 'package:shared_preferences/shared_preferences.dart';
+import 'hire_freelancer.dart';
 import 'notifications.dart';
 
 class SideBarDrawer extends StatelessWidget {
@@ -42,9 +43,17 @@ class SideBarDrawer extends StatelessWidget {
             SideBarItem(
                 text: 'Hire Freelancer',
                 onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HireFreelancer()),
+                  );
+                }),
+            SideBarItem(
+                text: 'Hire Company',
+                onTap: () {
                   // Navigator.push(
                   //   context,
-                  //   MaterialPageRoute(builder: (context) => InviteFriends()),
+                  //   MaterialPageRoute(builder: (context) => HireCompany()),
                   // );
                 }),
             SideBarItem(
@@ -72,14 +81,6 @@ class SideBarDrawer extends StatelessWidget {
                   );
                 }),
             SideBarItem(
-                text: 'Posted Projects',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PostedProjects()),
-                  );
-                }),
-            SideBarItem(
               text: 'Logout',
               onTap: () {
                 _showLogoutConfirmation(context);
@@ -94,77 +95,128 @@ class SideBarDrawer extends StatelessWidget {
   void _showLogoutConfirmation(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Color(0xFF242424),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.all(20),
+        return AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+          margin: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF2C2C2C), Color(0xFF181818)],
+            ),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.white.withOpacity(0.1), width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.4),
+                blurRadius: 12,
+                offset: Offset(0, 6),
+              ),
+            ],
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Container(
+                margin: EdgeInsets.only(top: 12),
+                height: 4,
+                width: 32,
+                decoration: BoxDecoration(
+                  color: Colors.grey[700],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              SizedBox(height: 16),
               Text(
                 'Confirm Logout',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.3,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Are you sure you want to log out?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 14,
+                  height: 1.4,
                 ),
               ),
               SizedBox(height: 20),
-              Text(
-                'Are you sure you want to logout?',
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 16,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          await prefs.clear();
+                          Navigator.pop(context);
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignInPage()),
+                            (Route<dynamic> route) => false,
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFFE53935),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 3,
+                          shadowColor: Colors.black.withOpacity(0.3),
+                        ),
+                        child: Text(
+                          'Log Out',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: OutlinedButton.styleFrom(
+                          side:
+                              BorderSide(color: Colors.grey[700]!, width: 1.5),
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      // Clear SharedPreferences and navigate to signup
-                      final SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      await prefs.clear(); // Clears all preferences
-                      Navigator.pop(context); // Close bottom sheet
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                SignInPage()), // Replace with your signup page class
-                        (Route<dynamic> route) => false,
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                    ),
-                    child: Text(
-                      'Yes',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context); // Close bottom sheet
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                    ),
-                    child: Text(
-                      'No',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
+              SizedBox(height: 20),
             ],
           ),
         );

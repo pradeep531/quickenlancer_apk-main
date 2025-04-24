@@ -32,7 +32,7 @@ class _OnboardingMainState extends State<OnboardingMain> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => SignInPage(),
+        builder: (context) => MyHomePage(),
       ),
     );
   }

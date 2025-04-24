@@ -43,13 +43,12 @@ class _MyHomePageState extends State<MyHomePage> {
   String _country = '';
   final TextEditingController _searchController = TextEditingController();
   String _searchKeyword = '';
-
+  int? isLoggedIn;
+  String profilePicPath = '';
   @override
   void initState() {
     super.initState();
-    _loadPreferences();
-    initiateSearchProjectData();
-    _fetchProjects();
+    _initializeData(); // Call async operations in a separate method
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
               _scrollController.position.maxScrollExtent * 0.9 &&
@@ -67,33 +66,17 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<void> initiateSearchProjectData() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final String? authToken = prefs.getString('auth_token');
-      final userId = prefs.getString('user_id') ?? '';
-
-      final String searchUrl = URLS().initiate_search_project_data_api;
-      final searchRequestBody = jsonEncode({
-        "user_id": userId,
-      });
-
-      log('Search API Request body: $searchRequestBody');
-
-      final searchResponse = await http.post(
-        Uri.parse(searchUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          if (authToken != null) 'Authorization': 'Bearer $authToken',
-        },
-        body: searchRequestBody,
-      );
-
-      print('Search API Response status: ${searchResponse.statusCode}');
-      print('Search API Response body: ${searchResponse.body}');
-    } catch (e) {
-      print('Search API Error: $e');
-    }
+  Future<void> _initializeData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isLoggedIn =
+          prefs.getInt('is_logged_in'); // Assign value after async call
+      profilePicPath =
+          prefs.getString('profile_pic_path') ?? ''; // Store profile_pic_path
+    });
+    await _loadPreferences();
+    // await initiateSearchProjectData();
+    await _fetchProjects();
   }
 
   Future<void> _loadPreferences() async {
@@ -229,7 +212,84 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _onItemTapped(int index) {
-    setState(() => _selectedIndex = index);
+    // Skip login check for homepage (index 0)
+    if (index != 0 && isLoggedIn != 1) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            title: Text(
+              'Login Required',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
+                color: Colors.black87,
+              ),
+            ),
+            content: Text(
+              'You need to log in to access this feature. Would you like to log in now?',
+              style: TextStyle(
+                fontSize: 16.0,
+                color: Colors.black54,
+                height: 1.5,
+              ),
+            ),
+            actionsPadding:
+                EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog
+                },
+                child: Text(
+                  'No',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => SignInPage()),
+                  );
+                },
+                child: Text(
+                  'Yes',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.blue[700],
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                  backgroundColor: Colors.blue[50],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
     final routes = {
       0: MyHomePage(),
       1: AllProjects(),
@@ -237,7 +297,10 @@ class _MyHomePageState extends State<MyHomePage> {
       3: Buychatpage(),
       4: Editprofilepage(),
     };
+
     if (routes.containsKey(index)) {
+      // Only update _selectedIndex if navigation is successful
+      setState(() => _selectedIndex = index);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => routes[index]!),
@@ -276,70 +339,203 @@ class _MyHomePageState extends State<MyHomePage> {
     final size = MediaQuery.of(context).size;
     final padding = size.width * 0.04;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFE8F1FC),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Row(
-          children: [
-            const CircleAvatar(
-              radius: 18,
-              backgroundImage: AssetImage('assets/profile_pic.png'),
-            ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '$_firstName $_lastName'.trim(),
-                  style: GoogleFonts.montserrat(
-                    fontSize: size.width * 0.042,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black,
+    return WillPopScope(
+      onWillPop: () async {
+        return await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  // Background color
+                  backgroundColor: Colors.white,
+                  // Rounded corners
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      body: RefreshIndicator(
-        onRefresh: _onRefresh,
-        child: Column(
-          children: [
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: padding, vertical: 8),
-              child: Row(
-                children: [
-                  Expanded(child: _buildSearchField(size)),
-                  const SizedBox(width: 8),
-                  _buildFilterButton(),
-                ],
-              ),
-            ),
-            Expanded(
-              child: _isLoading && _jobs.isEmpty
-                  ? _buildShimmerList(size)
-                  : ListContainer(
-                      jobs: _jobs,
-                      scrollController: _scrollController,
+                  // Title styling
+                  title: Text(
+                    'Exit App',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0,
+                      color: Colors.black87,
                     ),
-            ),
-            if (_isLoadingMore)
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: CircularProgressIndicator(),
-              ),
-          ],
+                  ),
+                  // Content styling
+                  content: Text(
+                    'Are you sure you want to exit?',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.black54,
+                      height: 1.5, // Line height
+                    ),
+                  ),
+                  // Actions padding and alignment
+                  actionsPadding:
+                      EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: Text(
+                        'No',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 12.0),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: Text(
+                        'Yes',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.red[700], // Red for exit action
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 12.0),
+                        backgroundColor: Colors
+                            .red[50], // Subtle background for "Yes" button
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ) ??
+            false;
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFE8F1FC),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Row(
+            children: [
+              profilePicPath.isEmpty &&
+                      (_firstName?.isEmpty != false &&
+                          _lastName?.isEmpty != false)
+                  ? ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => SignInPage()),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Colorfile.textColor, // Button background color
+                        foregroundColor: Colors.white, // Text/icon color
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ), // Button padding
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(4), // Rounded corners
+                          side: BorderSide(
+                            color: Colors.white, // Border color
+                            width: 0.5, // Border width
+                          ),
+                        ),
+                        elevation: 3, // Shadow elevation
+                        // Shadow color
+                        textStyle: GoogleFonts.montserrat(
+                          fontSize: size.width * 0.042,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      child: const Text(
+                        'Sign In',
+                        style: TextStyle(
+                          color: Colors.white, // Text color
+                        ),
+                      ),
+                    )
+                  : Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 18,
+                          backgroundImage: profilePicPath.isNotEmpty
+                              ? NetworkImage(
+                                  profilePicPath) // Use profile picture URL
+                              : null, // No background image when using icon
+                          child: profilePicPath.isEmpty
+                              ? const Icon(
+                                  Icons.person, // Default profile icon
+                                  size: 24,
+                                  color: Colors.grey, // Customize icon color
+                                )
+                              : null, // No child when image is present
+                        ),
+                        const SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              (_firstName?.isNotEmpty == true ||
+                                      _lastName?.isNotEmpty == true)
+                                  ? '$_firstName $_lastName'.trim()
+                                  : 'Not Available', // Show "Not Available" if names are empty
+                              style: GoogleFonts.montserrat(
+                                fontSize: size.width * 0.042,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+            ],
+          ),
         ),
-      ),
-      endDrawer: SideBarDrawer(),
-      bottomNavigationBar: MyBottomBar(
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
+        body: RefreshIndicator(
+          onRefresh: _onRefresh,
+          child: Column(
+            children: [
+              Container(
+                color: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: padding, vertical: 8),
+                child: Row(
+                  children: [
+                    Expanded(child: _buildSearchField(size)),
+                    const SizedBox(width: 8),
+                    _buildFilterButton(),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: _isLoading && _jobs.isEmpty
+                    ? _buildShimmerList(size)
+                    : ListContainer(
+                        jobs: _jobs,
+                        scrollController: _scrollController,
+                      ),
+              ),
+              if (_isLoadingMore)
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(),
+                ),
+            ],
+          ),
+        ),
+        endDrawer: SideBarDrawer(),
+        bottomNavigationBar: MyBottomBar(
+          selectedIndex: _selectedIndex,
+          onItemTapped: _onItemTapped,
+        ),
       ),
     );
   }
@@ -365,21 +561,38 @@ class _MyHomePageState extends State<MyHomePage> {
             fontWeight: FontWeight.w500,
             color: Colors.grey,
           ),
-          prefixIcon: const Icon(
-            CupertinoIcons.search,
-            color: Color(0xFFA5A5A5),
-            size: 22,
-          ),
+          // prefixIcon: const Icon(
+          //   CupertinoIcons.search,
+          //   color: Color(0xFFA5A5A5),
+          //   size: 22,
+          // ),
           suffixIcon: _searchController.text.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(Icons.clear, color: Color(0xFFA5A5A5)),
-                  onPressed: () {
-                    _searchController.clear();
-                    setState(() {
-                      _searchKeyword = '';
-                    });
-                    _fetchProjects();
-                  },
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Clear button
+                    IconButton(
+                      icon: const Icon(Icons.clear, color: Color(0xFFA5A5A5)),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() {
+                          _searchKeyword = '';
+                        });
+                        _fetchProjects();
+                      },
+                    ),
+                    // Search icon button
+                    IconButton(
+                      icon: const Icon(CupertinoIcons.search,
+                          color: Color(0xFF3A3A3A)),
+                      onPressed: () {
+                        setState(() {
+                          _searchKeyword = _searchController.text.trim();
+                        });
+                        _fetchProjects();
+                      },
+                    ),
+                  ],
                 )
               : null,
           filled: true,
@@ -394,6 +607,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onSubmitted: (value) {
           setState(() {
             _searchKeyword = value.trim();
+            _searchController.clear(); // Clear the text field
           });
           _fetchProjects();
         },
@@ -1151,21 +1365,67 @@ class _ListContainerState extends State<ListContainer> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Sign In Required'),
+          // Customize dialog shape and background
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          backgroundColor: Colors.white, // Light background
+          elevation: 8.0, // Shadow for depth
+          // Title styling
+          title: const Text(
+            'Sign In Required',
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          // Content styling
           content: const Text(
-              'You need to sign in to continue. Would you like to proceed to the sign-in page?'),
+            'You need to sign in to continue. Would you like to proceed to the sign-in page?',
+            style: TextStyle(
+              fontSize: 16.0,
+              color: Colors.black54,
+              height: 1.5, // Line spacing
+            ),
+          ),
+          // Actions (buttons)
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false); // Return false for "No"
               },
-              child: const Text('No'),
+              child: const Text(
+                'No',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.grey, // Subtle color for cancel
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true); // Return true for "Yes"
               },
-              child: const Text('Yes'),
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.blueAccent, // Button background
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+              child: const Text(
+                'Yes',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.white, // White text for contrast
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ],
         );

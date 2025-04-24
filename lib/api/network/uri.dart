@@ -20,4 +20,5 @@ class URLS {
   String notify_bidder = baseUrl + "user/notify-bidder";
   String set_project_time_availability =
       baseUrl + "user/project-time-availability";
+  String get_search_freelancer = baseUrl + "get_search_freelancer_api";
 }

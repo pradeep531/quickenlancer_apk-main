@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Projects/all_projects.dart';
 import '../api/network/uri.dart';
 
 class Buychatpage extends StatefulWidget {
@@ -49,6 +50,15 @@ class _BuyChatpageState extends State<Buychatpage> {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const MyHomePage()),
+      );
+    }
+    if (index == 1) {
+      // Check if the 3rd index is selected
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                const AllProjects()), // Navigate to the new page
       );
     }
     if (index == 2) {

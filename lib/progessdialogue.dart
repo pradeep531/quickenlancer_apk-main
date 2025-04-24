@@ -9,7 +9,7 @@ class ProgressDialog {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return Lottie.asset("images/loader.json");
+          return Lottie.asset("assets/loader.json");
         },
       );
     } catch (e) {

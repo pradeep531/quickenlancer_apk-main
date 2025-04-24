@@ -95,6 +95,8 @@ class _SignInPageState extends State<SignInPage> {
         await prefs.setString('email', data['email'] ?? '');
         await prefs.setString('country', data['country'] ?? '');
         await prefs.setString('auth_token', data['auth_token'] ?? '');
+        await prefs.setString(
+            'profile_pic_path', data['profile_pic_path'] ?? '');
         // Verify stored values (optional for debugging)
         print('Shared Preferences set:');
         print('is_logged_in: ${prefs.getInt('is_logged_in')}');
@@ -103,6 +105,7 @@ class _SignInPageState extends State<SignInPage> {
         print('last_name: ${prefs.getString('last_name')}');
         print('email: ${prefs.getString('email')}');
         print('auth_token: ${prefs.getString('auth_token')}');
+        print('profile_pic_path: ${prefs.getString('profile_pic_path')}');
 
         await initiateSearchProjectData(data['id'] ?? '0');
         // Rest of your dialog and navigation code remains unchanged

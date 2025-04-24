@@ -8,6 +8,7 @@ import 'package:quickenlancer_apk/Chat/chatpage.dart';
 import 'package:quickenlancer_apk/Colors/colorfile.dart';
 import 'package:quickenlancer_apk/home_page.dart';
 
+import 'Projects/all_projects.dart';
 import 'edit_profile_page.dart';
 import 'profilepage.dart';
 
@@ -42,6 +43,15 @@ class _ProfilePageState extends State<Editprofilepage> {
                 const MyHomePage()), // Navigate to the new page
       );
     }
+    if (index == 1) {
+      // Check if the 3rd index is selected
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                const AllProjects()), // Navigate to the new page
+      );
+    }
     if (index == 2) {
       // Check if the 3rd index is selected
       Navigator.push(
@@ -62,19 +72,11 @@ class _ProfilePageState extends State<Editprofilepage> {
     }
     if (index == 4) {
       // Check if the 3rd index is selected
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) =>
-                const Buycallpage()), // Navigate to the new page
-      );
-    }
-    if (index == 4) {
-      // Check if the 3rd index is selected
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ProfilePage()), // Navigate to the new page
+                Editprofilepage()), // Navigate to the new page
       );
     }
   }
