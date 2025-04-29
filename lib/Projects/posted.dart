@@ -1177,7 +1177,7 @@ class _PostedProjectsPageState extends State<PostedProjectsTab> {
                                                                   stackTrace) =>
                                                               const Icon(
                                                                   Icons
-                                                                      .broken_image,
+                                                                      .file_copy,
                                                                   size: 100,
                                                                   color: Colors
                                                                       .grey),
@@ -1189,7 +1189,7 @@ class _PostedProjectsPageState extends State<PostedProjectsTab> {
                                                             title:
                                                                 'Confirm Download',
                                                             content: Text(
-                                                              'Download this image?',
+                                                              'Download this file?',
                                                               style: GoogleFonts
                                                                   .montserrat(
                                                                 color: Colorfile

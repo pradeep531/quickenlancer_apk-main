@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,8 +9,7 @@ import 'package:quickenlancer_apk/api/network/uri.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Colors/colorfile.dart';
-import 'filter_bottom_sheet.dart';
-import 'hire_freelancer_filter.dart';
+import 'hire_company_filter.dart';
 
 class HireCompany extends StatefulWidget {
   const HireCompany({super.key});
@@ -35,7 +35,7 @@ class _HireCompanyState extends State<HireCompany> {
   @override
   void initState() {
     super.initState();
-    _fetchFreelancers();
+    _fetchCompanies();
     _scrollController.addListener(_onScroll);
   }
 
@@ -53,12 +53,12 @@ class _HireCompanyState extends State<HireCompany> {
         !isLoadingMore &&
         hasMore) {
       setState(() => offset += limit);
-      _fetchFreelancers(isPaginating: true);
+      _fetchCompanies(isPaginating: true);
     }
     setState(() => showScrollToTop = _scrollController.position.pixels > 100);
   }
 
-  Future<void> _fetchFreelancers({bool isPaginating = false}) async {
+  Future<void> _fetchCompanies({bool isPaginating = false}) async {
     setState(() {
       isPaginating ? isLoadingMore = true : isLoading = true;
       errorMessage = null;
@@ -66,7 +66,7 @@ class _HireCompanyState extends State<HireCompany> {
 
     try {
       final prefs = await SharedPreferences.getInstance();
-      final url = Uri.parse(URLS().get_search_freelancer);
+      final url = Uri.parse(URLS().get_search_company);
       final headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${prefs.getString('auth_token')}',
@@ -94,7 +94,7 @@ class _HireCompanyState extends State<HireCompany> {
       });
 
       print('Response Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
+      log('Response Body: ${response.body}');
 
       if (response.body.isEmpty) {
         setState(() {
@@ -187,7 +187,7 @@ class _HireCompanyState extends State<HireCompany> {
                                   ),
                                   const SizedBox(height: 8),
                                   ElevatedButton(
-                                    onPressed: () => _fetchFreelancers(),
+                                    onPressed: () => _fetchCompanies(),
                                     child: const Text('Retry'),
                                   ),
                                 ],
@@ -207,7 +207,7 @@ class _HireCompanyState extends State<HireCompany> {
                             : RefreshIndicator(
                                 onRefresh: () async {
                                   setState(() => offset = 0);
-                                  await _fetchFreelancers();
+                                  await _fetchCompanies();
                                 },
                                 child: SingleChildScrollView(
                                   controller: _scrollController,
@@ -270,7 +270,7 @@ class _HireCompanyState extends State<HireCompany> {
           fontWeight: FontWeight.w500,
         ),
         decoration: InputDecoration(
-          hintText: 'Search projects...',
+          hintText: 'Search companies...',
           hintStyle: GoogleFonts.montserrat(
             fontSize: size.width * 0.038,
             fontWeight: FontWeight.w500,
@@ -287,7 +287,7 @@ class _HireCompanyState extends State<HireCompany> {
                         setState(() {
                           _searchKeyword = '';
                         });
-                        _fetchFreelancers();
+                        _fetchCompanies();
                       },
                     ),
                     IconButton(
@@ -297,7 +297,7 @@ class _HireCompanyState extends State<HireCompany> {
                         setState(() {
                           _searchKeyword = _searchController.text.trim();
                         });
-                        _fetchFreelancers();
+                        _fetchCompanies();
                       },
                     ),
                   ],
@@ -317,7 +317,7 @@ class _HireCompanyState extends State<HireCompany> {
             _searchKeyword = value.trim();
             _searchController.clear();
           });
-          _fetchFreelancers();
+          _fetchCompanies();
         },
       ),
     );
@@ -352,20 +352,20 @@ class _HireCompanyState extends State<HireCompany> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (_) => HireFreelancerFilter(
+      builder: (_) => HireCompanyFilter(
         onApplyFilters: (List<dynamic> filters) {
           print('Filters applied in _showFilterSheet: $filters');
           setState(() {
             _currentFilters = filters;
           });
-          _fetchFreelancers();
+          _fetchCompanies();
         },
         onClearFilters: () {
           print('Filters cleared in _showFilterSheet');
           setState(() {
             _currentFilters = [];
           });
-          _fetchFreelancers();
+          _fetchCompanies();
         },
       ),
     );
@@ -501,39 +501,34 @@ class _FreelancerCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-            const SizedBox(height: 12),
+            if (freelancer['details']?.isNotEmpty == true)
+              const SizedBox(height: 12),
             Text(
-              freelancer['exp_description'] ?? 'No description',
+              freelancer['details'],
               style: _textStyle(size: 14, color: Colors.grey[700]),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 8),
-            skills.isNotEmpty
-                ? Wrap(
-                    spacing: 8,
-                    children: skills
-                        .map((skill) => Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 6),
-                              decoration: BoxDecoration(
-                                  color: const Color(0xFFE8F1FC),
-                                  borderRadius: BorderRadius.circular(4)),
-                              child: Text(
-                                skill,
-                                style: _textStyle(
-                                    size: 12, weight: FontWeight.w500),
-                              ),
-                            ))
-                        .toList(),
-                  )
-                : Text(
-                    'No skills listed',
-                    style: _textStyle(size: 14, color: Colors.grey[600]),
-                  ),
+            if (skills.isNotEmpty) const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              children: skills
+                  .map((skill) => Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                            color: const Color(0xFFE8F1FC),
+                            borderRadius: BorderRadius.circular(4)),
+                        child: Text(
+                          skill,
+                          style: _textStyle(size: 12, weight: FontWeight.w500),
+                        ),
+                      ))
+                  .toList(),
+            ),
             const SizedBox(height: 16),
             Text(
-              'Average Amount: ${freelancer['average_rate_per_hour'] ?? 'Not specified'} ${freelancer['currency_label']}/hr',
+              'Average Amount: ${freelancer['average_rate_per_hour'] != null && freelancer['average_rate_per_hour'] > 0 ? freelancer['average_rate_per_hour'] : 'Not specified'} ${freelancer['currency_label']?.isNotEmpty == true ? freelancer['currency_label'] : ''}/hr',
               style: _textStyle(
                   size: 12,
                   color: const Color(0xFF353B43),
@@ -568,8 +563,6 @@ class _FreelancerCard extends StatelessWidget {
   }
 
   Widget _buildHeader() {
-    final isOnline = freelancer['is_online'] == 1;
-
     return Container(
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: Color(0xFFE2E2E2))),
@@ -577,44 +570,26 @@ class _FreelancerCard extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 5),
       child: Row(
         children: [
-          Stack(
-            children: [
-              Container(
-                width: 55,
-                height: 55,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.grey[300]!, width: 2),
-                ),
-                child: ClipOval(
-                  child: freelancer['profile_pic'] != null
-                      ? Image.network(
-                          freelancer['profile_pic'],
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => const Icon(
-                            Icons.person,
-                            size: 55,
-                            color: Colors.grey,
-                          ),
-                        )
-                      : const Icon(Icons.person, size: 55, color: Colors.grey),
-                ),
-              ),
-              if (isOnline)
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.green,
-                      border: Border.all(color: Colors.white, width: 1),
-                    ),
-                  ),
-                ),
-            ],
+          Container(
+            width: 55,
+            height: 55,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.grey[300]!, width: 2),
+            ),
+            child: ClipOval(
+              child: freelancer['profile_pic']?.isNotEmpty == true
+                  ? Image.network(
+                      freelancer['profile_pic'],
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const Icon(
+                        Icons.person,
+                        size: 55,
+                        color: Colors.grey,
+                      ),
+                    )
+                  : const Icon(Icons.person, size: 55, color: Colors.grey),
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -622,22 +597,41 @@ class _FreelancerCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${freelancer['f_name']} ${freelancer['l_name']}',
+                  freelancer['name'] ?? 'Unknown Company',
                   style: _textStyle(size: 12, weight: FontWeight.bold),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                Text(
-                  '${freelancer['city_name']}, ${freelancer['country_name']} | ${freelancer['experience']} Year Exp.',
-                  style: _textStyle(size: 12),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                // Text(
+                //   '${freelancer['f_name']} ${freelancer['l_name']}',
+                //   style: _textStyle(size: 12),
+                //   maxLines: 1,
+                //   overflow: TextOverflow.ellipsis,
+                // ),
+                SizedBox(
+                  height: 4,
                 ),
-                Text(
-                  '${freelancer['state_name']}',
-                  style: _textStyle(size: 12),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                Row(
+                  children: [
+                    if (freelancer['country_flag_path']?.isNotEmpty == true)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4),
+                        child: Image.network(
+                          freelancer['country_flag_path'],
+                          width: 16,
+                          height: 16,
+                          errorBuilder: (_, __, ___) => const SizedBox(),
+                        ),
+                      ),
+                    Expanded(
+                      child: Text(
+                        freelancer['country_name'] ?? 'Unknown',
+                        style: _textStyle(size: 12),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

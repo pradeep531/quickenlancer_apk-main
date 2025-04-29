@@ -1,16 +1,28 @@
+import 'dart:developer';
+
+import 'package:crypto/crypto.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quickenlancer_apk/BottomBar/bottom_bar.dart';
 import 'package:quickenlancer_apk/Call/callpage.dart';
 import 'package:quickenlancer_apk/Chat/chatpage.dart';
 import 'package:quickenlancer_apk/Colors/colorfile.dart';
+import 'package:quickenlancer_apk/Projects/all_projects.dart';
 import 'package:quickenlancer_apk/home_page.dart';
+import 'Kyc Verification/kyc_verification.dart';
+import 'Update Profile/tabs/languagelist.dart';
+import 'Update Profile/tabs/portfolio_edit.dart';
+import 'Update Profile/tabs/portfolio_form.dart';
+import 'Update Profile/tabs/update_profile_page.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
+import 'dart:convert';
 
-import 'Projects/all_projects.dart';
-import 'edit_profile_page.dart';
-import 'profilepage.dart';
+import 'api/network/uri.dart';
 
 class Editprofilepage extends StatefulWidget {
   const Editprofilepage({Key? key}) : super(key: key);
@@ -20,129 +32,518 @@ class Editprofilepage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<Editprofilepage> {
-  // List to hold the portfolio itemsint _selectedIndex = 0;
   int _selectedIndex = 4;
+  List<int> portfolioItems = [1];
+  List<int> languagesItems = [1];
 
-  // Add a method to handle the refresh
+  // State variables to store API response data
+  Map<String, dynamic>? profileData;
+  Map<String, dynamic>? basicDetails;
+  List<dynamic>? portfolios;
+  List<dynamic>? languages;
+  List<dynamic>? skills;
+  List<dynamic>? certificates;
+  Map<String, dynamic>? counts;
+  bool _isLoading = true; // Loading state for skeleton
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProfileDetails();
+  }
+
   Future<void> _onRefresh() async {
-    // Simulate a network call or some data update here
-    await Future.delayed(Duration(seconds: 2));
-    // You can update the state or data here after refreshing
+    setState(() => _isLoading = true);
+    await fetchProfileDetails();
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    if (index == 0) {
-      // Check if the 3rd index is selected
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const MyHomePage()), // Navigate to the new page
+    setState(() => _selectedIndex = index);
+    final routes = [
+      MyHomePage(),
+      AllProjects(),
+      Buycallpage(),
+      Buychatpage(),
+      Editprofilepage(),
+    ];
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => routes[index]),
+    );
+  }
+
+  Future<void> fetchProfileDetails() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getString('user_id') ?? '';
+      final String? authToken = prefs.getString('auth_token');
+
+      final url = Uri.parse(URLS().get_profile_details);
+      final body = jsonEncode({'user_id': userId});
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          if (authToken != null) 'Authorization': 'Bearer $authToken',
+        },
+        body: body,
       );
-    }
-    if (index == 1) {
-      // Check if the 3rd index is selected
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const AllProjects()), // Navigate to the new page
-      );
-    }
-    if (index == 2) {
-      // Check if the 3rd index is selected
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const Buycallpage()), // Navigate to the new page
-      );
-    }
-    if (index == 3) {
-      // Check if the 3rd index is selected
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const Buychatpage()), // Navigate to the new page
-      );
-    }
-    if (index == 4) {
-      // Check if the 3rd index is selected
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                Editprofilepage()), // Navigate to the new page
-      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        log('Profile details: $responseData');
+        setState(() {
+          profileData = responseData;
+          basicDetails = responseData['data']['basic_details'];
+          portfolios = responseData['data']['portfolios'];
+          languages = responseData['data']['languages'];
+          skills = responseData['data']['skills'];
+          certificates = responseData['data']['certificates'];
+          counts = responseData['data']['counts'];
+          _isLoading = false;
+        });
+      } else {
+        print('Failed to fetch profile: ${response.statusCode}');
+        setState(() => _isLoading = false);
+      }
+    } catch (e) {
+      print('Error fetching profile: $e');
+      setState(() => _isLoading = false);
     }
   }
 
-  List<int> portfolioItems = [1]; // Start with one item
-  List<int> languagesItems = [1];
-  @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    Widget _buildAbilityIcon(IconData icon, String label) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+  void showDeleteConfirmationDialog(String type, {String? certificateId}) {}
+
+  Future<String> getPresignedUrl(String locOfFile) async {
+    print('Fetching presigned URL for: $locOfFile');
+    final prefs = await SharedPreferences.getInstance();
+
+    final userId = prefs.getString('user_id') ?? '';
+    final String? authToken = prefs.getString('auth_token');
+
+    if (authToken == null || userId.isEmpty) {
+      return 'User not authenticated';
+    }
+
+    final url = Uri.parse(URLS().user_fetch_file);
+    final body = jsonEncode({
+      'user_id': userId,
+      'loc_of_file': locOfFile,
+    });
+
+    final headers = {
+      'Authorization': 'Bearer $authToken',
+      'Content-Type': 'application/json',
+    };
+
+    log('Request Body: $body');
+    print('Request Headers: $headers');
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+      print('Response Status Code: ${response.statusCode}');
+      log('Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return 'Error: ${response.statusCode} - ${response.body}';
+      }
+    } catch (e) {
+      print('Exception: $e');
+      return 'Exception: $e';
+    }
+  }
+
+  Widget _buildSkeletonLoader(double width, double height) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          color: Colors.grey[300],
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSkeletonScreen(double screenWidth, double screenHeight) {
+    final montserrat = GoogleFonts.montserrat().fontFamily;
+    return SingleChildScrollView(
+      child: Stack(
         children: [
-          Icon(icon, color: Colorfile.textColor, size: 12),
-          SizedBox(width: screenWidth * 0.02), // Space between icon and label
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colorfile.textColor,
-              fontFamily: GoogleFonts.montserrat().fontFamily,
+          Container(
+            width: screenWidth,
+            height: screenHeight,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color.fromARGB(255, 235, 202, 220), Color(0xFFB7D7F9)],
+              ),
+            ),
+          ),
+          Positioned(
+            top: screenHeight * 0.08,
+            left: screenWidth * 0.05,
+            child: _buildSkeletonLoader(screenWidth * 0.3, screenWidth * 0.3),
+          ),
+          Positioned(
+            top: screenHeight * 0.16,
+            left: screenWidth * 0.4,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSkeletonLoader(screenWidth * 0.4, 20),
+                SizedBox(height: screenHeight * 0.01),
+                _buildSkeletonLoader(screenWidth * 0.3, 15),
+              ],
+            ),
+          ),
+          Positioned(
+            top: screenHeight * 0.23,
+            left: screenWidth * 0.05,
+            child: _buildSkeletonLoader(screenWidth * 0.25, 32),
+          ),
+          Container(
+            width: screenWidth,
+            margin: EdgeInsets.only(top: screenHeight * 0.15),
+            padding: EdgeInsets.all(screenWidth * 0.05),
+            decoration: BoxDecoration(color: Colors.white),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: screenHeight * 0.15),
+                _buildSkeletonLoader(screenWidth * 0.3, 20),
+                SizedBox(height: screenHeight * 0.01),
+                _buildSkeletonLoader(screenWidth * 0.8, 40),
+                SizedBox(height: screenHeight * 0.02),
+                Divider(color: Color(0xFFD9D9D9), thickness: 1),
+                SizedBox(height: screenHeight * 0.02),
+                _buildSkeletonLoader(screenWidth * 0.3, 20),
+                SizedBox(height: screenHeight * 0.02),
+                GridView.count(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  crossAxisSpacing: screenWidth * 0.05,
+                  mainAxisSpacing: screenHeight * 0.02,
+                  childAspectRatio: 1,
+                  children: List.generate(
+                      6,
+                      (index) => _buildSkeletonLoader(
+                          screenWidth * 0.45, screenWidth * 0.45)),
+                ),
+                SizedBox(height: screenHeight * 0.02),
+                Divider(color: Color(0xFFD9D9D9), thickness: 1),
+                SizedBox(height: screenHeight * 0.02),
+                _buildSkeletonLoader(screenWidth * 0.3, 20),
+                SizedBox(height: screenHeight * 0.02),
+                Column(
+                  children: List.generate(
+                      2,
+                      (index) => Padding(
+                            padding:
+                                EdgeInsets.only(bottom: screenHeight * 0.01),
+                            child: Row(
+                              children: [
+                                _buildSkeletonLoader(
+                                    screenWidth * 0.4, screenWidth * 0.35),
+                                SizedBox(width: screenWidth * 0.05),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildSkeletonLoader(
+                                          screenWidth * 0.3, 20),
+                                      SizedBox(height: screenHeight * 0.01),
+                                      _buildSkeletonLoader(
+                                          screenWidth * 0.4, 40),
+                                      SizedBox(height: screenHeight * 0.01),
+                                      _buildSkeletonLoader(
+                                          screenWidth * 0.25, 32),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                ),
+                SizedBox(height: screenHeight * 0.03),
+                _buildSkeletonLoader(screenWidth * 0.9, 40),
+                SizedBox(height: screenHeight * 0.02),
+                Divider(color: Color(0xFFD9D9D9), thickness: 1),
+                SizedBox(height: screenHeight * 0.02),
+                _buildSkeletonLoader(screenWidth * 0.3, 20),
+                SizedBox(height: screenHeight * 0.02),
+                Row(
+                  children: [
+                    _buildSkeletonLoader(12, 12),
+                    SizedBox(width: screenWidth * 0.02),
+                    _buildSkeletonLoader(screenWidth * 0.2, 15),
+                    SizedBox(width: screenWidth * 0.05),
+                    _buildSkeletonLoader(12, 12),
+                    SizedBox(width: screenWidth * 0.02),
+                    _buildSkeletonLoader(screenWidth * 0.2, 15),
+                  ],
+                ),
+                SizedBox(height: screenHeight * 0.02),
+                Column(
+                  children: List.generate(
+                      2,
+                      (index) => Padding(
+                            padding:
+                                EdgeInsets.only(bottom: screenHeight * 0.01),
+                            child: Row(
+                              children: [
+                                _buildSkeletonLoader(49, 49),
+                                SizedBox(width: screenWidth * 0.05),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildSkeletonLoader(
+                                          screenWidth * 0.3, 20),
+                                      SizedBox(height: screenHeight * 0.01),
+                                      _buildSkeletonLoader(
+                                          screenWidth * 0.4, 15),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                ),
+                SizedBox(height: screenHeight * 0.03),
+                _buildSkeletonLoader(screenWidth * 0.9, 40),
+                SizedBox(height: screenHeight * 0.02),
+                Divider(color: Color(0xFFD9D9D9), thickness: 1),
+                SizedBox(height: screenHeight * 0.02),
+                _buildSkeletonLoader(screenWidth * 0.3, 20),
+                SizedBox(height: screenHeight * 0.02),
+                _buildSkeletonLoader(screenWidth * 0.9, 80),
+                SizedBox(height: screenHeight * 0.02),
+                Column(
+                  children: List.generate(
+                      2,
+                      (index) => Padding(
+                            padding:
+                                EdgeInsets.only(bottom: screenHeight * 0.02),
+                            child: _buildSkeletonLoader(screenWidth * 0.9, 60),
+                          )),
+                ),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final montserrat = GoogleFonts.montserrat().fontFamily;
+    final textColor = Colorfile.textColor;
+    final currency = basicDetails?['currency'] as String? ?? 'INR';
+
+    if (_isLoading) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Update Profile',
+            style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              color: textColor,
+            ),
+          ),
+          backgroundColor: Colors.white,
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(right: 15),
+              child: _buildSkeletonLoader(80, 32),
+            ),
+          ],
+        ),
+        body: _buildSkeletonScreen(screenWidth, screenHeight),
+        bottomNavigationBar: AnimatedSwitcher(
+          duration: Duration(milliseconds: 300),
+          child: MyBottomBar(
+            key: ValueKey<int>(_selectedIndex),
+            selectedIndex: _selectedIndex,
+            onItemTapped: _onItemTapped,
+          ),
+        ),
       );
     }
+    String truncateWithEllipsis(String text, int maxLength) {
+      if (text.length <= maxLength) {
+        return text;
+      }
+      return '${text.substring(0, maxLength - 3)}...';
+    }
+
+    final countItems = [
+      {
+        'name': 'Skills',
+        'key': 'skills_count',
+        'description': 'Total number of skills listed in your profile.',
+      },
+      {
+        'name': 'Proposals Sent',
+        'key': 'proposal_sent_count',
+        'description': 'Number of project proposals you have submitted.',
+      },
+      {
+        'name': 'Projects Posted',
+        'key': 'project_posted_count',
+        'description': 'Total projects you have posted.',
+      },
+      {
+        'name': 'Projects Received',
+        'key': 'received_project_count',
+        'description': 'Projects assigned to you.',
+      },
+      {
+        'name': 'Projects Proposed',
+        'key': 'proposed_project_count',
+        'description': 'Projects you have proposed to work on.',
+      },
+      {
+        'name': 'Connections',
+        'key': 'connection_count',
+        'description': 'Total connections in your network.',
+      },
+    ];
+
+    Widget _buildAbilityIcon(IconData icon, String label) => Row(
+          children: [
+            Icon(icon, color: textColor, size: 12),
+            SizedBox(width: screenWidth * 0.02),
+            Text(
+              label,
+              style: TextStyle(
+                  fontSize: 12, color: textColor, fontFamily: montserrat),
+            ),
+          ],
+        );
+
+    Widget _sectionTitle(String title) => Text(
+          title,
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: textColor,
+            fontFamily: montserrat,
+          ),
+        );
+
+    Widget _divider() => Divider(color: Color(0xFFD9D9D9), thickness: 1);
+
+    Widget _addMoreButton(String section) => DottedBorder(
+          color: Color(0xFFD3DFED),
+          strokeWidth: 2,
+          dashPattern: [6, 3],
+          borderType: BorderType.RRect,
+          radius: Radius.circular(5),
+          child: TextButton(
+            onPressed: () {
+              if (section == 'portfolio') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UpdateProfilePage(initialTab: 2),
+                  ),
+                );
+              } else if (section == 'language') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UpdateProfilePage(initialTab: 3),
+                  ),
+                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => LanguageListScreen(
+                //         // 👈 separate action
+                //         ),
+                //   ),
+                // );
+              }
+            },
+            style: TextButton.styleFrom(
+              backgroundColor: Color(0xFFF5F7FA),
+              padding: EdgeInsets.symmetric(
+                vertical: screenHeight * 0.01,
+                horizontal: screenWidth * 0.05,
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Color(0xFFD3DFED)),
+                  child: Icon(Icons.add,
+                      color: textColor, size: screenWidth * 0.06),
+                ),
+                Text(
+                  'Add More',
+                  style: TextStyle(
+                    color: textColor,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: montserrat,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Update Profile',
           style: GoogleFonts.montserrat(
-            // Use GoogleFonts here
             fontWeight: FontWeight.w600,
             fontSize: 18,
-            color: Colorfile.textColor,
+            color: textColor,
           ),
         ),
-        backgroundColor: const Color(0xFFFFFFFF),
+        backgroundColor: Colors.white,
         actions: [
           Padding(
-            padding: const EdgeInsets.only(
-                right: 15.0), // Adjust this value as needed
+            padding: EdgeInsets.only(right: 15),
             child: ElevatedButton(
               onPressed: () {
-                // Add your verification logic here
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => KYCVerificationPage()),
+                );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFFFFFF),
+                backgroundColor: Colors.white,
                 side: BorderSide(color: Color(0xFF466AA5)),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                padding: EdgeInsets.symmetric(
-                    vertical: 6.0,
-                    horizontal:
-                        12.0), // Reduce vertical padding for less height
-                minimumSize: Size(80, 32), // Set a specific height if needed
+                    borderRadius: BorderRadius.circular(4)),
+                padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                minimumSize: Size(80, 32),
               ),
-              child: Text(
-                'Verify',
-                style: TextStyle(
-                  color: Color(0xFF466AA5),
-                ),
-              ),
+              child: Text('Verify', style: TextStyle(color: Color(0xFF466AA5))),
             ),
           ),
         ],
@@ -162,7 +563,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                       end: Alignment.bottomRight,
                       colors: [
                         Color.fromARGB(255, 235, 202, 220),
-                        Color(0xFFB7D7F9),
+                        Color(0xFFB7D7F9)
                       ],
                     ),
                   ),
@@ -171,50 +572,25 @@ class _ProfilePageState extends State<Editprofilepage> {
                   width: screenWidth,
                   margin: EdgeInsets.only(top: screenHeight * 0.15),
                   padding: EdgeInsets.all(screenWidth * 0.05),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    // borderRadius: BorderRadius.only(
-                    //   topLeft: Radius.circular(30),
-                    //   topRight: Radius.circular(30),
-                    // ),
-                  ),
+                  decoration: BoxDecoration(color: Colors.white),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        height: screenHeight * 0.15,
+                      SizedBox(height: screenHeight * 0.15),
+                      _sectionTitle('Profile Overview :'),
+                      SizedBox(height: screenHeight * 0.01),
+                      Text(
+                        basicDetails?['profile_description'] as String? ??
+                            'I am web Developer and Designer also handling experience of multiple project...',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black54,
+                            fontFamily: montserrat),
                       ),
-                      Container(
-                        padding: EdgeInsets.only(left: screenWidth * 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Profile Overview :',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: Colorfile.textColor,
-                                fontFamily: GoogleFonts.montserrat().fontFamily,
-                              ),
-                            ),
-                            SizedBox(height: screenHeight * 0.01),
-                            Text(
-                              'I am web Developer and Designer also handling experience of multiple project. I am web Developer and Designer also handling experience of multiple project.',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.black54,
-                                fontFamily: GoogleFonts.montserrat().fontFamily,
-                              ),
-                            ),
-                            SizedBox(height: screenHeight * 0.02),
-                            Divider(
-                              color: Color(0xFFD9D9D9),
-                              thickness: 1,
-                            ),
-                          ],
-                        ),
-                      ),
+                      SizedBox(height: screenHeight * 0.02),
+                      _divider(),
+                      SizedBox(height: screenHeight * 0.02),
+                      _sectionTitle('Skills Overview :'),
                       SizedBox(height: screenHeight * 0.02),
                       GridView.builder(
                         shrinkWrap: true,
@@ -225,93 +601,91 @@ class _ProfilePageState extends State<Editprofilepage> {
                           mainAxisSpacing: screenHeight * 0.02,
                           childAspectRatio: 1,
                         ),
-                        itemCount: 6,
+                        itemCount: countItems.length,
                         itemBuilder: (context, index) {
+                          final item = countItems[index];
+                          final countValue = counts != null
+                              ? counts![item['key']]?.toString() ?? '0'
+                              : '0';
                           return Container(
                             padding: EdgeInsets.all(screenWidth * 0.002),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFFE5ACCB),
-                                  Color(0xFFB7D7F9),
-                                ],
+                                colors: [Color(0xFFE5ACCB), Color(0xFFB7D7F9)],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
                             ),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: const Color(0xFFF5F7FA),
+                                color: Color(0xFFF5F7FA),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              padding: EdgeInsets.all(screenWidth * 0.03),
+                              padding: EdgeInsets.all(screenWidth * 0.04),
                               child: Stack(
                                 children: [
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        'Skills ${index + 1}',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colorfile.textColor,
-                                          fontFamily: GoogleFonts.montserrat()
-                                              .fontFamily,
-                                        ),
-                                      ),
-                                      SizedBox(height: screenHeight * 0.01),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 20.0),
-                                        child: Text(
-                                          'Your skills represent the capacity to accomplish milestone competently in various areas ${index + 1}',
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            color: Colors.black54,
-                                            fontFamily: GoogleFonts.montserrat()
-                                                .fontFamily,
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            width: screenWidth * 0.2,
+                                            child: Text(
+                                              item['name'] as String,
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.bold,
+                                                color: textColor,
+                                                fontFamily: montserrat,
+                                              ),
+                                              softWrap: true,
+                                            ),
                                           ),
-                                          maxLines:
-                                              6, // Limit the number of lines
-                                          overflow: TextOverflow
-                                              .ellipsis, // Add ellipsis (...) if text overflows
+                                          Container(
+                                            width: screenWidth * 0.08,
+                                            height: screenWidth * 0.08,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  Color(0xFFE5ACCB),
+                                                  Color(0xFFB7D7F9)
+                                                ],
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                countValue,
+                                                style: TextStyle(
+                                                  fontSize: screenWidth * 0.04,
+                                                  color: Colors.black,
+                                                  fontFamily: montserrat,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: screenHeight * 0.015),
+                                      Text(
+                                        item['description'] as String,
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: Colors.black54,
+                                          fontFamily: montserrat,
                                         ),
+                                        maxLines: 5,
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
-                                  ),
-                                  Positioned(
-                                    top: screenHeight * 0.0,
-                                    right: screenWidth * 0.00,
-                                    child: Container(
-                                      width: screenWidth * 0.08,
-                                      height: screenWidth * 0.08,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            Color(0xFFE5ACCB),
-                                            Color(0xFFB7D7F9),
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          '${index + 1}',
-                                          style: TextStyle(
-                                            fontSize: screenWidth * 0.04,
-                                            color: Colors.black,
-                                            fontFamily: GoogleFonts.montserrat()
-                                                .fontFamily,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
                                   ),
                                 ],
                               ),
@@ -320,801 +694,652 @@ class _ProfilePageState extends State<Editprofilepage> {
                         },
                       ),
                       SizedBox(height: screenHeight * 0.02),
-                      Divider(
-                        color: Color(0xFFD9D9D9),
-                        thickness: 1,
-                      ),
+                      _divider(),
                       SizedBox(height: screenHeight * 0.02),
-                      // Portfolio Section with dynamic boxes
-                      Text(
-                        'Portfolio:',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colorfile.textColor,
-                          fontFamily: GoogleFonts.montserrat().fontFamily,
-                        ),
-                      ),
+                      _sectionTitle('Portfolio:'),
                       SizedBox(height: screenHeight * 0.02),
                       Column(
-                        children: portfolioItems.map((item) {
-                          return Container(
-                            padding: EdgeInsets.all(screenWidth * 0.02),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  spreadRadius: 2,
-                                  blurRadius: 5,
-                                ),
-                              ],
-                            ),
-                            margin:
-                                EdgeInsets.only(bottom: screenHeight * 0.01),
-                            child: Row(
-                              children: [
-                                // Left side - Square Image
-                                Container(
-                                  width: screenWidth * 0.4,
-                                  height: screenWidth * 0.35,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                          'assets/test.jpg'), // Use AssetImage
-                                      fit: BoxFit.cover,
+                        children: portfolios?.map((item) {
+                              final imagePathMap = profileData != null &&
+                                      profileData!['data'] != null &&
+                                      profileData!['data']['image_path'] is Map
+                                  ? profileData!['data']['image_path']
+                                      as Map<String, dynamic>
+                                  : null;
+                              final portfolioPath = imagePathMap != null &&
+                                      imagePathMap['portfolio_path'] is String
+                                  ? imagePathMap['portfolio_path'] as String
+                                  : 'images/portfolio/';
+                              final file = item['file'] as String?;
+                              final portfolioImageFuture =
+                                  file != null && file.isNotEmpty
+                                      ? getPresignedUrl('$portfolioPath$file')
+                                      : Future.value('assets/test.jpg');
+
+                              // Variable to hold the image URL
+                              String? imageUrl;
+
+                              return Container(
+                                padding: EdgeInsets.all(screenWidth * 0.02),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      spreadRadius: 2,
+                                      blurRadius: 5,
                                     ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
+                                  ],
                                 ),
+                                margin: EdgeInsets.only(
+                                    bottom: screenHeight * 0.01),
+                                child: Row(
+                                  children: [
+                                    FutureBuilder<String>(
+                                      future: portfolioImageFuture,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return _buildSkeletonLoader(
+                                              screenWidth * 0.4,
+                                              screenWidth * 0.35);
+                                        }
 
-                                SizedBox(width: screenWidth * 0.05),
-
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // Title and Subtitle Row with Edit Icon
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          // Title
-                                          Text(
-                                            'Test',
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                              fontFamily:
-                                                  GoogleFonts.montserrat()
-                                                      .fontFamily,
+                                        if (snapshot.hasError ||
+                                            !snapshot.hasData) {
+                                          imageUrl =
+                                              null; // Reset imageUrl on error
+                                          return Container(
+                                            width: screenWidth * 0.4,
+                                            height: screenWidth * 0.35,
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[
+                                                  300], // Placeholder color
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                             ),
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.image_not_supported,
+                                                size: 40,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          );
+                                        }
+
+                                        try {
+                                          final responseData =
+                                              jsonDecode(snapshot.data!);
+                                          if (responseData is Map &&
+                                              responseData['status'] ==
+                                                  'true' &&
+                                              responseData['data'] is String) {
+                                            imageUrl = responseData[
+                                                'data']; // Set imageUrl
+                                          } else {
+                                            imageUrl = null;
+                                          }
+                                        } catch (e) {
+                                          print(
+                                              'Error parsing presigned URL: $e');
+                                          imageUrl = null;
+                                        }
+
+                                        if (imageUrl == null ||
+                                            imageUrl!.isEmpty) {
+                                          return Container(
+                                            width: screenWidth * 0.4,
+                                            height: screenWidth * 0.35,
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[300],
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.image_not_supported,
+                                                size: 40,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          );
+                                        }
+
+                                        return Container(
+                                          width: screenWidth * 0.4,
+                                          height: screenWidth * 0.35,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: NetworkImage(imageUrl!),
+                                              fit: BoxFit.cover,
+                                              onError: (exception,
+                                                      stackTrace) =>
+                                                  AssetImage('assets/test.jpg'),
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                           ),
-                                          // Edit Icon
-                                          IconButton(
-                                            onPressed: () {
-                                              // Handle Edit action
+                                        );
+                                      },
+                                    ),
+                                    SizedBox(width: screenWidth * 0.05),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                item['name'] as String? ?? '',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: montserrat,
+                                                ),
+                                              ),
+                                              IconButton(
+                                                onPressed: () {
+                                                  // Navigate to PortfolioForm for editing
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          PortfolioFormEdit(
+                                                        portfolioId: item['id']
+                                                            ?.toString(),
+                                                        imageUrl: imageUrl ??
+                                                            '', // Pass imageUrl
+                                                        projectName:
+                                                            item['name']
+                                                                as String?,
+                                                        projectUrl: item['url']
+                                                                as String? ??
+                                                            '',
+                                                        projectSkill: item[
+                                                                    'skills']
+                                                                is List
+                                                            ? (item['skills']
+                                                                        as List)
+                                                                    .isNotEmpty
+                                                                ? item['skills']
+                                                                            [0][
+                                                                        'skill']
+                                                                    as String?
+                                                                : null
+                                                            : item['skills']
+                                                                as String?,
+                                                        otherSkills:
+                                                            item['other_skills']
+                                                                    as String? ??
+                                                                '',
+                                                        projectDescription:
+                                                            item['description']
+                                                                as String?,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                icon: Icon(
+                                                  CupertinoIcons
+                                                      .square_pencil_fill,
+                                                  color: textColor,
+                                                  size: screenWidth * 0.05,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Html(
+                                            data: truncateWithEllipsis(
+                                                item['description']
+                                                        as String? ??
+                                                    'Description not available',
+                                                100),
+                                            style: {
+                                              '*': Style(
+                                                fontSize: FontSize(12),
+                                                color: Colors.grey,
+                                                fontFamily: montserrat,
+                                              ),
+                                              'p': Style(margin: Margins.zero),
+                                              'ul': Style(
+                                                margin: Margins(
+                                                  left: Margin(16),
+                                                  top: Margin(8),
+                                                  bottom: Margin(8),
+                                                ),
+                                              ),
+                                              'li': Style(
+                                                  margin: Margins(
+                                                      bottom: Margin(4))),
                                             },
-                                            icon: Icon(
-                                              CupertinoIcons.square_pencil_fill,
-                                              color: Colorfile.textColor,
-                                              size: screenWidth * 0.05,
+                                            shrinkWrap: true,
+                                          ),
+                                          SizedBox(height: 15),
+                                          OutlinedButton(
+                                            onPressed: () {
+                                              // Navigate to PortfolioForm for viewing
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PortfolioFormEdit(
+                                                    portfolioId:
+                                                        item['id']?.toString(),
+                                                    projectName:
+                                                        item['name'] as String?,
+                                                    imageUrl: imageUrl ??
+                                                        '', // Pass imageUrl
+                                                    projectUrl: item['url']
+                                                            as String? ??
+                                                        '',
+                                                    projectSkill: item['skills']
+                                                            is List
+                                                        ? (item['skills']
+                                                                    as List)
+                                                                .isNotEmpty
+                                                            ? item['skills'][0]
+                                                                    ['skill']
+                                                                as String?
+                                                            : null
+                                                        : item['skills']
+                                                            as String?,
+                                                    otherSkills:
+                                                        item['other_skills']
+                                                                as String? ??
+                                                            '',
+                                                    projectDescription:
+                                                        item['description']
+                                                            as String?,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            style: OutlinedButton.styleFrom(
+                                              backgroundColor:
+                                                  Color(0xFFF4F6F8),
+                                              side: BorderSide(
+                                                  color: textColor, width: 1),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 6),
+                                              minimumSize:
+                                                  Size(screenWidth * 0.25, 32),
+                                            ),
+                                            child: Text(
+                                              'View',
+                                              style: TextStyle(
+                                                fontSize: screenWidth * 0.04,
+                                                color: textColor,
+                                                fontFamily: montserrat,
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                      // Subtitle
-                                      Text(
-                                        'Lorem Ipsum is simply dummy text',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                          fontFamily: GoogleFonts.montserrat()
-                                              .fontFamily,
-                                        ),
-                                      ),
-                                      SizedBox(height: 15),
-                                      OutlinedButton(
-                                        onPressed: () {
-                                          // Handle View action
-                                        },
-                                        child: Text(
-                                          'View',
-                                          style: TextStyle(
-                                            fontSize: screenWidth * 0.04,
-                                            color: Colorfile.textColor,
-                                            fontFamily: GoogleFonts.montserrat()
-                                                .fontFamily,
-                                          ),
-                                        ),
-                                        style: OutlinedButton.styleFrom(
-                                          backgroundColor: Color(
-                                              0xFFF4F6F8), // Background color
-                                          side: BorderSide(
-                                            color: Colorfile.textColor,
-                                            width: 1, // Border color and width
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                4), // Border radius
-                                          ),
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: 6.0,
-                                            horizontal: screenWidth * 0,
-                                          ),
-                                          minimumSize:
-                                              Size(screenWidth * 0.25, 32),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
+                              );
+                            }).toList() ??
+                            [],
                       ),
                       SizedBox(height: screenHeight * 0.03),
-
-                      DottedBorder(
-                        color: Color(0xFFD3DFED), // Dotted border color
-                        strokeWidth: 2, // Border width
-                        dashPattern: [
-                          6,
-                          3
-                        ], // Dotted pattern (length and space)
-                        borderType:
-                            BorderType.RRect, // Rounded rectangle border
-                        radius: Radius.circular(5), // Border radius
-                        child: TextButton(
-                          onPressed: () {
-                            // Add a new portfolio item when clicked
-                            setState(() {
-                              portfolioItems.add(portfolioItems.length + 1);
-                            });
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor:
-                                Color(0xFFF5F7FA), // Updated background color
-                            padding: EdgeInsets.symmetric(
-                              vertical: screenHeight * 0.01,
-                              horizontal: screenWidth *
-                                  0.05, // Added horizontal padding
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            shadowColor:
-                                Colors.transparent, // No shadow for flat button
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(8), // Circle padding
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0xFFD3DFED), // Circle color
-                                ),
-                                child: Icon(
-                                  Icons.add,
-                                  color: Colorfile.textColor, // Icon color
-                                  size: screenWidth * 0.06,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10), // Padding inside the text
-                                child: Text(
-                                  'Add More',
-                                  style: TextStyle(
-                                    color: Colorfile.textColor, // Text color
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily:
-                                        GoogleFonts.montserrat().fontFamily,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      _addMoreButton('portfolio'),
                       SizedBox(height: screenHeight * 0.02),
-                      Divider(
-                        color: Color(0xFFD9D9D9),
-                        thickness: 1,
-                      ),
+                      _divider(),
                       SizedBox(height: screenHeight * 0.02),
-                      Text(
-                        'Language Known :',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colorfile.textColor,
-                          fontFamily: GoogleFonts.montserrat().fontFamily,
-                        ),
-                      ),
+                      _sectionTitle('Language Known :'),
+                      SizedBox(height: screenHeight * 0.02),
                       Column(
+                        children: languages?.map((item) {
+                              final known = (item['known'] as String?)
+                                  ?.split(',')
+                                  .map((e) => e.trim())
+                                  .toList();
+                              final proficientValue = item['proficient'] != null
+                                  ? (item['proficient'] is num
+                                      ? item['proficient'] as num
+                                      : double.tryParse(
+                                          item['proficient'].toString()))
+                                  : 0;
+                              return Container(
+                                padding: EdgeInsets.all(screenWidth * 0.03),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                      color: Color(0xFFD9D9D9), width: 1.5),
+                                ),
+                                margin: EdgeInsets.only(
+                                    bottom: screenHeight * 0.01),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 49,
+                                      height: 49,
+                                      child: CircularProgressIndicator(
+                                        value: proficientValue != null
+                                            ? proficientValue / 100
+                                            : 0,
+                                        strokeWidth: 6,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.green),
+                                      ),
+                                    ),
+                                    SizedBox(width: screenWidth * 0.05),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            item['language'] as String? ??
+                                                'English',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w600,
+                                              fontFamily: montserrat,
+                                            ),
+                                          ),
+                                          SizedBox(height: screenHeight * 0.01),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment
+                                                .start, // Align items to start with no gap
+                                            children: [
+                                              if (known != null &&
+                                                  known.contains('1'))
+                                                _buildAbilityIcon(
+                                                    Icons
+                                                        .remove_red_eye_outlined,
+                                                    'Read'),
+                                              if (known != null &&
+                                                  known.contains('2'))
+                                                _buildAbilityIcon(
+                                                    Icons
+                                                        .mode_edit_outline_outlined,
+                                                    'Write'),
+                                              if (known != null &&
+                                                  known.contains('3'))
+                                                _buildAbilityIcon(
+                                                    Icons.mic_none_outlined,
+                                                    'Speak'),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList() ??
+                            [],
+                      ),
+                      SizedBox(height: screenHeight * 0.03),
+                      _addMoreButton('language'),
+                      SizedBox(height: screenHeight * 0.02),
+                      _divider(),
+                      SizedBox(height: screenHeight * 0.02),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // Other widgets like 'Languages Known' go here
-
-                          SizedBox(height: screenHeight * 0.02),
-
-                          // Color block with percentage ranges
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              // 0% - 25%
-                              Container(
-                                width: 12,
-                                height: 12,
-                                color: Color(0xFFEB5757), // Red for 0% - 25%
+                          _sectionTitle('Skills & Price :'),
+                          Padding(
+                            padding: EdgeInsets.only(top: 4),
+                            child: IconButton(
+                              icon: Image.asset(
+                                'assets/Group 237842.png',
+                                height: 25,
+                                width: 25,
+                                fit: BoxFit.contain,
                               ),
-                              SizedBox(
-                                  width: screenWidth *
-                                      0.02), // Space between color block and text
-                              Text(
-                                '0% - 25%',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 10,
-                                  fontFamily:
-                                      GoogleFonts.montserrat().fontFamily,
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      UpdateProfilePage(initialTab: 1),
                                 ),
                               ),
-                              SizedBox(
-                                  width: screenWidth *
-                                      0.05), // Space between blocks
-                              // 26% - 50%
-                              Container(
-                                width: 12,
-                                height: 12,
-                                color:
-                                    Color(0xFFF2C94C), // Yellow for 26% - 50%
-                              ),
-                              SizedBox(
-                                  width: screenWidth *
-                                      0.02), // Space between color block and text
-                              Text(
-                                '26% - 50%',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 10,
-                                  fontFamily:
-                                      GoogleFonts.montserrat().fontFamily,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
                       SizedBox(height: screenHeight * 0.02),
-                      Column(
-                        children: languagesItems.map((item) {
-                          return Container(
-                            padding: EdgeInsets.all(screenWidth * 0.03),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Color(0xFFD9D9D9), // Border color
-                                width: 1.5, // Border width
-                              ),
-                            ),
-                            margin:
-                                EdgeInsets.only(bottom: screenHeight * 0.01),
-                            child: Row(
-                              children: [
-                                // Left side - Square Image (Placeholder)
-                                Container(
-                                  width:
-                                      49, // Adjust the size as per your requirement
-                                  height:
-                                      49, // Adjust the size as per your requirement
-
-                                  child: CircularProgressIndicator(
-                                    value: 0.75, // Set the progress value here
-                                    strokeWidth:
-                                        6, // Reduced stroke width for a smaller progress indicator
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.green),
-                                  ),
-                                ),
-
-                                SizedBox(width: screenWidth * 0.05),
-
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // Language Name Row with Edit Icon
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          // Language Name
-                                          Text(
-                                            'English',
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily:
-                                                  GoogleFonts.montserrat()
-                                                      .fontFamily,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: screenHeight * 0.01),
-                                      // Abilities (Read, Write, Speak)
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          _buildAbilityIcon(
-                                              Icons.remove_red_eye_outlined,
-                                              'Read'),
-                                          _buildAbilityIcon(
-                                              Icons.mode_edit_outline_outlined,
-                                              'Write'),
-                                          _buildAbilityIcon(
-                                              Icons.mic_none_outlined, 'Speak'),
-                                        ],
-                                      ),
-                                      // Circular Progress Indicator for Learning Progress
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                      SizedBox(height: screenHeight * 0.03),
-                      DottedBorder(
-                        color: Color(0xFFD3DFED), // Dotted border color
-                        strokeWidth: 2, // Border width
-                        dashPattern: [
-                          6,
-                          3
-                        ], // Dotted pattern (length and space)
-                        borderType:
-                            BorderType.RRect, // Rounded rectangle border
-                        radius: Radius.circular(5), // Border radius
-                        child: TextButton(
-                          onPressed: () {
-                            // Add a new portfolio item when clicked
-                            setState(() {
-                              languagesItems.add(languagesItems.length + 1);
-                            });
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor:
-                                Color(0xFFF5F7FA), // Updated background color
-                            padding: EdgeInsets.symmetric(
-                              vertical: screenHeight * 0.01,
-                              horizontal: screenWidth *
-                                  0.05, // Added horizontal padding
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            shadowColor:
-                                Colors.transparent, // No shadow for flat button
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Table(
+                        border: TableBorder.all(
+                          color: Color(0xFFD9D9D9),
+                          width: 1,
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                        ),
+                        children: [
+                          TableRow(
+                            decoration: BoxDecoration(color: Color(0xFFF5F7FA)),
                             children: [
-                              Container(
-                                padding: EdgeInsets.all(8), // Circle padding
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0xFFD3DFED), // Circle color
-                                ),
-                                child: Icon(
-                                  Icons.add,
-                                  color: Colorfile.textColor, // Icon color
-                                  size: screenWidth * 0.06,
+                              Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Text(
+                                  'Skill',
+                                  style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                    color: textColor,
+                                  ),
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10), // Padding inside the text
+                                padding: EdgeInsets.all(8),
                                 child: Text(
-                                  'Add More',
-                                  style: TextStyle(
-                                    color: Colorfile.textColor, // Text color
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily:
-                                        GoogleFonts.montserrat().fontFamily,
-                                    fontSize: screenWidth * 0.04,
+                                  'Cost',
+                                  style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                    color: textColor,
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      Divider(
-                        color: Color(0xFFD9D9D9),
-                        thickness: 1,
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      Text(
-                        'Skills & Price :',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colorfile.textColor,
-                          fontFamily: GoogleFonts.montserrat().fontFamily,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-// Table Container
-
-                      Container(
-                        // decoration: BoxDecoration(
-                        //   border: Border.all(color: Color(0xFFD9D9D9), width: 1),
-                        //   borderRadius: BorderRadius.circular(8),
-                        // ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Table(
-                              border: TableBorder.all(
-                                color: Color(0xFFD9D9D9),
-                                width: 1,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                              ),
-                              children: [
-                                TableRow(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFF5F7FA),
-                                  ),
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'Skill',
-                                        style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                          color: Colorfile.textColor,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'Cost',
-                                        style: GoogleFonts.montserrat(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                          color: Colorfile.textColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                TableRow(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'Bootstrap',
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 11,
-                                          color: Colorfile.textColor,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        '\USD 20',
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 11,
-                                          color: Colorfile.textColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                TableRow(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'Paid social media advertising',
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 11,
-                                          color: Colorfile.textColor,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        '\USD 15',
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 11,
-                                          color: Colorfile.textColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                TableRow(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'Hibernate',
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 11,
-                                          color: Colorfile.textColor,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        '\USD 25',
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 11,
-                                          color: Colorfile.textColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                                border: Border.all(
-                                  color: Color(0xFFD9D9D9),
-                                  width: 1,
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  // Table to separate the certificate title and add a line below it
-                                  Table(
-                                    columnWidths: {
-                                      0: FixedColumnWidth(MediaQuery.of(context)
-                                              .size
-                                              .width *
-                                          0.7), // Adjust width with MediaQuery
-                                      1: FixedColumnWidth(
-                                          MediaQuery.of(context).size.width *
-                                              0.3),
-                                    },
+                          ...?skills
+                              ?.where((skill) =>
+                                  skill['skill'] != null &&
+                                  skill['skill'] is String)
+                              .map((skill) => TableRow(
                                     children: [
-                                      TableRow(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5.0, vertical: 8.0),
-                                            child: Text(
-                                              'Certificate',
-                                              style: GoogleFonts.montserrat(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 13,
-                                                color: Colorfile.textColor,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                top:
-                                                    4.0), // Add top padding to give some space above the image
-                                            child: Image.asset(
-                                              'assets/Group 237842.png',
-                                              height:
-                                                  25, // Set the height of the image
-                                              width:
-                                                  50, // Set the width of the image
-                                              fit: BoxFit
-                                                  .contain, // Ensures the image fits inside the specified size
-                                            ),
-                                          ),
-                                        ],
+                                      Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: Text(
+                                          skill['skill'] as String,
+                                          style: GoogleFonts.montserrat(
+                                              fontSize: 11, color: textColor),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(8),
+                                        child: Text(
+                                          '$currency ${skill['rate'] ?? 'N/A'}',
+                                          style: GoogleFonts.montserrat(
+                                              fontSize: 11, color: textColor),
+                                        ),
                                       ),
                                     ],
-                                  ),
-                                  Divider(
-                                    // This Divider is outside of the Table but inside the Column
-                                    color: Color(0xFFD9D9D9),
-                                    height: 1,
-                                    thickness: 1,
-                                    indent: 0,
-                                    endIndent: 0,
-                                  ),
-                                  Table(
-                                    columnWidths: {
-                                      0: FixedColumnWidth(MediaQuery.of(context)
-                                              .size
-                                              .width *
-                                          0.7), // Adjust width with MediaQuery
-                                      1: FixedColumnWidth(
-                                          MediaQuery.of(context).size.width *
-                                              0.3),
-                                    },
+                                  ))
+                              .toList(),
+                        ],
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
+                      ...[
+                        {
+                          'title': 'Certificate',
+                          'data': certificates ?? <dynamic>[],
+                        },
+                        {
+                          'title': 'Experience in Year',
+                          'data': basicDetails != null
+                              ? [basicDetails!['experience']]
+                              : <dynamic>[],
+                        },
+                      ].map((section) {
+                        final isCertificate = section['title'] == 'Certificate';
+                        final data = section['data'] as List<dynamic>;
+                        return Container(
+                          margin: EdgeInsets.only(bottom: screenHeight * 0.02),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            border:
+                                Border.all(color: Color(0xFFD9D9D9), width: 1),
+                          ),
+                          child: Column(
+                            children: [
+                              Table(
+                                columnWidths: {
+                                  0: FixedColumnWidth(screenWidth * 0.7),
+                                  1: FixedColumnWidth(screenWidth * 0.3),
+                                },
+                                children: [
+                                  TableRow(
                                     children: [
-                                      TableRow(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5.0, vertical: 8.0),
-                                            child: Text(
-                                              'Web Designing',
-                                              style: GoogleFonts.montserrat(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 11,
-                                                color: Colorfile.textColor,
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 5, vertical: 8),
+                                        child: Text(
+                                          section['title'] as String,
+                                          style: GoogleFonts.montserrat(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13,
+                                            color: textColor,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 4),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UpdateProfilePage(
+                                                  initialTab: isCertificate
+                                                      ? 4
+                                                      : 5, // 👈 separate action
+                                                ),
                                               ),
-                                            ),
+                                            );
+                                          },
+                                          child: Image.asset(
+                                            'assets/Group 237842.png',
+                                            height: 25,
+                                            width: 50,
+                                            fit: BoxFit.contain,
                                           ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                top:
-                                                    4.0), // Add top padding to give some space above the image
-                                            child: Image.asset(
-                                              'assets/trash 1.png',
-                                              height:
-                                                  20, // Set the height of the image
-                                              width:
-                                                  20, // Set the width of the image
-                                              fit: BoxFit
-                                                  .contain, // Ensures the image fits inside the specified size
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                                border: Border.all(
-                                  color: Color(0xFFD9D9D9),
-                                  width: 1,
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  // Table to separate the certificate title and add a line below it
-                                  Table(
-                                    columnWidths: {
-                                      0: FixedColumnWidth(MediaQuery.of(context)
-                                              .size
-                                              .width *
-                                          0.7), // Adjust width with MediaQuery
-                                      1: FixedColumnWidth(
-                                          MediaQuery.of(context).size.width *
-                                              0.3),
-                                    },
-                                    children: [
-                                      TableRow(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5.0, vertical: 8.0),
-                                            child: Text(
-                                              'Experience in Year',
-                                              style: GoogleFonts.montserrat(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize:
-                                                    13, // Adjust font size with MediaQuery
-                                                color: Colorfile.textColor,
+                              _divider(),
+                              Table(
+                                columnWidths: {
+                                  0: FixedColumnWidth(screenWidth * 0.7),
+                                  1: FixedColumnWidth(screenWidth * 0.3),
+                                },
+                                children: isCertificate
+                                    ? data.map<TableRow>((cert) {
+                                        return TableRow(
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 5, vertical: 8),
+                                              child: Text(
+                                                cert['name'] as String? ?? '',
+                                                style: GoogleFonts.montserrat(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 11,
+                                                  color: textColor,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                top:
-                                                    4.0), // Add top padding to give some space above the image
-                                            child: Image.asset(
-                                              'assets/Group 237842.png',
-                                              height:
-                                                  20, // Set the height of the image
-                                              width:
-                                                  20, // Set the width of the image
-                                              fit: BoxFit
-                                                  .contain, // Ensures the image fits inside the specified size
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Divider(
-                                    // This Divider is outside of the Table but inside the Column
-                                    color: Color(0xFFD9D9D9),
-                                    height: 1,
-                                    thickness: 1,
-                                    indent: 0,
-                                    endIndent: 0,
-                                  ),
-                                  Table(
-                                    columnWidths: {
-                                      0: FixedColumnWidth(MediaQuery.of(context)
-                                              .size
-                                              .width *
-                                          0.7), // Adjust width with MediaQuery
-                                      1: FixedColumnWidth(
-                                          MediaQuery.of(context).size.width *
-                                              0.3),
-                                    },
-                                    children: [
-                                      TableRow(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5.0, vertical: 8.0),
-                                            child: Text(
-                                              '2 Year- Web developer',
-                                              style: GoogleFonts.montserrat(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize:
-                                                    11, // Adjust font size with MediaQuery
-                                                color: Colorfile.textColor,
+                                            // Padding(
+                                            //   padding: EdgeInsets.only(top: 4),
+                                            //   child: IconButton(
+                                            //       icon: Image.asset(
+                                            //         'assets/trash 1.png',
+                                            //         height: 20,
+                                            //         width: 20,
+                                            //         fit: BoxFit.contain,
+                                            //       ),
+                                            //       onPressed: () =>
+                                            //           Navigator.push(
+                                            //             context,
+                                            //             MaterialPageRoute(
+                                            //               builder: (context) =>
+                                            //                   UpdateProfilePage(
+                                            //                       initialTab:
+                                            //                           4),
+                                            //             ),
+                                            //           )),
+                                            // ),
+                                          ],
+                                        );
+                                      }).toList()
+                                    : [
+                                        TableRow(
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 5, vertical: 8),
+                                              child: Text(
+                                                data.isNotEmpty &&
+                                                        data[0] != null
+                                                    ? data[0] as String
+                                                    : 'N/A',
+                                                style: GoogleFonts.montserrat(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 11,
+                                                  color: textColor,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                top:
-                                                    4.0), // Add top padding to give some space above the image
-                                            child: Image.asset(
-                                              'assets/trash 1.png',
-                                              height:
-                                                  25, // Set the height of the image
-                                              width:
-                                                  50, // Set the width of the image
-                                              fit: BoxFit
-                                                  .contain, // Ensures the image fits inside the specified size
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                            // Padding(
+                                            //   padding: EdgeInsets.only(top: 4),
+                                            //   child: IconButton(
+                                            //     icon: Image.asset(
+                                            //       'assets/trash 1.png',
+                                            //       height: 20,
+                                            //       width: 20,
+                                            //       fit: BoxFit.contain,
+                                            //     ),
+                                            //     onPressed: data.isNotEmpty &&
+                                            //             data[0] != null
+                                            //         ? () => Navigator.push(
+                                            //               context,
+                                            //               MaterialPageRoute(
+                                            //                 builder: (context) =>
+                                            //                     UpdateProfilePage(
+                                            //                         initialTab:
+                                            //                             5),
+                                            //               ),
+                                            //             )
+                                            //         : null,
+                                            //   ),
+                                            // ),
+                                          ],
+                                        ),
+                                      ],
                               ),
-                            ),
-                          ],
-                        ),
-                      )
+                            ],
+                          ),
+                        );
+                      }),
                     ],
                   ),
                 ),
@@ -1124,13 +1349,13 @@ class _ProfilePageState extends State<Editprofilepage> {
                   child: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(
-                          color: Colors.white, width: 4), // White border
+                      border: Border.all(color: Colors.white, width: 4),
                     ),
                     child: CircleAvatar(
                       radius: screenWidth * 0.15,
                       backgroundImage: NetworkImage(
-                        'https://images.pexels.com/photos/14653174/pexels-photo-14653174.jpeg',
+                        basicDetails?['profile_pic_path'] as String? ??
+                            'https://images.pexels.com/photos/14653174/pexels-photo-14653174.jpeg',
                       ),
                     ),
                   ),
@@ -1139,34 +1364,26 @@ class _ProfilePageState extends State<Editprofilepage> {
                   top: screenHeight * 0.23,
                   left: screenWidth * 0.05,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UpdateProfilePage(),
-                        ),
-                      );
-                      // Handle edit profile action
-                    },
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              UpdateProfilePage(initialTab: 0)),
+                    ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colorfile.textColor,
+                      backgroundColor: textColor,
                       padding: EdgeInsets.symmetric(
-                        vertical:
-                            6.0, // Set a fixed vertical padding for consistent height
-                        horizontal: screenWidth * 0.12,
-                      ),
+                          vertical: 6, horizontal: screenWidth * 0.12),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      minimumSize: Size(screenWidth * 0.25,
-                          32), // Set a fixed height (32) and width
+                          borderRadius: BorderRadius.circular(5)),
+                      minimumSize: Size(screenWidth * 0.25, 32),
                     ),
                     child: Text(
                       'Edit',
                       style: TextStyle(
                         fontSize: screenWidth * 0.04,
                         color: Colors.white,
-                        fontFamily: GoogleFonts.montserrat().fontFamily,
+                        fontFamily: montserrat,
                       ),
                     ),
                   ),
@@ -1178,29 +1395,33 @@ class _ProfilePageState extends State<Editprofilepage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Vaibhav Danve',
+                        '${basicDetails?['f_name'] as String? ?? ''} ${basicDetails?['l_name'] as String? ?? ''}',
                         style: TextStyle(
                           fontSize: screenWidth * 0.05,
                           fontWeight: FontWeight.bold,
-                          color: Colorfile.textColor,
-                          fontFamily: GoogleFonts.montserrat().fontFamily,
+                          color: textColor,
+                          fontFamily: montserrat,
                         ),
                       ),
-                      // SizedBox(height: screenHeight * 0.01),
                       Row(
                         children: [
-                          Image.asset(
-                            'assets/india.png',
+                          Image.network(
+                            basicDetails?['country_flag_path'] as String? ??
+                                'assets/india.png',
                             height: screenHeight * 0.03,
                             width: screenHeight * 0.03,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Image.asset('assets/india.png',
+                                    height: screenHeight * 0.03,
+                                    width: screenHeight * 0.03),
                           ),
                           SizedBox(width: screenWidth * 0.02),
                           Text(
-                            'Gondia, India',
+                            '${basicDetails?['city_name'] as String? ?? ''}, ${basicDetails?['country_name'] as String? ?? ''}',
                             style: TextStyle(
                               fontSize: screenWidth * 0.04,
                               color: Colors.black54,
-                              fontFamily: GoogleFonts.montserrat().fontFamily,
+                              fontFamily: montserrat,
                             ),
                           ),
                         ],

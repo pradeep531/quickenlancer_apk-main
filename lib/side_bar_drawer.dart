@@ -51,10 +51,10 @@ class SideBarDrawer extends StatelessWidget {
             SideBarItem(
                 text: 'Hire Company',
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => HireCompany()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HireCompany()),
+                  );
                 }),
             SideBarItem(
                 text: 'My Connection',

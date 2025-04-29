@@ -136,6 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
       );
 
       print('Response Status: ${response.statusCode}');
+
       print(
           'Response Body: ${response.body.isEmpty ? "EMPTY" : response.body}');
       log('Response Body: ${response.body}', name: 'fetchProjects');

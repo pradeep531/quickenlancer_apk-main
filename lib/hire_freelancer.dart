@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -93,7 +94,7 @@ class _HireFreelancerState extends State<HireFreelancer> {
       });
 
       print('Response Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
+      log('Response Body: ${response.body}');
 
       if (response.body.isEmpty) {
         setState(() {
@@ -269,7 +270,7 @@ class _HireFreelancerState extends State<HireFreelancer> {
           fontWeight: FontWeight.w500,
         ),
         decoration: InputDecoration(
-          hintText: 'Search projects...',
+          hintText: 'Search freelancers...',
           hintStyle: GoogleFonts.montserrat(
             fontSize: size.width * 0.038,
             fontWeight: FontWeight.w500,
@@ -626,12 +627,35 @@ class _FreelancerCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                Text(
-                  '${freelancer['city_name']}, ${freelancer['country_name']} | ${freelancer['experience']} Year Exp.',
-                  style: _textStyle(size: 12),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                Row(
+                  children: [
+                    if (freelancer['country_flag_path']?.isNotEmpty == true)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4),
+                        child: Image.network(
+                          freelancer['country_flag_path'],
+                          width: 16,
+                          height: 16,
+                          errorBuilder: (_, __, ___) => const SizedBox(),
+                        ),
+                      ),
+                    Expanded(
+                      child: Text(
+                        '${freelancer['country_name']} | ${freelancer['experience']} Year Exp.',
+                        // freelancer['country_name'] ?? 'Unknown',
+                        style: _textStyle(size: 12),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
+                // Text(
+                //   '${freelancer['city_name']} | ${freelancer['experience']} Year Exp.',
+                //   style: _textStyle(size: 12),
+                //   maxLines: 1,
+                //   overflow: TextOverflow.ellipsis,
+                // ),
                 Text(
                   '${freelancer['state_name']}',
                   style: _textStyle(size: 12),

@@ -3,17 +3,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 
-class UpdateProfilePage extends StatefulWidget {
-  const UpdateProfilePage({Key? key}) : super(key: key);
+class UpdateProfilePages extends StatefulWidget {
+  const UpdateProfilePages({Key? key}) : super(key: key);
 
   @override
   _UpdateProfilePageState createState() => _UpdateProfilePageState();
 }
 
-class _UpdateProfilePageState extends State<UpdateProfilePage> {
+class _UpdateProfilePageState extends State<UpdateProfilePages> {
   int _currentTab = 0;
   bool _isSidebarExpanded = false;
-
+  final _skillRatingController = TextEditingController(); // Add this
   // Controllers and state
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
@@ -75,6 +75,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     _experienceDescriptionController.dispose();
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
+    _skillRatingController.dispose(); // Add this
     super.dispose();
   }
 
@@ -277,41 +278,63 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             ),
             if (_selectedSkill != null) ...[
               Text(
-                'Rate your skill (1-5)',
+                'Rate your skill',
                 style: GoogleFonts.montserrat(
                     fontSize: 15, fontWeight: FontWeight.w500),
               ),
-              Slider(
-                value: _skillRating,
-                min: 1,
-                max: 5,
-                divisions: 4,
-                label: _skillRating.round().toString(),
-                activeColor: const Color(0xFF2563EB),
-                inactiveColor: Colors.grey[300],
-                onChanged: (value) => setState(() => _skillRating = value),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: TextField(
+                  controller: _skillRatingController,
+                  decoration: _textFieldDecoration('Skill Rating'),
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  style: GoogleFonts.montserrat(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black87,
+                  ),
+                ),
               ),
               _styledButton(
                 text: 'Add Skill',
                 icon: Icons.add,
                 onPressed: () {
+                  final ratingText = _skillRatingController.text;
+                  final rating = double.tryParse(ratingText) ?? 0.0;
                   if (_selectedSkill != null &&
                       !_skills.any((s) => s['name'] == _selectedSkill)) {
                     setState(() {
                       _skills.add({
                         'name': _selectedSkill!,
-                        'rating': _skillRating.round()
+                        'rating': rating,
                       });
                       _selectedSkill = null;
-                      _skillRating = 1.0;
+                      _skillRatingController.clear();
+                      _skillRating = 0.0;
                     });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          _selectedSkill == null
+                              ? 'Please select a skill'
+                              : 'Skill already added',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                        backgroundColor: Colors.redAccent,
+                      ),
+                    );
                   }
                 },
               ),
             ],
             ..._skills.map((skill) => ListTile(
                   title: Text(
-                    '${skill['name']} (Rating: ${skill['rating']}/5)',
+                    '${skill['name']} (Rating: ${skill['rating']})',
                     style: GoogleFonts.montserrat(
                         fontSize: 15, fontWeight: FontWeight.w400),
                   ),
@@ -383,7 +406,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             Text(
               'Reading Proficiency',
               style: GoogleFonts.montserrat(
-                  fontSize: 15, fontWeight: FontWeight.w500),
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             Slider(
               value: _readingProficiency,
@@ -395,10 +420,22 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
               inactiveColor: Colors.grey[300],
               onChanged: (value) => setState(() => _readingProficiency = value),
             ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: LinearProgressIndicator(
+                value: _readingProficiency / 100,
+                backgroundColor: Colors.grey[200],
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2563EB)),
+                minHeight: 8,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
             Text(
               'Writing Proficiency',
               style: GoogleFonts.montserrat(
-                  fontSize: 15, fontWeight: FontWeight.w500),
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             Slider(
               value: _writingProficiency,
@@ -410,10 +447,22 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
               inactiveColor: Colors.grey[300],
               onChanged: (value) => setState(() => _writingProficiency = value),
             ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: LinearProgressIndicator(
+                value: _writingProficiency / 100,
+                backgroundColor: Colors.grey[200],
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2563EB)),
+                minHeight: 8,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
             Text(
               'Speaking Proficiency',
               style: GoogleFonts.montserrat(
-                  fontSize: 15, fontWeight: FontWeight.w500),
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             Slider(
               value: _speakingProficiency,
@@ -426,7 +475,16 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
               onChanged: (value) =>
                   setState(() => _speakingProficiency = value),
             ),
-            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: LinearProgressIndicator(
+                value: _speakingProficiency / 100,
+                backgroundColor: Colors.grey[200],
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2563EB)),
+                minHeight: 8,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
             _styledButton(
               text: 'Add Language',
               icon: Icons.add,
@@ -444,18 +502,112 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     _writingProficiency = 0.0;
                     _speakingProficiency = 0.0;
                   });
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Please enter a language name',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                      backgroundColor: Colors.redAccent,
+                    ),
+                  );
                 }
               },
             ),
-            ..._languages.map((lang) => ListTile(
-                  title: Text(
-                    '${lang['name']} (Read: ${lang['reading'].round()}%, Write: ${lang['writing'].round()}%, Speak: ${lang['speaking'].round()}%)',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 15, fontWeight: FontWeight.w400),
-                  ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
-                )),
+            if (_languages.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey[100]!),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Languages',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ..._languages.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final lang = entry.value;
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(8),
+                            onTap: () {},
+                            hoverColor: Colors.grey[50],
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          '${lang['name']}',
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Colors.redAccent,
+                                          size: 18,
+                                        ),
+                                        onPressed: () => setState(
+                                          () => _languages.removeAt(index),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 4),
+                                  _buildProficiencyMeter(
+                                    'Reading',
+                                    lang['reading'],
+                                  ),
+                                  const SizedBox(height: 4),
+                                  _buildProficiencyMeter(
+                                    'Writing',
+                                    lang['writing'],
+                                  ),
+                                  const SizedBox(height: 4),
+                                  _buildProficiencyMeter(
+                                    'Speaking',
+                                    lang['speaking'],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+              ),
+            ],
           ],
         ),
       },
@@ -609,6 +761,42 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         ),
       },
     ];
+  }
+
+  Widget _buildProficiencyMeter(String label, double value) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 80,
+          child: Text(
+            label,
+            style: GoogleFonts.montserrat(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[600],
+            ),
+          ),
+        ),
+        Expanded(
+          child: LinearProgressIndicator(
+            value: value / 100,
+            backgroundColor: Colors.grey[200],
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2563EB)),
+            minHeight: 6,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          '${value.round()}%',
+          style: GoogleFonts.montserrat(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey[800],
+          ),
+        ),
+      ],
+    );
   }
 
   @override

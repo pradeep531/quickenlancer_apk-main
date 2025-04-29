@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-
+    _checkLoginStatus();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
@@ -36,14 +36,17 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
-    _checkLoginStatus(); // Call the login status check
+// Call the login status check
   }
 
   Future<void> _checkLoginStatus() async {
+    print('Checking login status...');
+    // Simulate a network delay
     // Get SharedPreferences instance
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? isLoggedIn = prefs.getInt('is_logged_in');
-    final String? userId = prefs.getString('user_id'); // Retrieve user_id
+    final String? userId = prefs.getString('user_id') ?? '';
+    // Retrieve user_id
 
     _animationController.forward();
 
@@ -55,29 +58,29 @@ class _SplashScreenState extends State<SplashScreen>
         });
 
         // If user is logged in, call the API
-        if (isLoggedIn == 1 && userId != null) {
-          try {
-            final String searchUrl = URLS().initiate_search_project_data_api;
-            final searchRequestBody = jsonEncode({
-              "user_id": userId,
-            });
+        // if (isLoggedIn == 1 && userId != null) {
+        try {
+          final String searchUrl = URLS().initiate_search_project_data_api;
+          final searchRequestBody = jsonEncode({
+            "user_id": userId,
+          });
 
-            print('Search API Request body: $searchRequestBody');
+          print('Initialise Request body: $searchRequestBody');
 
-            final searchResponse = await http.post(
-              Uri.parse(searchUrl),
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: searchRequestBody,
-            );
+          final searchResponse = await http.post(
+            Uri.parse(searchUrl),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: searchRequestBody,
+          );
 
-            print('Search API Response status: ${searchResponse.statusCode}');
-            print('Search API Response body: ${searchResponse.body}');
-          } catch (e) {
-            print('Search API Error: $e');
-          }
+          print('Initialise Response status: ${searchResponse.statusCode}');
+          print('Initialise Response body: ${searchResponse.body}');
+        } catch (e) {
+          print('Search API Error: $e');
         }
+        // }
 
         Timer(const Duration(seconds: 2), () {
           // Check if user is logged in
