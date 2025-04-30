@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:quickenlancer_apk/Colors/colorfile.dart';
 import 'package:quickenlancer_apk/SignUp/forgotPassword.dart';
 import 'package:quickenlancer_apk/SignUp/signup.dart';
@@ -48,6 +49,32 @@ class _SignInPageState extends State<SignInPage> {
     });
 
     return _emailError == null && _passwordError == null;
+  }
+
+  Future<void> _handleGoogleSignIn() async {
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        clientId:
+            '36873877135-l723ac401rq49fcv5r2vdm0ald463cq4.apps.googleusercontent.com',
+        scopes: ['email', 'profile'],
+      );
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+        print('Google Sign-In Response:');
+        print('User ID: ${googleUser.id}');
+        print('Display Name: ${googleUser.displayName}');
+        print('Email: ${googleUser.email}');
+        print('Access Token: ${googleAuth.accessToken}');
+        print('ID Token: ${googleAuth.idToken}');
+        log('Full Google User Object: ${googleUser.toString()}');
+      } else {
+        print('Google Sign-In cancelled by user');
+      }
+    } catch (e) {
+      print('Google Sign-In Error: $e');
+    }
   }
 
   Future<void> signIn() async {
@@ -469,7 +496,8 @@ class _SignInPageState extends State<SignInPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: () {},
+                      onTap:
+                          _handleGoogleSignIn, // Call the function to print response
                       child: ClipOval(
                         child: Image.asset(
                           'assets/google.png',

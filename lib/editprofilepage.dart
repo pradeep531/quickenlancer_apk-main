@@ -35,7 +35,7 @@ class _ProfilePageState extends State<Editprofilepage> {
   int _selectedIndex = 4;
   List<int> portfolioItems = [1];
   List<int> languagesItems = [1];
-
+  String kycStatus = '';
   // State variables to store API response data
   Map<String, dynamic>? profileData;
   Map<String, dynamic>? basicDetails;
@@ -50,6 +50,56 @@ class _ProfilePageState extends State<Editprofilepage> {
   void initState() {
     super.initState();
     fetchProfileDetails();
+    getKycDetails();
+  }
+
+  Future<void> getKycDetails() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('user_id') ?? '';
+    final authToken = prefs.getString('auth_token') ?? '';
+
+    final url = Uri.parse(URLS().get_kyc_details);
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $authToken',
+      },
+      body: jsonEncode({
+        'user_id': userId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      log('KYC Details: $data');
+
+      // Extract kyc_status from the response
+      final kycStatusCode = data['data']['kyc_status'].toString();
+
+      // Map kyc_status code to corresponding status
+      switch (kycStatusCode) {
+        case '0':
+          kycStatus = 'Pending';
+          break;
+        case '1':
+          kycStatus = 'Approved';
+          break;
+        case '2':
+          kycStatus = 'Rejected';
+          break;
+        case '3':
+          kycStatus = 'Submitted';
+          break;
+        default:
+          kycStatus = 'unknown';
+      }
+
+      log('KYC Status stored: $kycStatus');
+    } else {
+      print('Error: ${response.statusCode} ${response.body}');
+    }
   }
 
   Future<void> _onRefresh() async {
@@ -525,27 +575,35 @@ class _ProfilePageState extends State<Editprofilepage> {
         ),
         backgroundColor: Colors.white,
         actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 15),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => KYCVerificationPage()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                side: BorderSide(color: Color(0xFF466AA5)),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4)),
-                padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                minimumSize: Size(80, 32),
+          Visibility(
+            visible: kycStatus == 'Pending',
+            child: Padding(
+              padding: EdgeInsets.only(right: 15),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => KYCVerificationPage(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  side: BorderSide(color: Color(0xFF466AA5)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                  minimumSize: Size(80, 32),
+                ),
+                child: Text(
+                  kycStatus,
+                  style: TextStyle(color: Color(0xFF466AA5)),
+                ),
               ),
-              child: Text('Verify', style: TextStyle(color: Color(0xFF466AA5))),
             ),
-          ),
+          )
         ],
       ),
       body: CupertinoScrollbar(
@@ -577,11 +635,62 @@ class _ProfilePageState extends State<Editprofilepage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: screenHeight * 0.15),
-                      _sectionTitle('Profile Overview :'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _sectionTitle('Profile Overview :'),
+                          Container(
+                            child: kycStatus == 'Approved'
+                                ? Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.green[
+                                          600], // Green background for verification
+                                      borderRadius: BorderRadius.circular(
+                                          12), // Rounded corners
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(
+                                              0.1), // Subtle shadow
+                                          blurRadius: 4,
+                                          offset: Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons
+                                              .shield_outlined, // Checkmark icon for verification
+                                          color: Colors.white,
+                                          size: 16,
+                                        ),
+                                        SizedBox(
+                                            width:
+                                                4), // Spacing between icon and text
+                                        Text(
+                                          'Verified',
+                                          style: TextStyle(
+                                            color: Colors
+                                                .white, // White text for contrast
+                                            fontSize: 12, // Compact text size
+                                            fontWeight: FontWeight
+                                                .w600, // Bold for emphasis
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SizedBox
+                                    .shrink(), // Empty widget if not approved
+                          ),
+                        ],
+                      ),
                       SizedBox(height: screenHeight * 0.01),
                       Text(
-                        basicDetails?['profile_description'] as String? ??
-                            'I am web Developer and Designer also handling experience of multiple project...',
+                        basicDetails?['profile_description'] as String? ?? '',
                         style: TextStyle(
                             fontSize: 12,
                             color: Colors.black54,
@@ -1268,26 +1377,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                                 ),
                                               ),
                                             ),
-                                            // Padding(
-                                            //   padding: EdgeInsets.only(top: 4),
-                                            //   child: IconButton(
-                                            //       icon: Image.asset(
-                                            //         'assets/trash 1.png',
-                                            //         height: 20,
-                                            //         width: 20,
-                                            //         fit: BoxFit.contain,
-                                            //       ),
-                                            //       onPressed: () =>
-                                            //           Navigator.push(
-                                            //             context,
-                                            //             MaterialPageRoute(
-                                            //               builder: (context) =>
-                                            //                   UpdateProfilePage(
-                                            //                       initialTab:
-                                            //                           4),
-                                            //             ),
-                                            //           )),
-                                            // ),
+                                            SizedBox(), // Or a widget if you want to show data in the 2nd column
                                           ],
                                         );
                                       }).toList()
@@ -1309,29 +1399,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                                 ),
                                               ),
                                             ),
-                                            // Padding(
-                                            //   padding: EdgeInsets.only(top: 4),
-                                            //   child: IconButton(
-                                            //     icon: Image.asset(
-                                            //       'assets/trash 1.png',
-                                            //       height: 20,
-                                            //       width: 20,
-                                            //       fit: BoxFit.contain,
-                                            //     ),
-                                            //     onPressed: data.isNotEmpty &&
-                                            //             data[0] != null
-                                            //         ? () => Navigator.push(
-                                            //               context,
-                                            //               MaterialPageRoute(
-                                            //                 builder: (context) =>
-                                            //                     UpdateProfilePage(
-                                            //                         initialTab:
-                                            //                             5),
-                                            //               ),
-                                            //             )
-                                            //         : null,
-                                            //   ),
-                                            // ),
+                                            SizedBox(), // Maintain alignment with second column
                                           ],
                                         ),
                                       ],

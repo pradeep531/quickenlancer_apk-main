@@ -17,7 +17,7 @@ class PortfolioFormEdit extends StatefulWidget {
   final String? otherSkills;
   final String? projectDescription;
   final File? projectLogo;
-  final String? imageUrl; // New parameter for image URL
+  final String? imageUrl;
 
   const PortfolioFormEdit({
     Key? key,
@@ -38,13 +38,11 @@ class PortfolioFormEdit extends StatefulWidget {
 class _PortfolioFormState extends State<PortfolioFormEdit> {
   final _projectNameController = TextEditingController();
   final _projectUrlController = TextEditingController();
-  String? _projectSkill;
+  final List<String> _selectedSkills = [];
   final _otherSkillsController = TextEditingController();
   final _projectDescriptionController = TextEditingController();
   File? _projectLogo;
   bool _isLoading = false;
-
-  // List to store fetched skills
   List<Map<String, dynamic>> _availableSkills = [];
 
   @override
@@ -64,7 +62,9 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
     // Autofill form fields with constructor data
     _projectNameController.text = widget.projectName ?? '';
     _projectUrlController.text = widget.projectUrl ?? '';
-    _projectSkill = widget.projectSkill;
+    if (widget.projectSkill != null && widget.projectSkill!.isNotEmpty) {
+      _selectedSkills.add(widget.projectSkill!);
+    }
     _otherSkillsController.text = widget.otherSkills ?? '';
 
     // Handle projectDescription: Convert HTML to plain text if present
@@ -78,11 +78,10 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
 
     _projectLogo = widget.projectLogo;
 
-    // Fetch skills to validate projectSkill
+    // Fetch skills
     _fetchSkills();
   }
 
-  // Function to convert HTML to plain text
   String _convertHtmlToPlainText(String htmlString) {
     try {
       final document = parse(htmlString);
@@ -133,7 +132,6 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
   }
 
   Future<void> _saveForm() async {
-    // Validate form fields
     if (_projectNameController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter a project name')),
@@ -146,9 +144,10 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
       );
       return;
     }
-    if (_projectSkill == null) {
+    if (_selectedSkills.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a project skill')),
+        const SnackBar(
+            content: Text('Please select at least one project skill')),
       );
       return;
     }
@@ -166,12 +165,12 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
       final userId = prefs.getString('user_id') ?? '';
       final String? authToken = prefs.getString('auth_token');
 
-      // Find the selected skill's ID
-      final selectedSkill = _availableSkills
-          .firstWhere((skill) => skill['name'] == _projectSkill);
-      final skillId = selectedSkill['id'];
+      // Get IDs for selected skills
+      final skillIds = _selectedSkills
+          .map((skillName) => _availableSkills
+              .firstWhere((skill) => skill['name'] == skillName)['id'])
+          .toList();
 
-      // Prepare form-data
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(URLS().set_portfolio),
@@ -180,7 +179,7 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
       request.fields['project_name'] = _projectNameController.text;
       request.fields['user_id'] = userId;
       request.fields['project_url'] = _projectUrlController.text;
-      request.fields['project_skills'] = jsonEncode([skillId]);
+      request.fields['project_skills'] = jsonEncode(skillIds);
       request.fields['other_skills'] = _otherSkillsController.text;
       request.fields['project_desc'] = _projectDescriptionController.text;
       if (widget.portfolioId != null) {
@@ -192,35 +191,30 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
         );
       }
 
-      // Print request body
       print('Portfolio Request: POST ${URLS().set_portfolio}');
       print('Portfolio Request Body: ${request.fields}');
       if (_projectLogo != null) {
         print('Portfolio Request File: ${_projectLogo!.path}');
       }
 
-      // Send request
       final response = await request.send();
       final responseBody = await response.stream.bytesToString();
 
-      // Print response
       print('Portfolio Response: ${response.statusCode} $responseBody');
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Project saved successfully')),
         );
-        // Navigate to Editprofilepage
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const Editprofilepage()),
         );
 
-        // Clear form
         setState(() {
           _projectNameController.clear();
           _projectUrlController.clear();
-          _projectSkill = null;
+          _selectedSkills.clear();
           _otherSkillsController.clear();
           _projectDescriptionController.clear();
           _projectLogo = null;
@@ -239,6 +233,16 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
     } finally {
       setState(() => _isLoading = false);
     }
+  }
+
+  void _toggleSkillSelection(String skill) {
+    setState(() {
+      if (_selectedSkills.contains(skill)) {
+        _selectedSkills.remove(skill);
+      } else {
+        _selectedSkills.add(skill);
+      }
+    });
   }
 
   @override
@@ -279,7 +283,6 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Project Name
                     SharedWidgets.textField(
                       _projectNameController,
                       'Project Name',
@@ -287,7 +290,6 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                           value!.isEmpty ? 'Please enter a project name' : null,
                     ),
                     const SizedBox(height: 16),
-                    // Project URL
                     SharedWidgets.textField(
                       _projectUrlController,
                       'Project URL',
@@ -298,28 +300,132 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    // Project Skill Dropdown
-                    SharedWidgets.dropdown<String>(
-                      label: 'Project Skill',
-                      value: _projectSkill,
-                      items: _availableSkills
-                          .map((skill) => skill['name'] as String)
-                          .toList(),
-                      onChanged: (value) =>
-                          setState(() => _projectSkill = value),
-                      itemAsString: (String skill) => skill,
-                      validator: (value) => value == null
-                          ? 'Please select a project skill'
-                          : null,
+                    // Multi-select skills dropdown
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Project Skills',
+                            style: GoogleFonts.montserrat(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.blueGrey[900],
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0, vertical: 8.0),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Colors.white, Colors.grey[100]!],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(12.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 2,
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                              border: Border.all(
+                                  color: Colors.grey[300]!, width: 1.5),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                isExpanded: true,
+                                hint: Text(
+                                  'Select skills',
+                                  style: GoogleFonts.montserrat(
+                                    color: Colors.grey[600],
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                icon: const Icon(Icons.arrow_drop_down,
+                                    color: Colors.blueAccent),
+                                items: _availableSkills
+                                    .map((skill) => skill['name'] as String)
+                                    .toList()
+                                    .map((skill) => DropdownMenuItem<String>(
+                                          value: skill,
+                                          child: Row(
+                                            children: [
+                                              Checkbox(
+                                                value: _selectedSkills
+                                                    .contains(skill),
+                                                onChanged: (value) =>
+                                                    _toggleSkillSelection(
+                                                        skill),
+                                                activeColor: Colors.blueAccent,
+                                                checkColor: Colors.white,
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  skill,
+                                                  style: GoogleFonts.montserrat(
+                                                    fontSize: 15,
+                                                    color: Colors.blueGrey[800],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ))
+                                    .toList(),
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    _toggleSkillSelection(value);
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                          if (_selectedSkills.isNotEmpty) ...[
+                            const SizedBox(height: 12),
+                            Wrap(
+                              spacing: 8.0,
+                              runSpacing: 8.0,
+                              children: _selectedSkills
+                                  .map((skill) => Chip(
+                                        label: Text(
+                                          skill,
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        backgroundColor: Colors.blueAccent,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        deleteIcon: const Icon(Icons.close,
+                                            size: 18, color: Colors.white70),
+                                        onDeleted: () =>
+                                            _toggleSkillSelection(skill),
+                                        elevation: 3,
+                                        shadowColor:
+                                            Colors.blueAccent.withOpacity(0.3),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
+                                        ),
+                                      ))
+                                  .toList(),
+                            ),
+                          ],
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 16),
-                    // Other Skills
                     SharedWidgets.textField(
                       _otherSkillsController,
                       'Other Skills (Optional)',
                     ),
                     const SizedBox(height: 16),
-                    // Project Description
                     SharedWidgets.textField(
                       _projectDescriptionController,
                       'Project Description',
@@ -329,7 +435,6 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                           : null,
                     ),
                     const SizedBox(height: 16),
-                    // Upload Logo Button
                     StyledButton(
                       text: 'Upload Logo',
                       icon: Icons.upload,
@@ -341,7 +446,6 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                     ),
                     if (_projectLogo != null || widget.imageUrl != null) ...[
                       const SizedBox(height: 12),
-                      // Display selected logo file name (if new file uploaded)
                       if (_projectLogo != null)
                         Text(
                           _projectLogo!.path.split('/').last,
@@ -353,7 +457,6 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                           overflow: TextOverflow.ellipsis,
                         ),
                       const SizedBox(height: 12),
-                      // Display logo preview (new file or existing URL)
                       _projectLogo != null
                           ? Image.file(
                               _projectLogo!,
@@ -381,7 +484,6 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                               : const SizedBox.shrink(),
                     ],
                     const SizedBox(height: 24),
-                    // Save Button
                     Center(
                       child: ElevatedButton(
                         onPressed: _saveForm,

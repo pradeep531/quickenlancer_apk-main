@@ -386,70 +386,6 @@ class _LanguageFormState extends State<LanguageForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Display existing languages
-              if (languages.isNotEmpty) ...[
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: languages.length,
-                  itemBuilder: (context, index) {
-                    final language = languages[index];
-                    return Container(
-                      margin: EdgeInsets.only(bottom: 10.0),
-                      padding: EdgeInsets.all(12.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  language['language'] ?? 'Unknown',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'Abilities: ${getKnownAbilities(language['known'])}',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'Proficiency: ${language['proficient'] ?? 0}%',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _confirmDeleteLanguage(
-                              language['id'].toString(),
-                              language['language'] ?? 'Unknown',
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(height: 16),
-              ],
               // Form to add new language
               SharedWidgets.textField(_languageNameController, 'Language Name'),
               Text(
@@ -558,6 +494,7 @@ class _LanguageFormState extends State<LanguageForm> {
                   }
                 },
               ),
+              // Display locally added languages
               if (_languages.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 Container(
@@ -660,6 +597,95 @@ class _LanguageFormState extends State<LanguageForm> {
                   text: 'Save',
                   icon: Icons.save,
                   onPressed: _saveForm,
+                ),
+              ],
+              // Display existing languages with delete functionality
+              if (languages.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Text(
+                  'Existing Languages',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: languages.length,
+                  itemBuilder: (context, index) {
+                    final language = languages[index];
+                    return Container(
+                      margin: EdgeInsets.only(bottom: 12.0),
+                      padding: EdgeInsets.all(14.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10.0),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Language Info
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  language['language'] ?? 'Unknown',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Icon(Icons.translate,
+                                        size: 16, color: Colors.grey.shade600),
+                                    SizedBox(width: 6),
+                                    Expanded(
+                                      child: Text(
+                                        'Abilities: ${getKnownAbilities(language['known'])}',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black54),
+                                        // overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 6),
+                                Row(
+                                  children: [
+                                    Icon(Icons.speed,
+                                        size: 16, color: Colors.grey.shade600),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      'Proficiency: ${language['proficient'] ?? 0}%',
+                                      style: TextStyle(
+                                          fontSize: 14, color: Colors.black54),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Delete button
+                          IconButton(
+                            icon: Icon(Icons.delete_outline,
+                                color: Colors.redAccent),
+                            onPressed: () => _confirmDeleteLanguage(
+                              language['id'].toString(),
+                              language['language'] ?? 'Unknown',
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ],
             ],

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1088029839796",
+    "project_id": "quickenlancer-e4dad",
+    "storage_bucket": "quickenlancer-e4dad.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088029839796:android:e369cf19e73165dab0e2e1",
+        "android_client_info": {
+          "package_name": "com.example.quickenlancer_apk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-mcFsH0KbfxM_Ij8VqwH3sTiSdnHbQ0w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

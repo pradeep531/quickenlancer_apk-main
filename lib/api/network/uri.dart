@@ -37,4 +37,9 @@ class URLS {
   String user_delete_profile_items = baseUrl + "user/delete-profile-item";
   String post_project = baseUrl + "user/post-project";
   String post_project_documents = baseUrl + "user/post-project-documents";
+  String update_basic_details = baseUrl + "user/update-basic-details";
+  String submit_kyc_documents = baseUrl + "user/submit-kyc-documents";
+  String submit_kyc_video = baseUrl + "user/submit-kyc-video";
+  String submit_kyc_payment = baseUrl + "user/submit-kyc-payment";
+  String get_kyc_details = baseUrl + "user/get-kyc-details";
 }

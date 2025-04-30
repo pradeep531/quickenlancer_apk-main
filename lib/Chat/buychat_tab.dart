@@ -101,6 +101,7 @@ class _BuyChatTabState extends State<BuyChatTab> {
     }
   }
 
+//paid via stripe or phonepe
   // API call to buy tokens
   Future<void> _buyTokens() async {
     setState(() {

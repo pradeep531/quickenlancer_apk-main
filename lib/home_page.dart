@@ -1575,7 +1575,13 @@ class _ListContainerState extends State<ListContainer> {
                         Expanded(
                           child: TextButton(
                             onPressed: () async {
-                              Navigator.of(dialogContext).pop(); // Close dialog
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MyHomePage(),
+                                ),
+                              );
+                              // Navigator.of(dialogContext).pop(); // Close dialog
                               setDialogState(() {
                                 // Use setDialogState for local state
                                 if (isChat) {
