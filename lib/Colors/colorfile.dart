@@ -13,6 +13,6 @@ class Colorfile {
   static const Color morelightgrey = Color(0xFFA1A8B0);
   static const Color darkPrimary = Color(0xFF032183);
   static const Color body = Color(0xFFFFFFFF);
-
+  static const Color lightText = Color(0xFF353B43);
   // static const Color anotherColor = Color(0xFFxxxxxx);
 }

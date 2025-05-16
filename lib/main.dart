@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_notifications.dart';
 import 'firebase_options.dart';
 import 'package:quickenlancer_apk/splash_screen.dart';
+import 'package:google_fonts/google_fonts.dart'; // <-- Add this line
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,8 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        textTheme:
+            GoogleFonts.montserratTextTheme(), // <-- Global Montserrat font
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),

@@ -23,6 +23,8 @@ import 'package:shimmer/shimmer.dart';
 import 'dart:convert';
 
 import 'api/network/uri.dart';
+import 'profile_page.dart';
+import 'profilepage.dart';
 
 class Editprofilepage extends StatefulWidget {
   const Editprofilepage({Key? key}) : super(key: key);
@@ -1434,9 +1436,10 @@ class _ProfilePageState extends State<Editprofilepage> {
                   child: ElevatedButton(
                     onPressed: () => Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              UpdateProfilePage(initialTab: 0)),
+                      // MaterialPageRoute(
+                      //     builder: (context) =>
+                      //         UpdateProfilePage(initialTab: 0)),
+                      MaterialPageRoute(builder: (context) => ProfilePage()),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: textColor,

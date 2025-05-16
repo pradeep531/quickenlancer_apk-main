@@ -9,12 +9,12 @@ import 'Update Profile/tabs/update_profile_page.dart';
 import 'edit_profile_page.dart';
 import 'home_page.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage2 extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage2> {
   int _selectedIndex = 4;
 
   void _onItemTapped(int index) {
@@ -39,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
     } else if (index == 4) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => ProfilePage()),
+        MaterialPageRoute(builder: (context) => ProfilePage2()),
       );
     }
   }

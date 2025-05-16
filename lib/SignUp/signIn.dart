@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -11,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../api/network/uri.dart';
+import 'onboardingstep.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -54,26 +56,51 @@ class _SignInPageState extends State<SignInPage> {
   Future<void> _handleGoogleSignIn() async {
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn(
-        clientId:
-            '36873877135-l723ac401rq49fcv5r2vdm0ald463cq4.apps.googleusercontent.com',
         scopes: ['email', 'profile'],
       );
+
+      print('Attempting Google Sign-In...');
+
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      if (googleUser != null) {
-        final GoogleSignInAuthentication googleAuth =
-            await googleUser.authentication;
-        print('Google Sign-In Response:');
-        print('User ID: ${googleUser.id}');
-        print('Display Name: ${googleUser.displayName}');
-        print('Email: ${googleUser.email}');
-        print('Access Token: ${googleAuth.accessToken}');
-        print('ID Token: ${googleAuth.idToken}');
-        log('Full Google User Object: ${googleUser.toString()}');
-      } else {
+      if (googleUser == null) {
         print('Google Sign-In cancelled by user');
+        return;
       }
-    } catch (e) {
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      print('Google Sign-In Response:');
+      print('User ID: ${googleUser.id}');
+      print('Display Name: ${googleUser.displayName}');
+      print('Email: ${googleUser.email}');
+      print('Access Token: ${googleAuth.accessToken}');
+      print('ID Token: ${googleAuth.idToken}');
+      log('Full Google User Object: ${googleUser.toString()}');
+
+      // Authenticate with Firebase
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Sign in to Firebase
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      final User? firebaseUser = userCredential.user;
+
+      if (firebaseUser != null) {
+        print('Firebase Sign-In Successful:');
+        print('Firebase UID: ${firebaseUser.uid}');
+        print('Firebase Display Name: ${firebaseUser.displayName}');
+        print('Firebase Email: ${firebaseUser.email}');
+        print('Firebase Photo URL: ${firebaseUser.photoURL}');
+      } else {
+        print('Firebase Sign-In failed');
+      }
+    } catch (e, stackTrace) {
       print('Google Sign-In Error: $e');
+      print('Stack Trace: $stackTrace');
     }
   }
 
@@ -547,10 +574,16 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                     GestureDetector(
                       onTap: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => SignUpPage(),
+                        //   ),
+                        // );
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SignUpPage(),
+                            builder: (context) => OnboardingSignup(),
                           ),
                         );
                       },

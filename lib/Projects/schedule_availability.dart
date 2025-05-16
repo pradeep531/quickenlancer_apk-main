@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:quickenlancer_apk/Colors/colorfile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import '../api/network/uri.dart';
 import 'all_projects.dart';
+import 'post_project_final.dart';
 import 'posted.dart';
 
 class ScheduleAvailabilityPage extends StatefulWidget {
@@ -30,6 +32,7 @@ class _ScheduleAvailabilityPageState extends State<ScheduleAvailabilityPage> {
   };
 
   bool isLoading = false;
+  bool applyToAllDays = false;
 
   // Helper method to compare two TimeOfDay objects
   bool _isTimeAfter(TimeOfDay time1, TimeOfDay time2) {
@@ -142,13 +145,42 @@ class _ScheduleAvailabilityPageState extends State<ScheduleAvailabilityPage> {
         }
       }
       setState(() {
-        if (isFrom) {
-          availability[day]!['from'] = selectedTime;
+        if (applyToAllDays) {
+          for (var dayKey in availability.keys) {
+            if (isFrom) {
+              availability[dayKey]!['from'] = selectedTime;
+            } else {
+              availability[dayKey]!['to'] = selectedTime;
+            }
+            availability[dayKey]!['enabled'] = 1; // Automatically toggle on
+          }
         } else {
-          availability[day]!['to'] = selectedTime;
+          if (isFrom) {
+            availability[day]!['from'] = selectedTime;
+          } else {
+            availability[day]!['to'] = selectedTime;
+          }
+          availability[day]!['enabled'] = 1; // Automatically toggle on
         }
       });
     }
+  }
+
+  void _applyToAllDaysToggle(bool value) {
+    setState(() {
+      applyToAllDays = value;
+      if (value) {
+        for (var day in availability.keys) {
+          availability[day]!['enabled'] = 1;
+        }
+      } else {
+        for (var day in availability.keys) {
+          availability[day]!['enabled'] = 0;
+          availability[day]!['from'] = null;
+          availability[day]!['to'] = null;
+        }
+      }
+    });
   }
 
   Future<void> _saveAvailability() async {
@@ -164,7 +196,7 @@ class _ScheduleAvailabilityPageState extends State<ScheduleAvailabilityPage> {
       final Map<String, dynamic> requestBody = {
         'user_id': userId,
         'project_id': widget.projectId,
-        'other_skills': '', // Replace with actual skills if needed
+        'other_skills': '',
         'is_monday': availability['Monday']!['enabled'].toString(),
         'from_monday': availability['Monday']!['from'] != null
             ? (availability['Monday']!['from'] as TimeOfDay).hour
@@ -216,12 +248,6 @@ class _ScheduleAvailabilityPageState extends State<ScheduleAvailabilityPage> {
             : 9,
       };
 
-      // Print request details for debugging
-      debugPrint('Request URL: ${URLS().set_project_time_availability}');
-      debugPrint('Request Body: ${jsonEncode(requestBody)}');
-      debugPrint('Auth Token: ${authToken ?? 'No token'}');
-
-      // Prepare headers with Bearer token if available
       final headers = {
         'Content-Type': 'application/json',
         if (authToken != null && authToken.isNotEmpty)
@@ -234,10 +260,6 @@ class _ScheduleAvailabilityPageState extends State<ScheduleAvailabilityPage> {
         body: jsonEncode(requestBody),
       );
 
-      // Print response details
-      debugPrint('Response Status: ${response.statusCode}');
-      debugPrint('Response Body: ${response.body}');
-
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -247,11 +269,14 @@ class _ScheduleAvailabilityPageState extends State<ScheduleAvailabilityPage> {
           ),
         );
         Navigator.pop(context);
-
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const AllProjects()),
+          MaterialPageRoute(builder: (context) => const PostProjectFinal()),
         );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const AllProjects()),
+        // );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -263,7 +288,6 @@ class _ScheduleAvailabilityPageState extends State<ScheduleAvailabilityPage> {
         );
       }
     } catch (e) {
-      debugPrint('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $e', style: GoogleFonts.poppins()),
@@ -282,23 +306,21 @@ class _ScheduleAvailabilityPageState extends State<ScheduleAvailabilityPage> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFF5F7FA),
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: const Color(0xFFFFFFFF),
           elevation: 0,
           title: Text(
-            'Set Your Availability',
+            'Schedule Time',
             style: GoogleFonts.poppins(
               fontSize: 18,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
           ),
-          centerTitle: true,
           leading: IconButton(
             icon: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.blue,
+              Icons.arrow_back,
               size: 20,
             ),
             onPressed: () async {
@@ -309,340 +331,267 @@ class _ScheduleAvailabilityPageState extends State<ScheduleAvailabilityPage> {
         body: SafeArea(
           child: Column(
             children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Placeholder for asset image
+                    Image.asset(
+                      'assets/schedule.png', // Replace with your actual image path
+                      height: 150, // Adjust height as needed
+                      width: double.infinity,
+                      fit: BoxFit.contain,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Your Time Availability For This Project *',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Colorfile.textColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 16),
-                      Expanded(
-                        child: ListView(
-                          children: availability.keys.map((day) {
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  availability[day]!['enabled'] =
-                                      availability[day]!['enabled'] == 1
-                                          ? 0
-                                          : 1;
-                                  if (availability[day]!['enabled'] == 0) {
-                                    availability[day]!['from'] = null;
-                                    availability[day]!['to'] = null;
-                                  }
-                                });
-                              },
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
-                                transform: Matrix4.identity()
-                                  ..scale(availability[day]!['enabled'] == 1
-                                      ? 1.0
-                                      : 0.98),
-                                margin: const EdgeInsets.symmetric(vertical: 8),
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(
-                                    color: availability[day]!['enabled'] == 1
-                                        ? Colors.blue.shade200
-                                        : Colors.transparent,
-                                    width: 1,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: availability[day]!['enabled'] == 1
-                                          ? Colors.blue.shade100
-                                              .withOpacity(0.3)
-                                          : Colors.black.withOpacity(0.08),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 3),
-                                    ),
-                                  ],
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.grey.shade300),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Apply to All Days',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black87,
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                              ),
+                              Transform.scale(
+                                scale: 0.7, // Reduce toggle size
+                                child: Switch(
+                                  value: applyToAllDays,
+                                  onChanged: _applyToAllDaysToggle,
+                                  activeColor: Colors.green,
+                                  activeTrackColor:
+                                      Colors.green.withOpacity(0.3),
+                                  inactiveThumbColor: Colors.grey.shade400,
+                                  inactiveTrackColor: Colors.grey.shade200,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Divider(
+                            color: Color(0xFFE5E7EB),
+                            thickness: 0.5,
+                            height: 16,
+                          ),
+                          ...availability.keys.map((day) {
+                            return Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
                                       children: [
+                                        const Icon(
+                                          Icons.calendar_today,
+                                          size: 16,
+                                          color: Colors.grey,
+                                        ),
+                                        const SizedBox(width: 8),
                                         Text(
                                           day,
                                           style: GoogleFonts.poppins(
                                             fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black87,
-                                          ),
-                                        ),
-                                        Transform.scale(
-                                          scale: 0.85,
-                                          child: Switch(
-                                            value:
-                                                availability[day]!['enabled'] ==
-                                                    1,
-                                            activeColor: Colors.blue.shade600,
-                                            activeTrackColor:
-                                                Colors.blue.shade100,
-                                            inactiveThumbColor:
-                                                Colors.grey.shade400,
-                                            inactiveTrackColor:
-                                                Colors.grey.shade200,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                availability[day]!['enabled'] =
-                                                    value ? 1 : 0;
-                                                if (!value) {
-                                                  availability[day]!['from'] =
-                                                      null;
-                                                  availability[day]!['to'] =
-                                                      null;
-                                                }
-                                              });
-                                            },
+                                            fontWeight: FontWeight.w500,
+                                            color: Colorfile.textColor,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    if (availability[day]!['enabled'] == 1) ...[
-                                      const SizedBox(height: 12),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          RichText(
-                                            text: TextSpan(
-                                              style: GoogleFonts.poppins(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.grey.shade700,
-                                              ),
-                                              children: [
-                                                const TextSpan(text: 'From: '),
-                                                TextSpan(
-                                                  text: availability[day]![
-                                                              'from'] ==
-                                                          null
-                                                      ? '--:--'
-                                                      : (availability[day]![
-                                                                  'from']
-                                                              as TimeOfDay)
-                                                          .format(context),
-                                                  style: GoogleFonts.poppins(
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.blue.shade700,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () =>
-                                                _selectTime(context, day, true),
-                                            style: ElevatedButton.styleFrom(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 14,
-                                                      vertical: 8),
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              shadowColor: Colors.transparent,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              surfaceTintColor:
-                                                  Colors.transparent,
-                                              foregroundColor:
-                                                  Colors.blue.shade700,
-                                              splashFactory:
-                                                  InkRipple.splashFactory,
-                                              elevation: 0,
-                                            ).copyWith(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      Colors.transparent),
-                                              overlayColor:
-                                                  MaterialStateProperty.all(
-                                                      Colors.blue.shade100),
-                                            ),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                gradient: LinearGradient(
-                                                  colors: [
-                                                    Colors.blue.shade50,
-                                                    Colors.blue.shade100,
-                                                  ],
-                                                  begin: Alignment.topLeft,
-                                                  end: Alignment.bottomRight,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 14,
-                                                      vertical: 8),
-                                              child: Text(
-                                                'Select',
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.blue.shade700,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                    Transform.scale(
+                                      scale: 0.7, // Reduce toggle size
+                                      child: Switch(
+                                        value:
+                                            availability[day]!['enabled'] == 1,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            availability[day]!['enabled'] =
+                                                value ? 1 : 0;
+                                            if (!value) {
+                                              availability[day]!['from'] = null;
+                                              availability[day]!['to'] = null;
+                                            } else if (applyToAllDays) {
+                                              availability[day]!['from'] =
+                                                  availability['Monday']![
+                                                      'from'];
+                                              availability[day]!['to'] =
+                                                  availability['Monday']!['to'];
+                                            }
+                                          });
+                                        },
+                                        activeColor: Colors.green,
+                                        activeTrackColor:
+                                            Colors.green.withOpacity(0.3),
+                                        inactiveThumbColor:
+                                            Colors.grey.shade400,
+                                        inactiveTrackColor:
+                                            Colors.grey.shade200,
                                       ),
-                                      const SizedBox(height: 12),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          RichText(
-                                            text: TextSpan(
-                                              style: GoogleFonts.poppins(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.grey.shade700,
-                                              ),
-                                              children: [
-                                                const TextSpan(text: 'To: '),
-                                                TextSpan(
-                                                  text: availability[day]![
-                                                              'to'] ==
-                                                          null
-                                                      ? '--:--'
-                                                      : (availability[day]![
-                                                                  'to']
-                                                              as TimeOfDay)
-                                                          .format(context),
-                                                  style: GoogleFonts.poppins(
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.blue.shade700,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () => _selectTime(
-                                                context, day, false),
-                                            style: ElevatedButton.styleFrom(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 14,
-                                                      vertical: 8),
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              shadowColor: Colors.transparent,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              surfaceTintColor:
-                                                  Colors.transparent,
-                                              foregroundColor:
-                                                  Colors.blue.shade700,
-                                              splashFactory:
-                                                  InkRipple.splashFactory,
-                                              elevation: 0,
-                                            ).copyWith(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      Colors.transparent),
-                                              overlayColor:
-                                                  MaterialStateProperty.all(
-                                                      Colors.blue.shade100),
-                                            ),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                gradient: LinearGradient(
-                                                  colors: [
-                                                    Colors.blue.shade50,
-                                                    Colors.blue.shade100,
-                                                  ],
-                                                  begin: Alignment.topLeft,
-                                                  end: Alignment.bottomRight,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 14,
-                                                      vertical: 8),
-                                              child: Text(
-                                                'Select',
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.blue.shade700,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                    ),
                                   ],
                                 ),
-                              ),
+                                const Divider(
+                                  color: Color(0xFFE5E7EB),
+                                  thickness: 0.5,
+                                  height: 16,
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () =>
+                                          _selectTime(context, day, true),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 12, vertical: 8),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFFFFFFF),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                          border: Border.all(
+                                            color: Colors.grey.shade300,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              availability[day]!['from'] == null
+                                                  ? 'Select Time'
+                                                  : (availability[day]!['from']
+                                                          as TimeOfDay)
+                                                      .format(context),
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 14,
+                                                color: availability[day]![
+                                                            'from'] ==
+                                                        null
+                                                    ? Colorfile.textColor
+                                                    : Colors.black87,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            const Icon(
+                                              Icons.arrow_drop_down,
+                                              color: Colors.grey,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      'To',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () =>
+                                          _selectTime(context, day, false),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 12, vertical: 8),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFFFFFFF),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                          border: Border.all(
+                                            color: Colors.grey.shade300,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              availability[day]!['to'] == null
+                                                  ? 'Select Time'
+                                                  : (availability[day]!['to']
+                                                          as TimeOfDay)
+                                                      .format(context),
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 14,
+                                                color:
+                                                    availability[day]!['to'] ==
+                                                            null
+                                                        ? Colorfile.textColor
+                                                        : Colors.black87,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            const Icon(
+                                              Icons.arrow_drop_down,
+                                              color: Colors.grey,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             );
                           }).toList(),
-                        ),
+                        ],
                       ),
-                      const SizedBox(height: 16),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: ElevatedButton(
-                          onPressed: isLoading ? null : _saveAvailability,
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            backgroundColor: Colors.blue.shade600,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            elevation: 3,
-                            shadowColor: Colors.black.withOpacity(0.15),
-                          ).copyWith(
-                            overlayColor:
-                                MaterialStateProperty.all(Colors.blue.shade200),
-                          ),
-                          child: isLoading
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(
-                                      Icons.save,
-                                      size: 20,
-                                      color: Colors.white,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      'Save Availability',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                    ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                child: ElevatedButton(
+                  onPressed: isLoading ? null : _saveAvailability,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: Colorfile.primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    minimumSize: const Size(double.infinity, 50),
+                  ),
+                  child: Text(
+                    'SUBMIT',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

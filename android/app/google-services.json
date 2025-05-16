@@ -12,7 +12,12 @@
           "package_name": "com.example.quickenlancer_apk"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1088029839796-pu3un8ng1ckg51ljihcr5tbv890ir1nf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB-mcFsH0KbfxM_Ij8VqwH3sTiSdnHbQ0w"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1088029839796-pu3un8ng1ckg51ljihcr5tbv890ir1nf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1088029839796-vqon0cvlogbueju0952ffi0p852mbt57.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.quickenlancerApk"
+              }
+            }
+          ]
         }
       }
     }
