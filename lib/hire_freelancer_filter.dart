@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'api/network/uri.dart'; // Adjust based on your project
 
 class HireFreelancerFilter extends StatefulWidget {
-  final Function(List<dynamic>) onApplyFilters; // Changed to List<dynamic>
+  final Function(List<dynamic>) onApplyFilters;
   final VoidCallback onClearFilters;
 
   const HireFreelancerFilter({
@@ -28,6 +28,7 @@ class _HireFreelancerFilterBottomSheetState
     'locationName': '',
     'skills': <Map<String, dynamic>>{},
     'currency': <String>{},
+    'language': <String>{},
     'projectType': <String>{},
     'requirementType': <String>{},
     'connectType': <String>{},
@@ -39,6 +40,13 @@ class _HireFreelancerFilterBottomSheetState
   List<Map<String, dynamic>> locationSuggestions = [];
   List<Map<String, dynamic>> allSkills = [], skillSuggestions = [];
   List<Map<String, dynamic>> availableCurrencies = [];
+  // Static list of languages
+  final List<Map<String, dynamic>> availableLanguages = [
+    {'id': 'en', 'name': 'English'},
+    {'id': 'hi', 'name': 'Hindi'},
+    {'id': 'ja', 'name': 'Japanese'},
+    {'id': 'fr', 'name': 'French'},
+  ];
   bool isLoadingSuggestions = false,
       isLoadingSkills = false,
       isLoadingCurrencies = false;
@@ -80,6 +88,12 @@ class _HireFreelancerFilterBottomSheetState
     if (filters['currency'].isNotEmpty) {
       (filters['currency'] as Set<String>)
           .forEach((id) => encoded.add('currency@@$id'));
+    }
+
+    // Language: Add each as language@@{id}
+    if (filters['language'].isNotEmpty) {
+      (filters['language'] as Set<String>)
+          .forEach((id) => encoded.add('language@@$id'));
     }
 
     // Project Type: Add each as type@@0 (Fixed), type@@1 (Hourly)
@@ -346,6 +360,16 @@ class _HireFreelancerFilterBottomSheetState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFF6B7280),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                width: 32,
+                height: 4,
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -359,8 +383,9 @@ class _HireFreelancerFilterBottomSheetState
             ),
             const SizedBox(height: 16),
             _buildSkillsSection(),
+
             _buildTextField(
-                'Location', 'Enter location (city, country)', _onSearchChanged,
+                'Advanced Search', 'Enter Your Location', _onSearchChanged,
                 controller: _locationController, clearCallback: _clearLocation),
             if (isLoadingSuggestions)
               const Padding(
@@ -397,21 +422,22 @@ class _HireFreelancerFilterBottomSheetState
                 ),
               ),
             _buildCurrencySection(),
+            _buildLanguageSection(),
             _buildMultiSelect(
                 'Project Type', ['Fixed', 'Hourly'], filters['projectType']),
-            _buildMultiSelect(
-                'Priority', ['Cold', 'Hot'], filters['requirementType']),
-            _buildMultiSelect('Communication', ['Chat', 'Call', 'Email'],
-                filters['connectType']),
-            _buildMultiSelect('Profile Status', ['Verified', 'Unverified'],
-                filters['adminProfile']),
+            // _buildMultiSelect(
+            //     'Priority', ['Cold', 'Hot'], filters['requirementType']),
+            // _buildMultiSelect('Communication', ['Chat', 'Call', 'Email'],
+            //     filters['connectType']),
+            _buildMultiSelect('Project Admin Profile',
+                ['Verified', 'Unverified'], filters['adminProfile']),
             _buildSingleSelect(
                 'Sort By',
                 ['High to Low', 'Low to High'],
                 filters['biddingCriteria'],
                 (value) => setState(() => filters['biddingCriteria'] = value)),
             _buildSingleSelect(
-                'Posted',
+                'Freshness',
                 ['Today', 'This Week', 'This Month', 'Any Time'],
                 filters['freshness'],
                 (value) => setState(() => filters['freshness'] = value)),
@@ -428,6 +454,7 @@ class _HireFreelancerFilterBottomSheetState
                         'locationName': '',
                         'skills': <Map<String, dynamic>>{},
                         'currency': <String>{},
+                        'language': <String>{},
                         'projectType': <String>{},
                         'requirementType': <String>{},
                         'connectType': <String>{},
@@ -448,7 +475,7 @@ class _HireFreelancerFilterBottomSheetState
                   child: _buildButton(
                       'Apply', const Color(0xFF1A1A1A), Colors.white, () {
                     final encodedFilters = _encodeFilters(filters);
-                    print(encodedFilters); // Print the filters
+                    print(encodedFilters);
                     widget.onApplyFilters(encodedFilters);
                     Navigator.pop(context);
                   }),
@@ -489,12 +516,13 @@ class _HireFreelancerFilterBottomSheetState
                 children: [
                   Text(
                       selectedSkills.isEmpty
-                          ? 'Select skills'
+                          ? 'Search'
                           : '${selectedSkills.length} skill(s) selected',
                       style: GoogleFonts.montserrat(
                           fontSize: 14,
+                          fontWeight: FontWeight.w500,
                           color: selectedSkills.isEmpty
-                              ? const Color(0xFF999999)
+                              ? const Color(0xFF191E3E)
                               : const Color(0xFF1A1A1A))),
                   const Icon(Icons.arrow_drop_down, color: Color(0xFF666666)),
                 ],
@@ -529,61 +557,123 @@ class _HireFreelancerFilterBottomSheetState
 
   Widget _buildCurrencySection() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Currency',
-              style: GoogleFonts.montserrat(
-                  fontSize: 15, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 8),
+          Text(
+            'Currency',
+            style: GoogleFonts.montserrat(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 5),
+          Container(
+            height: 1,
+            color: const Color(0xFFE0E0E0),
+          ),
+          const SizedBox(height: 4),
           isLoadingCurrencies
               ? const Center(child: CircularProgressIndicator())
               : availableCurrencies.isEmpty
                   ? const Text('No currencies available')
-                  : Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: availableCurrencies.map((currency) {
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.zero,
+                      itemCount: availableCurrencies.length,
+                      itemBuilder: (context, index) {
+                        final currency = availableCurrencies[index];
                         final isSelected = (filters['currency'] as Set<String>)
                             .contains(currency['id']);
-                        return GestureDetector(
-                          onTap: () => _toggleSelection(
-                              filters['currency'], currency['id']),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 14, vertical: 10),
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? const Color(0xFF1A1A1A)
-                                  : const Color(0xFFF5F5F5),
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(
-                                  color: isSelected
-                                      ? const Color(0xFF1A1A1A)
-                                      : const Color(0xFFE0E0E0)),
-                              boxShadow: [
-                                if (isSelected)
-                                  const BoxShadow(
-                                      color: Colors.black12,
-                                      blurRadius: 4,
-                                      offset: Offset(0, 2))
-                              ],
-                            ),
-                            child: Text(
-                              currency['lable'],
-                              style: GoogleFonts.montserrat(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  color: isSelected
-                                      ? Colors.white
-                                      : const Color(0xFF1A1A1A)),
+                        return CheckboxListTile(
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 4),
+                          dense: true,
+                          visualDensity: VisualDensity(vertical: -2),
+                          title: Text(
+                            currency['lable'],
+                            style: GoogleFonts.montserrat(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: const Color(0xFF1A1A1A),
                             ),
                           ),
+                          value: isSelected,
+                          activeColor: const Color(0xFF1A1A1A),
+                          checkColor: Colors.white,
+                          controlAffinity: ListTileControlAffinity.leading,
+                          onChanged: (bool? value) {
+                            if (value != null) {
+                              setState(() {
+                                _toggleSelection(
+                                    filters['currency'], currency['id']);
+                              });
+                            }
+                          },
                         );
-                      }).toList(),
+                      },
                     ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLanguageSection() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Language',
+            style: GoogleFonts.montserrat(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 5),
+          Container(
+            height: 1,
+            color: const Color(0xFFE0E0E0),
+          ),
+          const SizedBox(height: 4),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            itemCount: availableLanguages.length,
+            itemBuilder: (context, index) {
+              final language = availableLanguages[index];
+              final isSelected =
+                  (filters['language'] as Set<String>).contains(language['id']);
+              return CheckboxListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                dense: true,
+                visualDensity: VisualDensity(vertical: -2),
+                title: Text(
+                  language['name'],
+                  style: GoogleFonts.montserrat(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: const Color(0xFF1A1A1A),
+                  ),
+                ),
+                value: isSelected,
+                activeColor: const Color(0xFF1A1A1A),
+                checkColor: Colors.white,
+                controlAffinity: ListTileControlAffinity.leading,
+                onChanged: (bool? value) {
+                  if (value != null) {
+                    setState(() {
+                      _toggleSelection(filters['language'], language['id']);
+                    });
+                  }
+                },
+              );
+            },
+          ),
         ],
       ),
     );
@@ -596,32 +686,54 @@ class _HireFreelancerFilterBottomSheetState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label,
-              style: GoogleFonts.montserrat(
-                  fontSize: 15, fontWeight: FontWeight.w600)),
+          Text(
+            label,
+            style: GoogleFonts.montserrat(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 5),
+          Container(
+            height: 1,
+            color: const Color(0xFFE0E0E0),
+          ),
+          SizedBox(height: 5),
           const SizedBox(height: 8),
           TextField(
             controller: controller,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: GoogleFonts.montserrat(color: const Color(0xFF999999)),
+              hintStyle: GoogleFonts.montserrat(
+                color: const Color(0xFF191E3E),
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
               filled: true,
               fillColor: const Color(0xFFF5F5F5),
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
-                  borderSide: const BorderSide(color: Color(0xFFE0E0E0))),
+                borderRadius: BorderRadius.circular(6),
+                borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+              ),
               focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
-                  borderSide: const BorderSide(color: Color(0xFF1A1A1A))),
+                borderRadius: BorderRadius.circular(6),
+                borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+              ),
               suffixIcon: controller?.text.isNotEmpty == true
                   ? IconButton(
                       icon: const Icon(Icons.clear, color: Color(0xFF666666)),
-                      onPressed: clearCallback)
+                      onPressed: clearCallback,
+                    )
                   : null,
             ),
-            style: GoogleFonts.montserrat(fontSize: 14),
+            style: GoogleFonts.montserrat(
+              fontSize: 14,
+              color: const Color(0xFF1A1A1A),
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.2,
+            ),
             onChanged: onChanged,
           ),
         ],
@@ -645,56 +757,65 @@ class _HireFreelancerFilterBottomSheetState
       dynamic selectedValue, Function(String) onSelected,
       {bool multiSelect = false}) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label,
-              style: GoogleFonts.montserrat(
-                  fontSize: 15, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: items.map((item) {
+          Text(
+            label,
+            style: GoogleFonts.montserrat(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 5),
+          Container(
+            height: 1,
+            color: const Color(0xFFE0E0E0),
+          ),
+          const SizedBox(height: 4),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final item = items[index];
               final isSelected = multiSelect
                   ? (selectedValue as Set<String>).contains(item)
                   : selectedValue == item;
-              return GestureDetector(
-                onTap: () => onSelected(item),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? const Color(0xFF1A1A1A)
-                        : const Color(0xFFF5F5F5),
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(
-                        color: isSelected
-                            ? const Color(0xFF1A1A1A)
-                            : const Color(0xFFE0E0E0)),
-                    boxShadow: [
-                      if (isSelected)
-                        const BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 4,
-                            offset: Offset(0, 2))
-                    ],
-                  ),
-                  child: Text(
-                    item,
-                    style: GoogleFonts.montserrat(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: isSelected
-                            ? Colors.white
-                            : const Color(0xFF1A1A1A)),
+              return CheckboxListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                dense: true,
+                visualDensity: VisualDensity(vertical: -2),
+                title: Text(
+                  item,
+                  style: GoogleFonts.montserrat(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: const Color(0xFF1A1A1A),
                   ),
                 ),
+                value: isSelected,
+                activeColor: const Color(0xFF1A1A1A),
+                checkColor: Colors.white,
+                controlAffinity: ListTileControlAffinity.leading,
+                onChanged: (bool? value) {
+                  if (value == true) {
+                    if (multiSelect) {
+                      onSelected(item);
+                    } else {
+                      setState(() {
+                        selectedValue = item;
+                        onSelected(item);
+                      });
+                    }
+                  } else if (multiSelect) {
+                    onSelected(item);
+                  }
+                },
               );
-            }).toList(),
+            },
           ),
         ],
       ),

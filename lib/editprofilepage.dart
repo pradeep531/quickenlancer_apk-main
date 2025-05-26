@@ -23,7 +23,7 @@ import 'package:shimmer/shimmer.dart';
 import 'dart:convert';
 
 import 'api/network/uri.dart';
-import 'profile_page.dart';
+import 'profile_page_new.dart';
 import 'profilepage.dart';
 
 class Editprofilepage extends StatefulWidget {
