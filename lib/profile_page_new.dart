@@ -9,10 +9,11 @@ import 'package:quickenlancer_apk/Call/callpage.dart';
 import 'package:quickenlancer_apk/Chat/chatpage.dart';
 import 'package:quickenlancer_apk/Colors/colorfile.dart';
 import 'package:quickenlancer_apk/Projects/all_projects.dart';
+import 'package:quickenlancer_apk/Update%20Profile%20New/portfolio_new.dart';
 import 'package:quickenlancer_apk/home_page.dart';
 import 'Kyc Verification/kyc_verification.dart';
 import 'Update Profile New/profile_update.dart';
-
+import 'Update Profile New/skills_new.dart';
 import 'Update Profile/tabs/update_profile_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,6 +21,7 @@ import 'dart:convert';
 
 import 'api/network/uri.dart';
 
+//save the new changes
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -199,12 +201,24 @@ class _ProfilePageState extends State<ProfilePage> {
                       _buildEditOption(
                         imagePath: 'assets/Group 237841.png',
                         label: 'Skills',
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SkillsNew(),
+                          ),
+                        ),
                         isTappable: true,
                       ),
                       _buildEditOption(
                         imagePath: 'assets/Group 237841.png',
                         label: 'Portfolio',
                         isTappable: true,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PortfolioNew(),
+                          ),
+                        ),
                       ),
                       _buildEditOption(
                         imagePath: 'assets/Group 237841.png',

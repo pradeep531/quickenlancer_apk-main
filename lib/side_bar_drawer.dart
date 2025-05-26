@@ -24,7 +24,7 @@ class SideBarDrawer extends StatelessWidget {
                 children: [
                   SizedBox(height: 20),
                   Image.asset(
-                    'assets/logo.png',
+                    'assets/logo1.png',
                     height: 50,
                     width: double.infinity,
                     fit: BoxFit.cover,

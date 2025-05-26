@@ -286,8 +286,8 @@ class _PasswordFormState extends State<PasswordForm> {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  _buildValidationItem('One lowercase & uppercase character',
-                      _hasLowerAndUpperCase),
+                  _buildValidationItem(
+                      'One lowercase & uppercase', _hasLowerAndUpperCase),
                   _buildValidationItem(
                       'One number & symbol', _hasNumberAndSymbol),
                   _buildValidationItem('6+ characters', _hasMinLength),

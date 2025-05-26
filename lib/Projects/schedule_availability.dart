@@ -338,13 +338,13 @@ class _ScheduleAvailabilityPageState extends State<ScheduleAvailabilityPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Placeholder for asset image
-                    Image.asset(
-                      'assets/schedule.png', // Replace with your actual image path
-                      height: 150, // Adjust height as needed
-                      width: double.infinity,
-                      fit: BoxFit.contain,
-                    ),
-                    const SizedBox(height: 16),
+                    // Image.asset(
+                    //   'assets/schedule.png', // Replace with your actual image path
+                    //   height: 150, // Adjust height as needed
+                    //   width: double.infinity,
+                    //   fit: BoxFit.contain,
+                    // ),
+                    // const SizedBox(height: 16),
                     Text(
                       'Your Time Availability For This Project *',
                       style: GoogleFonts.poppins(
