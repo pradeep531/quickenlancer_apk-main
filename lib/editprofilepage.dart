@@ -13,6 +13,11 @@ import 'package:quickenlancer_apk/Colors/colorfile.dart';
 import 'package:quickenlancer_apk/Projects/all_projects.dart';
 import 'package:quickenlancer_apk/home_page.dart';
 import 'Kyc Verification/kyc_verification.dart';
+import 'Update Profile New/certification_new.dart';
+import 'Update Profile New/experience_new.dart';
+import 'Update Profile New/language_new.dart';
+import 'Update Profile New/portfolio_new.dart';
+import 'Update Profile New/skills_new.dart';
 import 'Update Profile/tabs/languagelist.dart';
 import 'Update Profile/tabs/portfolio_edit.dart';
 import 'Update Profile/tabs/portfolio_form.dart';
@@ -512,14 +517,14 @@ class _ProfilePageState extends State<Editprofilepage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => UpdateProfilePage(initialTab: 2),
+                    builder: (context) => PortfolioNew(),
                   ),
                 );
               } else if (section == 'language') {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => UpdateProfilePage(initialTab: 3),
+                    builder: (context) => LanguagePageNew(),
                   ),
                 );
                 // Navigator.push(
@@ -1215,8 +1220,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                               onPressed: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      UpdateProfilePage(initialTab: 1),
+                                  builder: (context) => SkillsNew(),
                                 ),
                               ),
                             ),
@@ -1337,11 +1341,9 @@ class _ProfilePageState extends State<Editprofilepage> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    UpdateProfilePage(
-                                                  initialTab: isCertificate
-                                                      ? 4
-                                                      : 5, // 👈 separate action
-                                                ),
+                                                    isCertificate
+                                                        ? CertificationNew()
+                                                        : ExperienceNew(),
                                               ),
                                             );
                                           },

@@ -138,7 +138,6 @@ class _PostProjectState extends State<PostProject> {
           .map((s) => s.trim())
           .where((s) => s.isNotEmpty)
           .toList();
-      if (_otherSkills.isNotEmpty) _otherSkillsError = null;
       _otherSkillsXssError =
           _containsScriptTag(input) ? 'Script tags are not allowed' : null;
     });
@@ -191,7 +190,6 @@ class _PostProjectState extends State<PostProject> {
     setState(() {
       _projectNameError = null;
       _skillsError = null;
-      _otherSkillsError = null;
       _projectCostError = null;
       _currencyError = null;
       _requirementTypeError = null;
@@ -223,10 +221,6 @@ class _PostProjectState extends State<PostProject> {
       } else if (step == 1) {
         if (selectedSkillIds.isEmpty) {
           _skillsError = 'At least one skill is required';
-          isValid = false;
-        }
-        if (_otherSkills.isEmpty) {
-          _otherSkillsError = 'At least one other skill is required';
           isValid = false;
         }
       } else if (step == 2) {
@@ -261,10 +255,6 @@ class _PostProjectState extends State<PostProject> {
         }
         if (selectedSkillIds.isEmpty) {
           _skillsError = 'At least one skill is required';
-          isValid = false;
-        }
-        if (_otherSkills.isEmpty) {
-          _otherSkillsError = 'At least one other skill is required';
           isValid = false;
         }
         if (_projectCostController.text.isEmpty) {
@@ -356,8 +346,7 @@ class _PostProjectState extends State<PostProject> {
             );
             documentRequest.headers['Authorization'] = 'Bearer $authToken';
             documentRequest.fields['user_id'] = userId;
-            documentRequest.fields['project_id'] =
-                projectId; // Add project_id to form fields
+            documentRequest.fields['project_id'] = projectId;
 
             for (var file in _files) {
               if (file.bytes != null) {
@@ -656,7 +645,7 @@ class _PostProjectState extends State<PostProject> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Other skills *',
+          Text('Other skills',
               style: GoogleFonts.montserrat(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -669,14 +658,13 @@ class _PostProjectState extends State<PostProject> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(
-                    color: _otherSkillsError != null ||
-                            _otherSkillsXssError != null
+                    color: _otherSkillsXssError != null
                         ? Colors.red
                         : Colors.grey.shade300),
               ),
               contentPadding:
                   EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              errorText: _otherSkillsError ?? _otherSkillsXssError,
+              errorText: _otherSkillsXssError,
               errorStyle:
                   GoogleFonts.montserrat(fontSize: 12, color: Colors.red),
             ),
@@ -976,53 +964,86 @@ class _PostProjectState extends State<PostProject> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Review and Post',
-              style: GoogleFonts.montserrat(
-                  fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(
+            'Review and Post',
+            style: GoogleFonts.montserrat(
+                fontSize: 16, fontWeight: FontWeight.bold),
+          ),
           SizedBox(height: 16),
+          _buildRow(
+              'Project Name: ',
+              _projectNameController.text.isEmpty
+                  ? 'Not set'
+                  : _projectNameController.text),
+          _buildRow(
+              'Description: ',
+              _descriptionController.text.isEmpty
+                  ? 'Not set'
+                  : _descriptionController.text),
+          _buildRow(
+              'Skills: ',
+              selectedSkillIds.isEmpty
+                  ? 'None'
+                  : selectedSkillIds
+                      .map((id) => allSkills.firstWhere(
+                          (s) => int.parse(s['id'].toString()) == id)['skill'])
+                      .join(', ')),
+          _buildRow('Other Skills: ',
+              _otherSkills.isEmpty ? 'None' : _otherSkills.join(', ')),
+          _buildRow(
+              'Requirement Type: ',
+              selectedRequiredType == -1
+                  ? 'Not set'
+                  : options[0]['items'][selectedRequiredType]['label']),
+          _buildRow(
+              'Looking For: ',
+              selectedLookingFor == -1
+                  ? 'Not set'
+                  : options[1]['items'][selectedLookingFor]['label']),
+          _buildRow(
+              'Payment Mode: ',
+              selectedPaymentType == -1
+                  ? 'Not set'
+                  : options[3]['items'][selectedPaymentType]['label']),
+          _buildRow(
+              'Connect Type: ',
+              selectedConnectType == -1
+                  ? 'Not set'
+                  : options[2]['items'][selectedConnectType]['label']),
+          _buildRow(
+              'Currency: ',
+              selectedCurrency == null
+                  ? 'Not set'
+                  : '${selectedCurrency!['currency']} (${selectedCurrency!['lable']})'),
+          _buildRow(
+              'Project Cost: ',
+              _projectCostController.text.isEmpty
+                  ? 'Not set'
+                  : _projectCostController.text),
+          _buildRow('Uploaded Files: ',
+              _files.isEmpty ? 'None' : _files.map((f) => f.name).join(', ')),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRow(String label, String value) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           Text(
-              'Project Name: ${_projectNameController.text.isEmpty ? 'Not set' : _projectNameController.text}',
-              style: GoogleFonts.montserrat(fontSize: 14)),
-          SizedBox(height: 8),
-          Text(
-              'Description: ${_descriptionController.text.isEmpty ? 'Not set' : _descriptionController.text}',
-              style: GoogleFonts.montserrat(fontSize: 14)),
-          SizedBox(height: 8),
-          Text(
-              'Skills: ${selectedSkillIds.isEmpty ? 'None' : selectedSkillIds.map((id) => allSkills.firstWhere((s) => int.parse(s['id'].toString()) == id)['skill']).join(', ')}',
-              style: GoogleFonts.montserrat(fontSize: 14)),
-          SizedBox(height: 8),
-          Text(
-              'Other Skills: ${_otherSkills.isEmpty ? 'None' : _otherSkills.join(', ')}',
-              style: GoogleFonts.montserrat(fontSize: 14)),
-          SizedBox(height: 8),
-          Text(
-              'Requirement Type: ${selectedRequiredType == -1 ? 'Not set' : options[0]['items'][selectedRequiredType]['label']}',
-              style: GoogleFonts.montserrat(fontSize: 14)),
-          SizedBox(height: 8),
-          Text(
-              'Looking For: ${selectedLookingFor == -1 ? 'Not set' : options[1]['items'][selectedLookingFor]['label']}',
-              style: GoogleFonts.montserrat(fontSize: 14)),
-          SizedBox(height: 8),
-          Text(
-              'Payment Mode: ${selectedPaymentType == -1 ? 'Not set' : options[3]['items'][selectedPaymentType]['label']}',
-              style: GoogleFonts.montserrat(fontSize: 14)),
-          SizedBox(height: 8),
-          Text(
-              'Connect Type: ${selectedConnectType == -1 ? 'Not set' : options[2]['items'][selectedConnectType]['label']}',
-              style: GoogleFonts.montserrat(fontSize: 14)),
-          SizedBox(height: 8),
-          Text(
-              'Currency: ${selectedCurrency == null ? 'Not set' : '${selectedCurrency!['currency']} (${selectedCurrency!['lable']})'}',
-              style: GoogleFonts.montserrat(fontSize: 14)),
-          SizedBox(height: 8),
-          Text(
-              'Project Cost: ${_projectCostController.text.isEmpty ? 'Not set' : _projectCostController.text}',
-              style: GoogleFonts.montserrat(fontSize: 14)),
-          SizedBox(height: 8),
-          Text(
-              'Uploaded Files: ${_files.isEmpty ? 'None' : _files.map((f) => f.name).join(', ')}',
-              style: GoogleFonts.montserrat(fontSize: 14)),
+            label,
+            style: GoogleFonts.montserrat(
+                fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: GoogleFonts.montserrat(fontSize: 14),
+            ),
+          ),
         ],
       ),
     );

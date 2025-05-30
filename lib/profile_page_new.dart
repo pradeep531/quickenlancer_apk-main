@@ -12,6 +12,10 @@ import 'package:quickenlancer_apk/Projects/all_projects.dart';
 import 'package:quickenlancer_apk/Update%20Profile%20New/portfolio_new.dart';
 import 'package:quickenlancer_apk/home_page.dart';
 import 'Kyc Verification/kyc_verification.dart';
+import 'Update Profile New/certification_new.dart';
+import 'Update Profile New/change_password.dart';
+import 'Update Profile New/experience_new.dart';
+import 'Update Profile New/language_new.dart';
 import 'Update Profile New/profile_update.dart';
 import 'Update Profile New/skills_new.dart';
 import 'Update Profile/tabs/update_profile_page.dart';
@@ -224,21 +228,45 @@ class _ProfilePageState extends State<ProfilePage> {
                         imagePath: 'assets/Group 237841.png',
                         label: 'Language',
                         isTappable: true,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LanguagePageNew(),
+                          ),
+                        ),
                       ),
                       _buildEditOption(
                         imagePath: 'assets/Group 237841.png',
                         label: 'Certification',
                         isTappable: true,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CertificationNew(),
+                          ),
+                        ),
                       ),
                       _buildEditOption(
                         imagePath: 'assets/Group 237841.png',
                         label: 'Experience',
                         isTappable: true,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ExperienceNew(),
+                          ),
+                        ),
                       ),
                       _buildEditOption(
                         imagePath: 'assets/Group 237841.png',
                         label: 'Change Password',
                         isTappable: true,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PasswordNew(),
+                          ),
+                        ),
                       ),
                       SizedBox(height: 60),
                     ],
@@ -265,12 +293,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   top: screenHeight * 0.23,
                   left: screenWidth * 0.05,
                   child: ElevatedButton(
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              UpdateProfilePage(initialTab: 0)),
-                    ),
+                    // onPressed: () => Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) =>
+                    //           UpdateProfilePage(initialTab: 0)),
+                    // ),
+                    onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       backgroundColor: textColor,
                       padding: EdgeInsets.symmetric(
