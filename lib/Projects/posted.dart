@@ -10,6 +10,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../api/network/uri.dart';
 import '../Colors/colorfile.dart';
 import '../chat_page.dart';
+import 'all_proposals.dart';
+import 'calls_list.dart';
 import 'schedule_availability.dart';
 
 class PostedProjectsTab extends StatefulWidget {
@@ -27,7 +29,7 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
   final int limit = 10;
   Map<String, bool> descriptionExpandedMap = {};
   Map<String, TabController> tabControllers = {};
-  final counts = {'call': 5, 'chat': 3, 'proposal': 10};
+  final counts = {'call': 5, 'chat': 3, 'milestone': 10, 'attachment': 8};
 
   @override
   void initState() {
@@ -255,6 +257,391 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
       ),
     );
   }
+
+  Widget _buildCallTab() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Card(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 0,
+            color: Colors.white,
+            shape: const Border(
+                bottom: BorderSide(color: Color(0xFFDDDDDD), width: 1)),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CircleAvatar(
+                    radius: 24,
+                    backgroundImage: NetworkImage(
+                        'https://www.quickensol.com/quickenlancer-new/images/profile_pic/profile.png'),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Vaibhav Danve',
+                          style: GoogleFonts.montserrat(
+                            color: Colors.black87,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Last Call On: 01 Jan, 1970  |  05:30 AM',
+                          style: GoogleFonts.montserrat(
+                            color: Colors.black54,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            SizedBox(
+                              height: 36,
+                              child: TextButton(
+                                onPressed: () {},
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colorfile.textColor,
+                                  side: const BorderSide(
+                                      color: Colorfile.textColor, width: 1),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4)),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 0),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.phone,
+                                        size: 15, color: Colorfile.textColor),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Call',
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            SizedBox(
+                              height: 36,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xFFB7D7F9),
+                                      Color(0xFFE6ACCB)
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(4)),
+                                ),
+                                child: TextButton(
+                                  onPressed: () {},
+                                  style: TextButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 0),
+                                  ),
+                                  child: Text(
+                                    'Hire Me',
+                                    style: GoogleFonts.montserrat(
+                                      color: Colorfile.textColor,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CallsList(),
+                        ),
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colorfile.textColor,
+                      side: const BorderSide(
+                          color: Colorfile.textColor, width: 1),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
+                      backgroundColor: Colors.white,
+                    ),
+                    child: Text(
+                      'View All',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF51A5D1),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Send Proposal',
+                          style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Image.asset(
+                          'assets/send1.png',
+                          height: 18,
+                          width: 18,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _proposalTab() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Card(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 0,
+            color: Colors.white,
+            shape: const Border(
+                bottom: BorderSide(color: Color(0xFFDDDDDD), width: 1)),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CircleAvatar(
+                    radius: 24,
+                    backgroundImage: NetworkImage(
+                        'https://www.quickensol.com/quickenlancer-new/images/profile_pic/profile.png'),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Vaibhav Danve',
+                          style: GoogleFonts.montserrat(
+                            color: Colorfile.grey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Last Call On: 01 Jan, 1970  |  05:30 AM',
+                          style: GoogleFonts.montserrat(
+                            color: Colorfile.grey,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                height: 36,
+                                child: TextButton(
+                                  onPressed: () {},
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Color(0xFF000000),
+                                    side: const BorderSide(
+                                        color: Color(0xFF000000), width: 1),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4)),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 0),
+                                  ),
+                                  child: Text(
+                                    'Milestone',
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              SizedBox(
+                                height: 36,
+                                child: TextButton(
+                                  onPressed: () {},
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Color(0xFF000000),
+                                    side: const BorderSide(
+                                        color: Color(0xFF000000), width: 1),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4)),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 0),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Image.asset(
+                                        'assets/attachment.png',
+                                        height: 18,
+                                        width: 18,
+                                        color: Color(0xFF000000),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        'Attachment',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllProposals(),
+                        ),
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Color(0xFF000000),
+                      side:
+                          const BorderSide(color: Color(0xFF000000), width: 1),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
+                      backgroundColor: Colors.white,
+                    ),
+                    child: Text(
+                      'View All',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Color(0xFF51A5D1), // Updated background color
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Send Proposal',
+                          style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Image.asset(
+                          'assets/send1.png', // Replace with your PNG path
+                          height: 18,
+                          width: 18,
+                          color: Colors.white, // Tint to match text color
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  // Reusable widget for Chat Tab
+
+  // Reusable widget for Milestone Tab
+
+  // Reusable widget for Attachment Tab
 
   @override
   Widget build(BuildContext context) {
@@ -566,7 +953,7 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                             _buildTab('Chat', counts['chat']!)),
                                     Tab(
                                         child: _buildTab(
-                                            'Proposal', counts['proposal']!,
+                                            'Proposal', counts['milestone']!,
                                             maxWidth: 90)),
                                   ],
                                 ),
@@ -1027,205 +1414,10 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                                         FontWeight.w500)),
                                       ),
                                       // Call Tab
-                                      SingleChildScrollView(
-                                        child: Card(
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 8),
-                                          elevation: 0,
-                                          color: Colors.white,
-                                          shape: const Border(
-                                              bottom: BorderSide(
-                                                  color: Color(0xFFDDDDDD),
-                                                  width: 1)),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(12),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const CircleAvatar(
-                                                    radius: 24,
-                                                    backgroundImage: NetworkImage(
-                                                        'https://www.quickensol.com/quickenlancer-new/images/profile_pic/profile.png')),
-                                                const SizedBox(width: 12),
-                                                Expanded(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text('Vaibhav Danve',
-                                                          style: GoogleFonts
-                                                              .montserrat(
-                                                                  color: Colors
-                                                                      .black87,
-                                                                  fontSize: 16,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600)),
-                                                      const SizedBox(height: 4),
-                                                      Text(
-                                                          'Last Call On: 01 Jan, 1970  |  05:30 AM',
-                                                          style: GoogleFonts
-                                                              .montserrat(
-                                                                  color: Colors
-                                                                      .black54,
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400)),
-                                                      const SizedBox(height: 8),
-                                                      Row(
-                                                        children: [
-                                                          SizedBox(
-                                                            height: 36,
-                                                            child: TextButton(
-                                                              onPressed: () {},
-                                                              style: TextButton
-                                                                  .styleFrom(
-                                                                foregroundColor:
-                                                                    Colorfile
-                                                                        .textColor,
-                                                                side: const BorderSide(
-                                                                    color: Colorfile
-                                                                        .textColor,
-                                                                    width: 1),
-                                                                shape: RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            4)),
-                                                                padding: const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        12,
-                                                                    vertical:
-                                                                        0),
-                                                              ),
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
-                                                                children: [
-                                                                  const Icon(
-                                                                      Icons
-                                                                          .phone,
-                                                                      size: 18,
-                                                                      color: Colorfile
-                                                                          .textColor),
-                                                                  const SizedBox(
-                                                                      width: 4),
-                                                                  Text('Call',
-                                                                      style: GoogleFonts.montserrat(
-                                                                          fontSize:
-                                                                              14,
-                                                                          fontWeight:
-                                                                              FontWeight.w500)),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                              width: 16),
-                                                          SizedBox(
-                                                            height: 36,
-                                                            child: Container(
-                                                              decoration:
-                                                                  const BoxDecoration(
-                                                                gradient: LinearGradient(
-                                                                    colors: [
-                                                                      Color(
-                                                                          0xFFB7D7F9),
-                                                                      Color(
-                                                                          0xFFE6ACCB)
-                                                                    ],
-                                                                    begin: Alignment
-                                                                        .topLeft,
-                                                                    end: Alignment
-                                                                        .bottomRight),
-                                                                borderRadius: BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            4)),
-                                                              ),
-                                                              child: TextButton(
-                                                                onPressed:
-                                                                    () {},
-                                                                style: TextButton.styleFrom(
-                                                                    padding: const EdgeInsets
-                                                                        .symmetric(
-                                                                        horizontal:
-                                                                            16,
-                                                                        vertical:
-                                                                            0)),
-                                                                child: Text(
-                                                                    'Hire Me',
-                                                                    style: GoogleFonts.montserrat(
-                                                                        color: Colorfile
-                                                                            .textColor,
-                                                                        fontSize:
-                                                                            14,
-                                                                        fontWeight:
-                                                                            FontWeight.w500)),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                      _buildCallTab(),
                                       // Chat Tab
-                                      SingleChildScrollView(
-                                        child: Center(
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 16, vertical: 8),
-                                            decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: Colors.black54,
-                                                    width: 1),
-                                                borderRadius:
-                                                    BorderRadius.circular(8)),
-                                            child: Text('Chats Not Found',
-                                                style: GoogleFonts.montserrat(
-                                                    color: Colors.black54,
-                                                    fontSize: 12,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                          ),
-                                        ),
-                                      ),
-                                      // Proposal Tab
-                                      SingleChildScrollView(
-                                        child: Center(
-                                          child: TextButton(
-                                            onPressed: job['status'] == '0'
-                                                ? () {}
-                                                : () {},
-                                            style: TextButton.styleFrom(
-                                                backgroundColor:
-                                                    const Color(0xFFCAEA95),
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4))),
-                                            child: Text(
-                                                job['status'] == '0'
-                                                    ? 'Approval Pending'
-                                                    : 'Go to Proposals',
-                                                style: GoogleFonts.montserrat(
-                                                    color:
-                                                        const Color(0xFF5C8A3C),
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 12)),
-                                          ),
-                                        ),
-                                      ),
+                                      _buildCallTab(),
+                                      _proposalTab(),
                                     ],
                                   ),
                                 ),
