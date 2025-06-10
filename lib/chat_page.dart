@@ -34,7 +34,7 @@ class _ChatPageState extends State<ChatPage> {
   bool _hasMoreMessages = true;
   int _limit = 10;
   int _offset = 0;
-  List<Map<String, dynamic>> messages = [];
+  List<Map<String, Object>> messages = [];
   String projectName = '';
   String projectCreatedOn = '';
   String projectAmount = '';
@@ -52,7 +52,6 @@ class _ChatPageState extends State<ChatPage> {
         _isScrolled = _scrollController.offset > 100;
       });
 
-      // Trigger fetch when scrolling near the top
       if (_scrollController.offset <= 50 &&
           !_isLoadingMore &&
           _hasMoreMessages &&
@@ -71,7 +70,6 @@ class _ChatPageState extends State<ChatPage> {
       _isLoadingMore = true;
     });
 
-    // Reset offset and messages if refreshing
     if (isRefresh) {
       _offset = 0;
       messages.clear();
@@ -80,10 +78,10 @@ class _ChatPageState extends State<ChatPage> {
 
     final prefs = await SharedPreferences.getInstance();
     final String? authToken = prefs.getString('auth_token');
-    final userId = prefs.getString('user_id') ?? '';
+    final String? userId = prefs.getString('user_id') ?? '';
     final String apiUrl = URLS().user_chats;
-    final Map<String, dynamic> requestBody = {
-      "user_id": userId,
+    final Map<String, Object> requestBody = {
+      "user_id": userId!,
       "offset": _offset,
       "limit": _limit,
       "project_id": widget.projectId,
@@ -107,37 +105,51 @@ class _ChatPageState extends State<ChatPage> {
         final responseData = jsonDecode(response.body);
         if (responseData['status'] == 'true') {
           final data = responseData['data'];
-          final List<dynamic> fetchedMessages = data['messages'];
-
+          final List<dynamic> fetchedMessages =
+              data['messages'] is List ? data['messages'] : [];
           setState(() {
             if (_offset == 0) {
-              // Initial fetch or refresh: replace messages
               messages = fetchedMessages.map((msg) {
-                return {
-                  'text': msg['message'],
-                  'sender': msg['text_align'] == 'right' ? 'sent' : 'received',
-                  'time':
-                      DateTime.tryParse(msg['created_on']) ?? DateTime.now(),
+                final String messageText = msg['message']?.toString() ?? '';
+                final String textAlign =
+                    msg['text_align']?.toString() ?? 'left';
+                final DateTime createdOn =
+                    DateTime.tryParse(msg['created_on']?.toString() ?? '') ??
+                        DateTime.now();
+                return <String, Object>{
+                  'text': messageText,
+                  'sender': textAlign == 'right' ? 'sent' : 'received',
+                  'time': createdOn,
                 };
               }).toList();
-              // Populate project details only on initial fetch or refresh
-              projectName = data['project_name'] ?? 'Untitled Project';
-              projectCreatedOn = data['project_created_on'] ?? '';
-              projectAmount = data['project_amount'] ?? '';
-              currencyLabel = data['currency_label'] ?? 'INR';
-              receiverName =
-                  '${data['receiver_details']['f_name'] ?? ''} ${data['receiver_details']['l_name'] ?? ''}'
-                      .trim();
-              profilePic = data['profile_pic'] ??
+              projectName =
+                  data['project_name']?.toString() ?? 'Untitled Project';
+              projectCreatedOn = data['project_created_on']?.toString() ?? '';
+              projectAmount = data['project_amount']?.toString() ?? '';
+              currencyLabel = data['currency_label']?.toString() ?? 'INR';
+
+              if (data['receiver_details'] is Map) {
+                receiverName =
+                    '${data['receiver_details']?['f_name']?.toString() ?? ''} ${data['receiver_details']?['l_name']?.toString() ?? ''}'
+                        .trim();
+              } else {
+                receiverName = '';
+              }
+
+              profilePic = data['profile_pic']?.toString() ??
                   'https://www.quickensol.com/quickenlancer-new/images/acco.png';
             } else {
-              // Pagination: prepend new messages
               final newMessages = fetchedMessages.map((msg) {
-                return {
-                  'text': msg['message'],
-                  'sender': msg['text_align'] == 'right' ? 'sent' : 'received',
-                  'time':
-                      DateTime.tryParse(msg['created_on']) ?? DateTime.now(),
+                final String messageText = msg['message']?.toString() ?? '';
+                final String textAlign =
+                    msg['text_align']?.toString() ?? 'left';
+                final DateTime createdOn =
+                    DateTime.tryParse(msg['created_on']?.toString() ?? '') ??
+                        DateTime.now();
+                return <String, Object>{
+                  'text': messageText,
+                  'sender': textAlign == 'right' ? 'sent' : 'received',
+                  'time': createdOn,
                 };
               }).toList();
               messages.insertAll(0, newMessages);
@@ -146,14 +158,15 @@ class _ChatPageState extends State<ChatPage> {
             _isLoadingMore = false;
           });
 
-          if (_offset == 0) {
-            // Scroll to bottom only on initial fetch or refresh
+          if (_offset == 0 && messages.isNotEmpty) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              _scrollController.animateTo(
-                _scrollController.position.maxScrollExtent,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOut,
-              );
+              if (_scrollController.hasClients) {
+                _scrollController.animateTo(
+                  _scrollController.position.maxScrollExtent,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                );
+              }
             });
           }
         } else {
@@ -161,9 +174,9 @@ class _ChatPageState extends State<ChatPage> {
             _isLoadingMore = false;
             _hasMoreMessages = false;
           });
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   const SnackBar(content: Text('Failed to load chat data')),
-          // );
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to load chat data')),
+          );
         }
       } else {
         log('Fetch Chat Error: ${response.statusCode}');
@@ -175,25 +188,35 @@ class _ChatPageState extends State<ChatPage> {
           const SnackBar(content: Text('Failed to load chat data')),
         );
       }
-    } catch (e) {
-      log('Fetch Chat Error: $e');
+    } catch (e, stackTrace) {
+      log('Fetch Chat Error: $e, StackTrace: $stackTrace');
       setState(() {
         _isLoadingMore = false;
         _hasMoreMessages = false;
       });
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('Error loading chat data')),
-      // );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error loading chat data')),
+      );
     }
   }
 
   Future<void> _sendMessage(String typedMessage) async {
     final prefs = await SharedPreferences.getInstance();
     final String? authToken = prefs.getString('auth_token');
+    final String? userId = prefs.getString('user_id');
+
+    if (userId == null || authToken == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Authentication error. Please log in again.'),
+        ),
+      );
+      return;
+    }
 
     final String apiUrl = URLS().user_send_message;
-    final Map<String, dynamic> requestBody = {
-      "user_id": prefs.getString('user_id'),
+    final Map<String, Object> requestBody = {
+      "user_id": userId,
       "chat_sender": widget.chatSender,
       "message": typedMessage,
       "chat_receiver": widget.chatReceiver,
@@ -213,28 +236,39 @@ class _ChatPageState extends State<ChatPage> {
 
       log('Send Message Response Body: ${response.body}');
       if (response.statusCode == 200) {
-        setState(() {
-          messages.add({
-            "text": typedMessage,
-            "sender": "sent",
-            "time": DateTime.now(),
+        final responseData = jsonDecode(response.body);
+        if (responseData['status'] == 'true') {
+          setState(() {
+            messages.add(<String, Object>{
+              "text": typedMessage,
+              "sender": "sent",
+              "time": DateTime.now(),
+            });
           });
-        });
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_scrollController.hasClients) {
+              _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+              );
+            }
+          });
+          _textController.clear();
+        } else {
+          log('Send Message Error: ${response.body}');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to send message')),
           );
-        });
+        }
       } else {
         log('Send Message Error: ${response.statusCode} - ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to send message')),
         );
       }
-    } catch (e) {
-      log('Send Message Error: $e');
+    } catch (e, stackTrace) {
+      log('Send Message Error: $e, StackTrace: $stackTrace');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Error sending message')),
       );
@@ -294,6 +328,13 @@ class _ChatPageState extends State<ChatPage> {
               fontSize: 18.0,
             ),
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.refresh, color: Colorfile.textColor),
+              onPressed: () => _fetchChatData(isRefresh: true),
+              tooltip: 'Reload Chat',
+            ),
+          ],
           elevation: 0,
         ),
         body: Column(
@@ -344,25 +385,6 @@ class _ChatPageState extends State<ChatPage> {
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.w600,
                                   ),
-                                  // children: [
-                                  //   TextSpan(
-                                  //     text: _isExpanded
-                                  //         ? ' Read less'
-                                  //         : ' Read more',
-                                  //     style: const TextStyle(
-                                  //       color: Color(0xFF424752),
-                                  //       fontWeight: FontWeight.w500,
-                                  //       fontSize: 9,
-                                  //       decoration: TextDecoration.underline,
-                                  //     ),
-                                  //     recognizer: TapGestureRecognizer()
-                                  //       ..onTap = () {
-                                  //         setState(() {
-                                  //           _isExpanded = !_isExpanded;
-                                  //         });
-                                  //       },
-                                  //   ),
-                                  // ],
                                 ),
                                 maxLines: _isExpanded ? null : 2,
                                 overflow: _isExpanded
@@ -474,8 +496,8 @@ class _ChatPageState extends State<ChatPage> {
                                 _isLoadingMore ? index - 1 : index;
                             final message = messages[messageIndex];
                             final isSent = message['sender'] == 'sent';
-                            final time =
-                                DateFormat('h:mm a').format(message['time']);
+                            final time = DateFormat('h:mm a')
+                                .format(message['time'] as DateTime);
                             return Column(
                               crossAxisAlignment: isSent
                                   ? CrossAxisAlignment.end
@@ -508,7 +530,7 @@ class _ChatPageState extends State<ChatPage> {
                                     ),
                                   ),
                                   child: Text(
-                                    message['text']!,
+                                    message['text']! as String,
                                     style:
                                         GoogleFonts.montserrat(fontSize: 13.0),
                                   ),
@@ -577,7 +599,6 @@ class _ChatPageState extends State<ChatPage> {
                         onPressed: () {
                           if (_textController.text.trim().isNotEmpty) {
                             _sendMessage(_textController.text.trim());
-                            _textController.clear();
                           }
                         },
                       ),
