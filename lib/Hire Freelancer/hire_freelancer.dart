@@ -6,9 +6,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:quickenlancer_apk/api/network/uri.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Colors/colorfile.dart';
-import 'filter_bottom_sheet.dart';
-import 'hire_freelancer_filter.dart';
+import '../Colors/colorfile.dart';
+import 'freelancer_profile.dart';
+import '../filter_bottom_sheet.dart';
+import '../hire_freelancer_filter.dart';
 import 'dart:async'; // Added for TimeoutException
 
 class HireFreelancer extends StatefulWidget {
@@ -543,7 +544,16 @@ class _FreelancerCard extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FreelancerProfile(
+                        freelancerId: freelancer['id'].toString(),
+                      ),
+                    ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: const Color(0xFF191E3E),

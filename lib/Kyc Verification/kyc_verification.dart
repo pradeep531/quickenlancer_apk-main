@@ -927,7 +927,6 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
           ],
         ),
       );
-
   @override
   Widget build(BuildContext context) {
     final stepContents = [
@@ -1078,231 +1077,242 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
       ),
     ];
 
-    return MaterialApp(
-      home: ScaffoldMessenger(
-        child: Builder(
-          builder: (context) => Scaffold(
-            backgroundColor: Colorfile.body,
-            appBar: AppBar(
-              backgroundColor: Colorfile.body,
-              leading: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colorfile.textColor),
-                  onPressed: () => Navigator.pop(context)),
-              title: Text('KYC Verification',
-                  style: GoogleFonts.montserrat(
-                      color: Colorfile.textColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600)),
+    void _handleBackPress(BuildContext context) {
+      showDialog(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text('Confirm Exit'),
+          content: Text('Are you sure you want to go back?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext), // Close dialog
+              child: Text('Cancel'),
             ),
-            body: Stack(
-              children: [
-                CupertinoScrollbar(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () => setState(
-                              () => _isContainerVisible = !_isContainerVisible),
-                          child: Container(
-                            width: double.infinity,
-                            height: 120,
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    colors: [
-                                  Color(0xFFB7D7F9),
-                                  Color(0xFFE5ACCB)
-                                ],
-                                    begin: Alignment.bottomLeft,
-                                    end: Alignment.topRight)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext); // Close dialog
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context); // Pop the current screen
+                }
+              },
+              child: Text('Yes'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ScaffoldMessenger(
+      child: Scaffold(
+        backgroundColor: Colorfile.body,
+        appBar: AppBar(
+          backgroundColor: Colorfile.body,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colorfile.textColor),
+            onPressed: () =>
+                _handleBackPress(context), // Only call _handleBackPress
+          ),
+          title: Text('KYC Verification',
+              style: GoogleFonts.montserrat(
+                  color: Colorfile.textColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600)),
+        ),
+        body: Stack(
+          children: [
+            CupertinoScrollbar(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () => setState(
+                          () => _isContainerVisible = !_isContainerVisible),
+                      child: Container(
+                        width: double.infinity,
+                        height: 120,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                colors: [Color(0xFFB7D7F9), Color(0xFFE5ACCB)],
+                                begin: Alignment.bottomLeft,
+                                end: Alignment.topRight)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                          child: Text('Why Quickenlancer KYC?',
-                                              style: GoogleFonts.montserrat(
-                                                  color: Colorfile.textColor,
-                                                  fontSize: 15,
-                                                  fontWeight:
-                                                      FontWeight.bold))),
-                                      Container(
-                                        width: 25,
-                                        height: 25,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                                color: Colorfile.textColor,
-                                                width: 1)),
-                                        child: Center(
-                                            child: Transform.rotate(
-                                                angle: _isContainerVisible
-                                                    ? 1.57
-                                                    : 4.72,
-                                                child: Icon(
-                                                    Icons.chevron_left_outlined,
-                                                    color: Colorfile.textColor,
-                                                    size: 20))),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text('Secure and verified user identities.',
-                                      style: GoogleFonts.montserrat(
-                                          color: Colorfile.textColor,
-                                          fontSize: 10)),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          height: _isContainerVisible ? 150 : 0,
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                  colors: [
-                                Color(0xFFB7D7F9),
-                                Color(0xFFE5ACCB)
-                              ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight)),
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(
-                                        color: const Color(0xFFE0E0E0),
-                                        width: 1)),
-                                child: ListTile(
-                                  leading: Container(
-                                    width: 50,
-                                    height: 50,
+                                  Expanded(
+                                      child: Text('Why Quickenlancer KYC?',
+                                          style: GoogleFonts.montserrat(
+                                              color: Colorfile.textColor,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold))),
+                                  Container(
+                                    width: 25,
+                                    height: 25,
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        gradient: LinearGradient(
-                                            colors: [
-                                              Color(0xFFB7D7F9),
-                                              Color(0xFFE5ACCB)
-                                            ],
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight)),
-                                    child: ClipOval(
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(6.0),
-                                            child: Icon(Icons.verified_user,
-                                                color: Colors.white))),
+                                        border: Border.all(
+                                            color: Colorfile.textColor,
+                                            width: 1)),
+                                    child: Center(
+                                        child: Transform.rotate(
+                                            angle: _isContainerVisible
+                                                ? 1.57
+                                                : 4.72,
+                                            child: Icon(
+                                                Icons.chevron_left_outlined,
+                                                color: Colorfile.textColor,
+                                                size: 20))),
                                   ),
-                                  title: Text('Secure Verification',
-                                      style: GoogleFonts.montserrat(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colorfile.textColor)),
-                                  subtitle: Text(
-                                      'Ensure a trusted platform experience.',
-                                      style: GoogleFonts.montserrat(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w500)),
-                                ),
+                                ],
                               ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        AnotherStepper(
-                          stepperList: List.generate(
-                              4,
-                              (_) => StepperData(
-                                  iconWidget: Icon(Icons.circle,
-                                      size: 20, color: Color(0xFF8B3A99)))),
-                          stepperDirection: Axis.horizontal,
-                          activeBarColor: Color(0xFF8B3A99),
-                          inActiveBarColor: Color(0xFFD9D9D9),
-                          iconWidth: 18,
-                          iconHeight: 20,
-                          barThickness: 2,
-                          activeIndex: _currentStep,
-                        ),
-                        const SizedBox(height: 20),
-                        _isApiLoading
-                            ? Center(
-                                child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Theme.of(context).primaryColor)))
-                            : stepContents[_currentStep],
-                        const SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              if (_currentStep > 0)
-                                StyledButton(
-                                    text: 'Previous',
-                                    icon: Icons.arrow_back,
-                                    onPressed: () =>
-                                        setState(() => _currentStep--),
-                                    buttonColor: null),
-                              StyledButton(
-                                text: _currentStep == stepContents.length - 1
-                                    ? 'Submit'
-                                    : 'Next',
-                                icon: _currentStep == stepContents.length - 1
-                                    ? Icons.check
-                                    : Icons.arrow_forward,
-                                onPressed: () async {
-                                  if (_currentStep < stepContents.length - 1) {
-                                    if (_validateStep(_currentStep)) {
-                                      if (_currentStep == 0) {
-                                        _formKey.currentState?.save();
-                                        await _updateBasicDetails();
-                                        if (mounted)
-                                          setState(() => _currentStep++);
-                                      } else if (_currentStep == 1) {
-                                        await _submitKYCDocuments();
-                                        if (mounted)
-                                          setState(() => _currentStep++);
-                                      } else if (_currentStep == 2) {
-                                        await _submitKYCVideo();
-                                        if (mounted)
-                                          setState(() => _currentStep++);
-                                      } else {
-                                        setState(() => _currentStep++);
-                                      }
-                                    } else {
-                                      _showSnackBar('Complete all fields');
-                                    }
-                                  } else {
-                                    _submitKYC();
-                                  }
-                                },
-                              ),
+                              const SizedBox(height: 8),
+                              Text('Secure and verified user identities.',
+                                  style: GoogleFonts.montserrat(
+                                      color: Colorfile.textColor,
+                                      fontSize: 10)),
                             ],
                           ),
                         ),
-                        const SizedBox(height: 20),
-                      ],
+                      ),
                     ),
-                  ),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      height: _isContainerVisible ? 150 : 0,
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              colors: [Color(0xFFB7D7F9), Color(0xFFE5ACCB)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight)),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                    color: const Color(0xFFE0E0E0), width: 1)),
+                            child: ListTile(
+                              leading: Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                        colors: [
+                                          Color(0xFFB7D7F9),
+                                          Color(0xFFE5ACCB)
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight)),
+                                child: ClipOval(
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(6.0),
+                                        child: Icon(Icons.verified_user,
+                                            color: Colors.white))),
+                              ),
+                              title: Text('Secure Verification',
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colorfile.textColor)),
+                              subtitle: Text(
+                                  'Ensure a trusted platform experience.',
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    AnotherStepper(
+                      stepperList: List.generate(
+                          4,
+                          (_) => StepperData(
+                              iconWidget: Icon(Icons.circle,
+                                  size: 20, color: Color(0xFF8B3A99)))),
+                      stepperDirection: Axis.horizontal,
+                      activeBarColor: Color(0xFF8B3A99),
+                      inActiveBarColor: Color(0xFFD9D9D9),
+                      iconWidth: 18,
+                      iconHeight: 20,
+                      barThickness: 2,
+                      activeIndex: _currentStep,
+                    ),
+                    const SizedBox(height: 20),
+                    _isApiLoading
+                        ? Center(
+                            child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Theme.of(context).primaryColor)))
+                        : stepContents[_currentStep],
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (_currentStep > 0)
+                            StyledButton(
+                                text: 'Previous',
+                                icon: Icons.arrow_back,
+                                onPressed: () => setState(() => _currentStep--),
+                                buttonColor: null),
+                          StyledButton(
+                            text: _currentStep == stepContents.length - 1
+                                ? 'Submit'
+                                : 'Next',
+                            icon: _currentStep == stepContents.length - 1
+                                ? Icons.check
+                                : Icons.arrow_forward,
+                            onPressed: () async {
+                              if (_currentStep < stepContents.length - 1) {
+                                if (_validateStep(_currentStep)) {
+                                  if (_currentStep == 0) {
+                                    _formKey.currentState?.save();
+                                    await _updateBasicDetails();
+                                    if (mounted) setState(() => _currentStep++);
+                                  } else if (_currentStep == 1) {
+                                    await _submitKYCDocuments();
+                                    if (mounted) setState(() => _currentStep++);
+                                  } else if (_currentStep == 2) {
+                                    await _submitKYCVideo();
+                                    if (mounted) setState(() => _currentStep++);
+                                  } else {
+                                    setState(() => _currentStep++);
+                                  }
+                                } else {
+                                  _showSnackBar('Complete all fields');
+                                }
+                              } else {
+                                _submitKYC();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
                 ),
-                if (_isSubmitting || _isApiLoading)
-                  Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: Center(
-                        child: CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white))),
-                  ),
-              ],
+              ),
             ),
-          ),
+            if (_isSubmitting || _isApiLoading)
+              Container(
+                color: Colors.black.withOpacity(0.5),
+                child: Center(
+                    child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Colors.white))),
+              ),
+          ],
         ),
       ),
     );

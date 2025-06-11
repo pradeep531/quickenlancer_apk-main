@@ -1,43 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:convert';
 import '../Colors/colorfile.dart';
-import '../api/network/uri.dart';
 
-class CallsList extends StatelessWidget {
-  final List<dynamic> calls;
+class ChatList extends StatelessWidget {
   final String projectId;
+  final String chatSender;
+  final String chatReceiver;
+  final List<dynamic>? chats; // Optional chats list
 
-  const CallsList({super.key, required this.calls, required this.projectId});
-
-  Future<void> _openPhoneDialer(String mobileNo, BuildContext context) async {
-    final uri = Uri(scheme: 'tel', path: mobileNo);
-    try {
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Cannot launch phone dialer',
-                style: GoogleFonts.montserrat()),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e) {
-      debugPrint('Failed to launch phone dialer: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Unable to open phone dialer',
-              style: GoogleFonts.montserrat()),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
+  const ChatList({
+    super.key,
+    required this.projectId,
+    required this.chatSender,
+    required this.chatReceiver,
+    this.chats,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +22,7 @@ class CallsList extends StatelessWidget {
       backgroundColor: Color(0xFFF5F5F5), // Softer background for minimal look
       appBar: AppBar(
         title: Text(
-          'Call List',
+          'Chat List',
           style: GoogleFonts.montserrat(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -63,10 +40,10 @@ class CallsList extends StatelessWidget {
           ),
         ),
       ),
-      body: calls.isEmpty
+      body: chats == null || chats!.isEmpty
           ? Center(
               child: Text(
-                'No calls available',
+                'No chats available',
                 style: GoogleFonts.montserrat(
                   color: Colors.black45,
                   fontSize: 14, // Smaller font for subtlety
@@ -76,9 +53,9 @@ class CallsList extends StatelessWidget {
             )
           : ListView.builder(
               padding: const EdgeInsets.all(12), // Reduced padding
-              itemCount: calls.length,
+              itemCount: chats!.length,
               itemBuilder: (context, index) {
-                final call = calls[index];
+                final chat = chats![index];
                 return Card(
                   margin: const EdgeInsets.symmetric(
                       vertical: 6), // Tighter spacing
@@ -98,9 +75,9 @@ class CallsList extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 20, // Smaller avatar
-                          backgroundImage: call['profile_pic_url'] != null &&
-                                  call['profile_pic_url'].isNotEmpty
-                              ? NetworkImage(call['profile_pic_url'])
+                          backgroundImage: chat['profile_pic_url'] != null &&
+                                  chat['profile_pic_url'].isNotEmpty
+                              ? NetworkImage(chat['profile_pic_url'])
                               : const NetworkImage(
                                   'https://www.quickensol.com/quickenlancer-new/images/profile_pic/profile.png'),
                         ),
@@ -110,7 +87,7 @@ class CallsList extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${call['f_name'] ?? ''} ${call['l_name'] ?? ''}',
+                                '${chat['f_name'] ?? ''} ${chat['l_name'] ?? ''}',
                                 style: GoogleFonts.montserrat(
                                   color: Colors.black87,
                                   fontSize: 14, // Smaller, cleaner font
@@ -119,7 +96,7 @@ class CallsList extends StatelessWidget {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                'Last Call: ${call['sent_on_text'] ?? 'N/A'}',
+                                'Last Chat: ${chat['sent_on_text'] ?? 'N/A'}',
                                 style: GoogleFonts.montserrat(
                                   color: Colors.black45, // Softer color
                                   fontSize: 11, // Smaller font
@@ -132,103 +109,18 @@ class CallsList extends StatelessWidget {
                                   SizedBox(
                                     height: 32, // Smaller button
                                     child: TextButton(
-                                      onPressed: () async {
-                                        final prefs = await SharedPreferences
-                                            .getInstance();
-                                        final String? userId =
-                                            prefs.getString('user_id');
-                                        final String? authToken =
-                                            prefs.getString('auth_token');
-
-                                        if (userId == null ||
-                                            authToken == null) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                  'User ID or auth token not available'),
-                                              backgroundColor: Colors.red,
+                                      onPressed: () {
+                                        // Navigate to a detailed chat view or perform an action
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Chat with ${chat['f_name'] ?? ''} ${chat['l_name'] ?? ''}',
+                                              style: GoogleFonts.montserrat(),
                                             ),
-                                          );
-                                          return;
-                                        }
-
-                                        final String callApiUrl =
-                                            URLS().set_call_entry;
-                                        final requestBody = jsonEncode({
-                                          'user_id': userId,
-                                          'project_id': projectId,
-                                          'project_owner_id':
-                                              call['user_id']?.toString() ??
-                                                  userId,
-                                          'used_token_id': call['used_token_id']
-                                                  ?.toString() ??
-                                              '',
-                                        });
-                                        debugPrint(
-                                            'API Request Body: $requestBody');
-
-                                        try {
-                                          final callResponse = await http.post(
-                                            Uri.parse(callApiUrl),
-                                            headers: {
-                                              'Content-Type':
-                                                  'application/json',
-                                              'Authorization':
-                                                  'Bearer $authToken',
-                                            },
-                                            body: requestBody,
-                                          );
-
-                                          debugPrint(
-                                              'API Response Status: ${callResponse.statusCode}');
-                                          debugPrint(
-                                              'API Response Body: ${callResponse.body}');
-
-                                          if (callResponse.statusCode == 200 ||
-                                              callResponse.statusCode == 201) {
-                                            final responseData =
-                                                jsonDecode(callResponse.body);
-                                            if (responseData['status'] ==
-                                                    'true' &&
-                                                responseData['data'] != null) {
-                                              final String receiverMobileNo =
-                                                  responseData['data']
-                                                      ['receiver_mobile_no'];
-                                              _openPhoneDialer(
-                                                  receiverMobileNo, context);
-                                            } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                      'Invalid response from server. Please try again.'),
-                                                  backgroundColor: Colors.red,
-                                                ),
-                                              );
-                                            }
-                                          } else {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                    'Failed to initiate call. Please try again.'),
-                                                backgroundColor: Colors.red,
-                                              ),
-                                            );
-                                          }
-                                        } catch (e) {
-                                          debugPrint(
-                                              'Error during API call: $e');
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                  'An error occurred. Please try again.'),
-                                              backgroundColor: Colors.red,
-                                            ),
-                                          );
-                                        }
+                                            backgroundColor: Colors.green,
+                                          ),
+                                        );
                                       },
                                       style: TextButton.styleFrom(
                                         foregroundColor: Colorfile.textColor,
@@ -244,12 +136,12 @@ class CallsList extends StatelessWidget {
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          const Icon(Icons.phone,
+                                          const Icon(Icons.chat,
                                               size: 14,
                                               color: Colorfile.textColor),
                                           const SizedBox(width: 4),
                                           Text(
-                                            'Call',
+                                            'Chat',
                                             style: GoogleFonts.montserrat(
                                               fontSize: 12, // Smaller font
                                               fontWeight: FontWeight.w500,
@@ -260,7 +152,7 @@ class CallsList extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(width: 12),
-                                  if (call['is_hire_me_button'] == 1)
+                                  if (chat['is_hire_me_button'] == 1)
                                     SizedBox(
                                       height: 32, // Smaller button
                                       child: TextButton(

@@ -12,6 +12,7 @@ import '../Colors/colorfile.dart';
 import '../chat_page.dart';
 import 'all_proposals.dart';
 import 'calls_list.dart';
+import 'chat_list.dart';
 import 'schedule_availability.dart';
 
 class PostedProjectsTab extends StatefulWidget {
@@ -296,7 +297,8 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
               ),
             )
           else
-            ...calls.map((call) => Card(
+            ...calls.take(3).map((call) => Card(
+                  // Limit to 3 calls
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   elevation: 0,
@@ -345,7 +347,6 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                     height: 36,
                                     child: TextButton(
                                       onPressed: () async {
-                                        // Fetch user_id and auth_token from SharedPreferences
                                         final prefs = await SharedPreferences
                                             .getInstance();
                                         final String? userId =
@@ -366,7 +367,6 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                           return;
                                         }
 
-                                        // Define the API URL
                                         final String callApiUrl =
                                             URLS().set_call_entry;
                                         final requestBody = jsonEncode({
@@ -384,7 +384,6 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                             'API Request Body: $requestBody');
 
                                         try {
-                                          // Make the API call
                                           final callResponse = await http.post(
                                             Uri.parse(callApiUrl),
                                             headers: {
@@ -403,7 +402,6 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
 
                                           if (callResponse.statusCode == 200 ||
                                               callResponse.statusCode == 201) {
-                                            // Parse the API response
                                             final responseData =
                                                 jsonDecode(callResponse.body);
                                             if (responseData['status'] ==
@@ -412,11 +410,9 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                               final String receiverMobileNo =
                                                   responseData['data']
                                                       ['receiver_mobile_no'];
-                                              // Open phone dialer with receiver_mobile_no
                                               _openPhoneDialer(
                                                   receiverMobileNo);
                                             } else {
-                                              // Handle invalid response format
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 const SnackBar(
@@ -427,7 +423,6 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                               );
                                             }
                                           } else {
-                                            // Handle API failure
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
                                               const SnackBar(
@@ -538,7 +533,11 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CallsList(),
+                          builder: (context) => CallsList(
+                            calls: calls, // Pass the calls list
+                            projectId: project['project_id']
+                                .toString(), // Pass projectId
+                          ),
                         ),
                       );
                     },
@@ -618,7 +617,8 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
               ),
             )
           else
-            ...chats.map((chat) => Card(
+            ...chats.take(3).map((chat) => Card(
+                  // Limit to 3 chats
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   elevation: 0,
@@ -667,7 +667,6 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                     height: 36,
                                     child: TextButton(
                                       onPressed: () async {
-                                        // Fetch user_id from SharedPreferences
                                         final prefs = await SharedPreferences
                                             .getInstance();
                                         final String? userId =
@@ -685,7 +684,6 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                           return;
                                         }
 
-                                        // Extract receiver_id from chat data
                                         final String? receiverId =
                                             chat['receiver_id']?.toString();
 
@@ -803,11 +801,12 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ChatPage(
+                          builder: (context) => ChatList(
                             projectId: project['project_id'].toString(),
                             chatSender: project['user_id']?.toString() ?? '',
                             chatReceiver:
                                 project['chat_receiver']?.toString() ?? '',
+                            chats: chats, // Pass the chats list
                           ),
                         ),
                       );
@@ -888,7 +887,7 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
               ),
             )
           else
-            ...proposals.map((proposal) => Card(
+            ...proposals.take(3).map((proposal) => Card(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   elevation: 0,
@@ -1028,7 +1027,10 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AllProposals(),
+                          builder: (context) => AllProposals(
+                            projectId: project['project_id'].toString(),
+                            proposals: proposals,
+                          ),
                         ),
                       );
                     },
@@ -1540,16 +1542,23 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                         onPressed: job['project_status'] == '0'
                                             ? () {}
                                             : () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AllProposals(),
-                                                  ),
-                                                );
+                                                // Navigator.push(
+                                                //   context,
+                                                //   MaterialPageRoute(
+                                                //     builder: (context) => AllProposals(),
+                                                //   ),
+                                                // );
                                               },
                                         style: TextButton.styleFrom(
                                           backgroundColor:
+                                              job['project_status'] == '0'
+                                                  ? Colors.grey.withOpacity(0.2)
+                                                  : job['project_status'] == '1'
+                                                      ? Colors.green
+                                                          .withOpacity(0.2)
+                                                      : Colors.red
+                                                          .withOpacity(0.2),
+                                          foregroundColor:
                                               job['project_status'] == '0'
                                                   ? Colors.grey
                                                   : job['project_status'] == '1'
@@ -1558,12 +1567,19 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(4),
+                                            side: BorderSide(
+                                              color: job['project_status'] ==
+                                                      '0'
+                                                  ? Colors.grey
+                                                  : job['project_status'] == '1'
+                                                      ? Colors.green
+                                                      : Colors.red,
+                                            ),
                                           ),
                                         ),
                                         child: Text(
                                           job['button_label'],
                                           style: GoogleFonts.montserrat(
-                                            color: const Color(0xFFFFFFFF),
                                             fontWeight: FontWeight.w500,
                                             fontSize: 12,
                                           ),
