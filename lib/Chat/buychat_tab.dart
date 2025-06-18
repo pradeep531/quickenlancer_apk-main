@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Call/thankyou_page.dart';
 import '../api/network/uri.dart';
 import '../home_page.dart';
 
@@ -146,9 +147,9 @@ class _BuyChatTabState extends State<BuyChatTab> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Chat unlocked successfully!")),
         );
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const MyHomePage()),
+          MaterialPageRoute(builder: (context) => ThankYouPage()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

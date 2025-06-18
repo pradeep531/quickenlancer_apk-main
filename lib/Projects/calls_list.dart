@@ -259,7 +259,7 @@ class CallsList extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 12),
+                                  // const SizedBox(width: 5),
                                   if (call['is_hire_me_button'] == 1)
                                     SizedBox(
                                       height: 32, // Smaller button
@@ -270,32 +270,61 @@ class CallsList extends StatelessWidget {
                                             SnackBar(
                                               content: Text(
                                                 'Hire Me action triggered',
-                                                style: GoogleFonts.montserrat(),
+                                                style: GoogleFonts.montserrat(
+                                                  color: Colors
+                                                      .black, // Black text
+                                                ),
                                               ),
                                               backgroundColor: Colors.green,
                                             ),
                                           );
                                         },
                                         style: TextButton.styleFrom(
-                                          foregroundColor: Colorfile.textColor,
-                                          backgroundColor: Colors.grey
-                                              .shade100, // Light background
+                                          foregroundColor: Colors
+                                              .black, // Black text for interaction states
+                                          backgroundColor: Colors
+                                              .transparent, // Transparent to show gradient
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12, vertical: 0),
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(6),
                                           ),
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 0),
                                         ),
-                                        child: Text(
-                                          'Hire Me',
-                                          style: GoogleFonts.montserrat(
-                                            fontSize: 12, // Smaller font
-                                            fontWeight: FontWeight.w500,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Color(0xFFB7D7F9), // #B7D7F9
+                                                Color(0xFFE6ACCB), // #E6ACCB
+                                              ],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              transform: GradientRotation(127.3 *
+                                                  3.1415927 /
+                                                  180), // Convert degrees to radians
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                          ),
+                                          child: Center(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                'Hire Me',
+                                                style: GoogleFonts.montserrat(
+                                                  fontSize: 12, // Smaller font
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors
+                                                      .black, // Black text
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
+                                    )
                                 ],
                               ),
                             ],

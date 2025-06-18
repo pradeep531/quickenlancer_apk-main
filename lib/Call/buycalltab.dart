@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/network/uri.dart';
 import '../home_page.dart';
+import 'thankyou_page.dart';
 
 class Buycalltab extends StatefulWidget {
   const Buycalltab({super.key});
@@ -143,12 +144,16 @@ class _BuyCallTabState extends State<Buycalltab> {
 
       if (response.statusCode == 200 && responseData['status'] == "true") {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Chat unlocked successfully!")),
+          SnackBar(content: Text("Call unlocked successfully!")),
         );
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const MyHomePage()),
+          MaterialPageRoute(builder: (context) => ThankYouPage()),
         );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const MyHomePage()),
+        // );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Error occurred")),

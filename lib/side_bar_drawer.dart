@@ -4,6 +4,7 @@ import 'package:quickenlancer_apk/SignUp/signIn.dart';
 import 'package:quickenlancer_apk/hire_company.dart';
 import 'package:quickenlancer_apk/myconnection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'Billing/billing_page.dart';
 import 'Hire Freelancer/hire_freelancer.dart';
 import 'notifications.dart';
 
@@ -112,7 +113,7 @@ class _SideBarDrawerState extends State<SideBarDrawer> {
                 )
               ],
             ),
-            SizedBox(height: screenHeight * 0.05),
+            SizedBox(height: screenHeight * 0.10),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
@@ -161,6 +162,25 @@ class _SideBarDrawerState extends State<SideBarDrawer> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => HireCompany()),
+                      );
+                    },
+                  ),
+                  SideBarItem(
+                    text: 'Billing',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => BillingPage()),
+                      );
+                    },
+                  ),
+                  SideBarItem(
+                    text: 'Notification',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NotificationPage()),
                       );
                     },
                   ),
@@ -406,7 +426,7 @@ class SideBarItem extends StatelessWidget {
           text,
           style: TextStyle(
             color: Colors.white,
-            fontSize: screenWidth * 0.04,
+            fontSize: screenWidth * 0.03,
           ),
         ),
         onTap: onTap,

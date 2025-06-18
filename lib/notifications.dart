@@ -133,7 +133,10 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async => false,
+      onWillPop: () async {
+        Navigator.of(context).pop();
+        return true;
+      },
       child: Scaffold(
         backgroundColor: Color(0xFFFFFFFF),
         appBar: AppBar(
