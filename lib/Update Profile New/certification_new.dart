@@ -346,10 +346,10 @@ class _CertificationNewState extends State<CertificationNew> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Certifications saved successfully')),
         );
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Editprofilepage()),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const Editprofilepage()),
+        // );
         setState(() {
           _certifications.clear();
           _certificateFiles.clear();
@@ -565,7 +565,7 @@ class _CertificationNewState extends State<CertificationNew> {
                         elevation: 0,
                       ),
                       child: Text(
-                        'Save Certifications',
+                        'Save',
                         style: GoogleFonts.montserrat(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,

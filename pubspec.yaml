@@ -61,6 +61,8 @@ dependencies:
   flutter_local_notifications: ^19.1.0
   firebase_auth: ^5.5.3
   flutter_quill: ^9.0.0
+  font_awesome_flutter: ^10.8.0
+  skeletonizer: ^1.4.3
 
 
 

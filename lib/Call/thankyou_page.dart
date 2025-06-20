@@ -1,17 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+import '../BottomBar/bottom_bar.dart';
+import '../Chat/chatpage.dart';
+import '../Projects/all_projects.dart';
+import '../SignUp/signIn.dart';
+import '../editprofilepage.dart';
 import '../home_page.dart';
+import 'callpage.dart';
 
-class ThankYouPage extends StatelessWidget {
+class ThankYouPage extends StatefulWidget {
   const ThankYouPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    Theme.of(context);
+  _ThankYouPageState createState() => _ThankYouPageState();
+}
 
+class _ThankYouPageState extends State<ThankYouPage> {
+  int _selectedIndex = -1; // Default to home index
+  int isLoggedIn = 0; // Example: Replace with your actual login state logic
+
+  void _onItemTapped(int index) {
+    final routes = {
+      0: const MyHomePage(),
+      1: const AllProjects(),
+      2: const Buycallpage(),
+      3: const Buychatpage(),
+      4: const Editprofilepage(),
+    };
+
+    if (routes.containsKey(index)) {
+      setState(() => _selectedIndex = index);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => routes[index]!),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFB),
+      appBar: AppBar(
+        title: const Text(
+          'Thank You',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1E293B),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 2,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color(0xFF1E293B),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -39,11 +90,11 @@ class ThankYouPage extends StatelessWidget {
                     fit: BoxFit.contain,
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 8),
                 const Text(
                   'Thank You!',
                   style: TextStyle(
-                    fontSize: 28,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1E293B),
                     letterSpacing: 0.5,
@@ -54,15 +105,15 @@ class ThankYouPage extends StatelessWidget {
                   'We’ve received your submission\nand will process it shortly.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     color: Color(0xFF64748B),
                     height: 1.5,
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 8),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: TextButton(
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
@@ -70,22 +121,31 @@ class ThankYouPage extends StatelessWidget {
                             builder: (context) => const MyHomePage()),
                       );
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0F766E),
+                    style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      elevation: 0,
                     ),
-                    child: const Text(
-                      'Back to Home',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.5,
-                        color: Colors.white,
-                      ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Back to Home',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.5,
+                            color: Color(0xFF1E3A8A),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Icon(
+                          Icons.arrow_forward,
+                          color: Color(0xFF1E3A8A),
+                          size: 20,
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -93,6 +153,10 @@ class ThankYouPage extends StatelessWidget {
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: MyBottomBar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }

@@ -436,7 +436,7 @@ class _SignInPageState extends State<SignInPage> {
                     Text(
                       'Remember me',
                       style: GoogleFonts.montserrat(
-                        fontSize: 11,
+                        fontSize: 14,
                         color: Colorfile.textColor,
                       ),
                     ),
@@ -456,7 +456,7 @@ class _SignInPageState extends State<SignInPage> {
                       child: Text(
                         'Forgot Password?',
                         style: GoogleFonts.montserrat(
-                          fontSize: 11,
+                          fontSize: 14,
                           fontWeight: FontWeight.w500,
                           height: 16.5 / 11,
                           letterSpacing: 0.5,
@@ -469,7 +469,7 @@ class _SignInPageState extends State<SignInPage> {
                     )
                   ],
                 ),
-                SizedBox(height: screenHeight * 0.05),
+                SizedBox(height: screenHeight * 0.02),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: ElevatedButton(
@@ -500,7 +500,7 @@ class _SignInPageState extends State<SignInPage> {
                           ),
                   ),
                 ),
-                SizedBox(height: screenHeight * 0.02),
+                SizedBox(height: screenHeight * 0.10),
                 Row(
                   children: [
                     Expanded(child: Divider()),

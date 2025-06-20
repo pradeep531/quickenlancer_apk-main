@@ -207,23 +207,32 @@ class _HistoryTabState extends State<HistoryTab> {
                                             CrossAxisAlignment.center,
                                         children: [
                                           Text(
-                                            'Allocated On',
+                                            'Payment Status',
                                             style: GoogleFonts.montserrat(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w500,
                                               color: Color(0xFF424752),
                                             ),
                                           ),
+
                                           SizedBox(height: 4),
                                           Text(
-                                            _formatDate(
-                                                historyData.allocatedOn),
+                                            'NA',
                                             style: GoogleFonts.montserrat(
-                                              fontSize: 13,
+                                              fontSize: 15,
                                               fontWeight: FontWeight.w500,
                                               color: Color(0xFF424752),
                                             ),
                                           ),
+                                          // Text(
+                                          //   _formatDate(
+                                          //       historyData.allocatedOn),
+                                          //   style: GoogleFonts.montserrat(
+                                          //     fontSize: 13,
+                                          //     fontWeight: FontWeight.w500,
+                                          //     color: Color(0xFF424752),
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                     ),
@@ -271,15 +280,15 @@ class _HistoryTabState extends State<HistoryTab> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        'Token No. : ${historyData.tokenNo}',
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colorfile.textColor,
-                                        ),
-                                      ),
-                                      SizedBox(height: 8),
+                                      // Text(
+                                      //   'Token No. : ${historyData.tokenNo}',
+                                      //   style: GoogleFonts.montserrat(
+                                      //     fontSize: 13,
+                                      //     fontWeight: FontWeight.w600,
+                                      //     color: Colorfile.textColor,
+                                      //   ),
+                                      // ),
+                                      // SizedBox(height: 8),
                                       Text(
                                         'Allocated Project: ${historyData.allocatedProject}',
                                         style: GoogleFonts.montserrat(

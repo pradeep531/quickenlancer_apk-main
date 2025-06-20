@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -196,56 +197,127 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
   }) {
     showDialog(
       context: context,
+      barrierColor: Colors.black.withOpacity(0.5),
+      barrierDismissible: true,
       builder: (context) => AlertDialog(
-        title: Text(title,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 8,
+        shadowColor: Colors.black.withOpacity(0.2),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+
+        // Replace title Text with Row containing title and close button
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                title,
+                style: GoogleFonts.montserrat(
+                  color: Colors.black.withOpacity(0.87),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.2,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            InkWell(
+              onTap: () => Navigator.pop(context),
+              borderRadius: BorderRadius.circular(20),
+              child: const Padding(
+                padding: EdgeInsets.all(4),
+                child: Icon(
+                  Icons.close,
+                  size: 24,
+                  color: Colors.black54,
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        content: Container(
+          padding: const EdgeInsets.only(top: 12),
+          child: DefaultTextStyle(
             style: GoogleFonts.montserrat(
-                color: Colorfile.textColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w600)),
-        content: content,
-        actions: actions.isEmpty
-            ? [
-                TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text('Close',
-                        style: GoogleFonts.montserrat(
-                            color: Colors.blue,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500)))
-              ]
-            : actions,
+              color: Colors.black.withOpacity(0.6),
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
+              height: 1.5,
+            ),
+            child: content,
+          ),
+        ),
+
+        actions: actions.isEmpty ? [] : actions,
+        actionsPadding: const EdgeInsets.only(right: 16, bottom: 16, left: 16),
+        actionsAlignment: MainAxisAlignment.end,
       ),
     );
   }
 
   void _showAddAvailabilityDialog(String projectId) {
     _showDialog(
-      title: 'Your availability for this project',
-      content: Text('No Time availability for this project.',
-          style:
-              GoogleFonts.montserrat(color: Colorfile.textColor, fontSize: 12)),
+      title: 'Project Availability',
+      content: Text(
+        'No availability set.',
+        style: GoogleFonts.montserrat(
+          color: Colors.black.withOpacity(0.6),
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          height: 1.4,
+        ),
+      ),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancel',
-                style: GoogleFonts.montserrat(
-                    color: Colors.blue,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500))),
+          onPressed: () => Navigator.pop(context),
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            backgroundColor: Colors.grey.withOpacity(0.1),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
+          ),
+          child: Text(
+            'Cancel',
+            style: GoogleFonts.montserrat(
+              color: const Color(0xFF0288D1),
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
         TextButton(
           onPressed: () {
             Navigator.pop(context);
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        ScheduleAvailabilityPage(projectId: projectId)));
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ScheduleAvailabilityPage(projectId: projectId),
+              ),
+            );
           },
-          child: Text('Add availability',
-              style: GoogleFonts.montserrat(
-                  color: Colors.blue,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500)),
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            backgroundColor: const Color(0xFF0288D1).withOpacity(0.1),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
+          ),
+          child: Text(
+            'Add',
+            style: GoogleFonts.montserrat(
+              color: const Color(0xFF0288D1),
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
       ],
     );
@@ -546,51 +618,66 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                       side: const BorderSide(
                           color: Colorfile.textColor, width: 1),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4)),
-                      backgroundColor: Colors.white,
-                    ),
-                    child: Text(
-                      'View All',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                        borderRadius:
+                            BorderRadius.circular(6), // Changed from 4 to 6
                       ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF51A5D1),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4)),
+                      backgroundColor: Colors.white,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'Send Proposal',
+                          'View All',
                           style: GoogleFonts.montserrat(
-                            color: Colors.white,
                             fontSize: 14,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Image.asset(
-                          'assets/send1.png',
-                          height: 18,
-                          width: 18,
-                          color: Colors.white,
+                        const SizedBox(
+                            width: 8), // spacing between text and arrow
+                        const Icon(
+                          Icons.arrow_forward,
+                          size: 16,
+                          color: Colorfile.textColor,
                         ),
                       ],
                     ),
                   ),
                 ),
+
+                // const SizedBox(height: 8),
+                // SizedBox(
+                //   width: double.infinity,
+                //   height: 48,
+                //   child: ElevatedButton(
+                //     onPressed: () {},
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: Color(0xFF51A5D1),
+                //       shape: RoundedRectangleBorder(
+                //           borderRadius: BorderRadius.circular(4)),
+                //     ),
+                //     child: Row(
+                //       mainAxisSize: MainAxisSize.min,
+                //       children: [
+                //         Text(
+                //           'Send Proposal',
+                //           style: GoogleFonts.montserrat(
+                //             color: Colors.white,
+                //             fontSize: 14,
+                //             fontWeight: FontWeight.w500,
+                //           ),
+                //         ),
+                //         const SizedBox(width: 8),
+                //         Image.asset(
+                //           'assets/send1.png',
+                //           height: 18,
+                //           width: 18,
+                //           color: Colors.white,
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -816,51 +903,61 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                       side: const BorderSide(
                           color: Colorfile.textColor, width: 1),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4)),
-                      backgroundColor: Colors.white,
-                    ),
-                    child: Text(
-                      'View All',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                        borderRadius:
+                            BorderRadius.circular(6), // Changed from 4 to 6
                       ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF51A5D1),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4)),
+                      backgroundColor: Colors.white,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Send Proposal',
+                          'View All',
                           style: GoogleFonts.montserrat(
-                            color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Image.asset(
-                          'assets/send1.png',
-                          height: 18,
-                          width: 18,
-                          color: Colors.white,
-                        ),
+                        const SizedBox(width: 8), // space between text and icon
+                        const Icon(Icons.arrow_forward, size: 18),
                       ],
                     ),
                   ),
                 ),
+                // const SizedBox(height: 8),
+                // SizedBox(
+                //   width: double.infinity,
+                //   height: 48,
+                //   child: ElevatedButton(
+                //     onPressed: () {},
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: Color(0xFF51A5D1),
+                //       shape: RoundedRectangleBorder(
+                //           borderRadius: BorderRadius.circular(4)),
+                //     ),
+                //     child: Row(
+                //       mainAxisSize: MainAxisSize.min,
+                //       children: [
+                //         Text(
+                //           'Send Proposal',
+                //           style: GoogleFonts.montserrat(
+                //             color: Colors.white,
+                //             fontSize: 14,
+                //             fontWeight: FontWeight.w500,
+                //           ),
+                //         ),
+                //         const SizedBox(width: 8),
+                //         Image.asset(
+                //           'assets/send1.png',
+                //           height: 18,
+                //           width: 18,
+                //           color: Colors.white,
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -1035,55 +1132,65 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                       );
                     },
                     style: TextButton.styleFrom(
-                      foregroundColor: Color(0xFF000000),
+                      foregroundColor: const Color(0xFF000000),
                       side:
                           const BorderSide(color: Color(0xFF000000), width: 1),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4)),
-                      backgroundColor: Colors.white,
-                    ),
-                    child: Text(
-                      'View All',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                        borderRadius:
+                            BorderRadius.circular(6), // changed from 4 to 6
                       ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF51A5D1),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4)),
+                      backgroundColor: Colors.white,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Send Proposal',
+                          'View All',
                           style: GoogleFonts.montserrat(
-                            color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Image.asset(
-                          'assets/send1.png',
-                          height: 18,
-                          width: 18,
-                          color: Colors.white,
-                        ),
+                        const SizedBox(width: 8), // space between text and icon
+                        const Icon(Icons.arrow_forward, size: 18),
                       ],
                     ),
                   ),
                 ),
+                // const SizedBox(height: 8),
+                // SizedBox(
+                //   width: double.infinity,
+                //   height: 48,
+                //   child: ElevatedButton(
+                //     onPressed: () {},
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: Color(0xFF51A5D1),
+                //       shape: RoundedRectangleBorder(
+                //           borderRadius: BorderRadius.circular(4)),
+                //     ),
+                //     child: Row(
+                //       mainAxisSize: MainAxisSize.min,
+                //       children: [
+                //         Text(
+                //           'Send Proposal',
+                //           style: GoogleFonts.montserrat(
+                //             color: Colors.white,
+                //             fontSize: 14,
+                //             fontWeight: FontWeight.w500,
+                //           ),
+                //         ),
+                //         const SizedBox(width: 8),
+                //         Image.asset(
+                //           'assets/send1.png',
+                //           height: 18,
+                //           width: 18,
+                //           color: Colors.white,
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -1096,8 +1203,8 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
   Widget build(BuildContext context) {
     final jobTextStyle = GoogleFonts.montserrat(
         color: Colorfile.textColor,
-        fontSize: 10,
-        fontWeight: FontWeight.w500,
+        fontSize: 11.5,
+        fontWeight: FontWeight.w600,
         height: 1.47);
     return Scaffold(
       backgroundColor: const Color(0xFFE8F1FC),
@@ -1319,10 +1426,35 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                             Text(
                                                 'Requirement Type: ${job['requirement_type'] == '0' ? 'Cold' : job['requirement_type'] == '1' ? 'Hot' : 'N/A'}',
                                                 style: jobTextStyle),
-                                            Text(
-                                                'Looking For: ${job['looking_for'] == '1' ? 'Company' : job['looking_for'] == '2' ? 'Freelancer' : 'Company/Freelancer'}',
-                                                style: jobTextStyle),
                                           ],
+                                        ),
+                                        Text(
+                                            'Looking For: ${job['looking_for'] == '1' ? 'Company' : job['looking_for'] == '2' ? 'Freelancer' : 'Company/Freelancer'}',
+                                            style: jobTextStyle),
+                                        Text.rich(
+                                          TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: 'Status: ',
+                                                style:
+                                                    jobTextStyle, // Apply your custom label style here
+                                              ),
+                                              TextSpan(
+                                                text: job['button_label'],
+                                                style: GoogleFonts.montserrat(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 12,
+                                                  color: job['project_status'] ==
+                                                          '0'
+                                                      ? Colors.grey
+                                                      : job['project_status'] ==
+                                                              '1'
+                                                          ? Colors.green
+                                                          : Colors.red,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         if (proposals != null) ...[
                                           Row(
@@ -1359,19 +1491,27 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                   spacing: 8,
                                   children: (job['skills'] as List<dynamic>? ??
                                           [])
-                                      .map((skill) => Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 8, vertical: 8),
-                                            decoration: BoxDecoration(
-                                                color: const Color(0xFFE8F1FC),
-                                                borderRadius:
-                                                    BorderRadius.circular(4)),
-                                            child: Text(skill['skill'] ?? '',
-                                                style: GoogleFonts.montserrat(
-                                                    fontSize: 11,
-                                                    fontWeight: FontWeight.w500,
-                                                    color:
-                                                        Colorfile.textColor)),
+                                      .map((skill) => Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8.0),
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 8),
+                                              decoration: BoxDecoration(
+                                                  color:
+                                                      const Color(0xFFE8F1FC),
+                                                  borderRadius:
+                                                      BorderRadius.circular(4)),
+                                              child: Text(skill['skill'] ?? '',
+                                                  style: GoogleFonts.montserrat(
+                                                      fontSize: 11,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color:
+                                                          Colorfile.textColor)),
+                                            ),
                                           ))
                                       .toList(),
                                 ),
@@ -1411,13 +1551,16 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                     Expanded(
                                       child: TextButton(
                                         onPressed: () => _showDialog(
-                                          title: 'Attachments',
+                                          title: 'Attachment',
                                           content: imagePath.isEmpty
-                                              ? Text('No attachments available',
+                                              ? Text(
+                                                  'No attachments available',
                                                   style: GoogleFonts.montserrat(
-                                                      color:
-                                                          Colorfile.textColor,
-                                                      fontSize: 12))
+                                                    color: Colorfile.textColor,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 12,
+                                                  ),
+                                                )
                                               : SizedBox(
                                                   height: 300,
                                                   width: 250,
@@ -1427,165 +1570,142 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                                         (context, index) {
                                                       final url =
                                                           imagePath[index];
-                                                      return Column(
-                                                        children: [
-                                                          Image.network(url,
-                                                              height: 150,
-                                                              width: 200,
-                                                              fit: BoxFit.cover,
-                                                              errorBuilder: (_,
-                                                                      __,
-                                                                      ___) =>
-                                                                  const Icon(
-                                                                      Icons
-                                                                          .file_copy,
-                                                                      size: 100,
-                                                                      color: Colors
-                                                                          .grey)),
-                                                          TextButton(
-                                                            onPressed: () =>
-                                                                _showDialog(
-                                                              title:
-                                                                  'Confirm Download',
-                                                              content: Text(
+                                                      return Container(
+                                                        margin: const EdgeInsets
+                                                            .symmetric(
+                                                            vertical: 2),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(12),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              color: Color(
+                                                                  0xFFDADADA)), // 1px solid #DADADA
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(6),
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            Text(
+                                                              'Document ${index + 1}',
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: Colorfile
+                                                                    .textColor,
+                                                              ),
+                                                            ),
+                                                            const Spacer(), // Push the icon to the right
+                                                            IconButton(
+                                                              icon: const Icon(
+                                                                  Icons
+                                                                      .download,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  size: 30),
+                                                              onPressed: () =>
+                                                                  _showDialog(
+                                                                title:
+                                                                    'Confirm Download',
+                                                                content: Text(
                                                                   'Download this file?',
-                                                                  style: GoogleFonts.montserrat(
-                                                                      color: Colorfile
-                                                                          .textColor,
-                                                                      fontSize:
-                                                                          12)),
-                                                              actions: [
-                                                                TextButton(
+                                                                  style: GoogleFonts
+                                                                      .montserrat(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Colorfile
+                                                                        .textColor,
+                                                                  ),
+                                                                ),
+                                                                actions: [
+                                                                  TextButton(
                                                                     onPressed: () =>
                                                                         Navigator.pop(
                                                                             context),
                                                                     child: Text(
-                                                                        'No',
-                                                                        style: GoogleFonts.montserrat(
-                                                                            color: Colors
-                                                                                .blue,
-                                                                            fontSize:
-                                                                                12,
-                                                                            fontWeight:
-                                                                                FontWeight.w500))),
-                                                                TextButton(
-                                                                  onPressed:
-                                                                      () {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    _downloadImage(
-                                                                        url);
-                                                                  },
-                                                                  child: Text(
+                                                                      'No',
+                                                                      style: GoogleFonts
+                                                                          .montserrat(
+                                                                        color: Colors
+                                                                            .blue,
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  TextButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                      _downloadImage(
+                                                                          url);
+                                                                    },
+                                                                    child: Text(
                                                                       'Yes',
-                                                                      style: GoogleFonts.montserrat(
-                                                                          color: Colors
-                                                                              .blue,
-                                                                          fontSize:
-                                                                              12,
-                                                                          fontWeight:
-                                                                              FontWeight.w500)),
-                                                                ),
-                                                              ],
+                                                                      style: GoogleFonts
+                                                                          .montserrat(
+                                                                        color: Colors
+                                                                            .blue,
+                                                                        fontSize:
+                                                                            12,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
-                                                            child: Text(
-                                                                'Download',
-                                                                style: GoogleFonts.montserrat(
-                                                                    color: Colors
-                                                                        .blue,
-                                                                    fontSize:
-                                                                        12,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500)),
-                                                          ),
-                                                        ],
+                                                          ],
+                                                        ),
                                                       );
                                                     },
                                                   ),
                                                 ),
                                         ),
                                         style: TextButton.styleFrom(
-                                            backgroundColor:
-                                                const Color(0xFFFAFAFA),
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
-                                                side: const BorderSide(
-                                                    color: Color(0xFFD9D9D9)))),
-                                        child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Transform.rotate(
-                                                  angle: 0.6,
-                                                  child: const Icon(
-                                                      Icons.attach_file,
-                                                      color:
-                                                          Colorfile.textColor)),
-                                              const SizedBox(width: 8),
-                                              Text('Attachment',
-                                                  style: GoogleFonts.montserrat(
-                                                      color:
-                                                          Colorfile.textColor,
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w500)),
-                                            ]),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: TextButton(
-                                        onPressed: job['project_status'] == '0'
-                                            ? () {}
-                                            : () {
-                                                // Navigator.push(
-                                                //   context,
-                                                //   MaterialPageRoute(
-                                                //     builder: (context) => AllProposals(),
-                                                //   ),
-                                                // );
-                                              },
-                                        style: TextButton.styleFrom(
                                           backgroundColor:
-                                              job['project_status'] == '0'
-                                                  ? Colors.grey.withOpacity(0.2)
-                                                  : job['project_status'] == '1'
-                                                      ? Colors.green
-                                                          .withOpacity(0.2)
-                                                      : Colors.red
-                                                          .withOpacity(0.2),
-                                          foregroundColor:
-                                              job['project_status'] == '0'
-                                                  ? Colors.grey
-                                                  : job['project_status'] == '1'
-                                                      ? Colors.green
-                                                      : Colors.red,
+                                              const Color(0xFFFAFAFA),
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(4),
-                                            side: BorderSide(
-                                              color: job['project_status'] ==
-                                                      '0'
-                                                  ? Colors.grey
-                                                  : job['project_status'] == '1'
-                                                      ? Colors.green
-                                                      : Colors.red,
-                                            ),
+                                            side: const BorderSide(
+                                                color: Color(0xFFD9D9D9)),
                                           ),
                                         ),
-                                        child: Text(
-                                          job['button_label'],
-                                          style: GoogleFonts.montserrat(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 12,
-                                          ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              '${imagePath.length} Attachment${imagePath.length == 1 ? '' : 's'}',
+                                              style: GoogleFonts.montserrat(
+                                                color: Colorfile.textColor,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            Transform.rotate(
+                                              angle: 0.6,
+                                              child: const Icon(
+                                                Icons.attach_file,
+                                                color: Colorfile.textColor,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                                 const SizedBox(height: 10),
@@ -1620,7 +1740,7 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                 ),
                                 const SizedBox(height: 10),
                                 SizedBox(
-                                  height: 150,
+                                  height: 110,
                                   child: TabBarView(
                                     controller: tabControllers[projectId],
                                     children: [

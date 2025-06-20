@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -76,28 +77,40 @@ Widget CustomTextField(
   TextInputType keyboardType = TextInputType.text,
   int maxLines = 1,
   String? Function(String?)? validator,
-  InputDecoration? decoration, // Added decoration parameter
+  InputDecoration? decoration,
 }) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8.0),
-    child: Material(
-      child: TextFormField(
-        controller: controller,
-        keyboardType: keyboardType,
-        maxLines: maxLines,
-        decoration: decoration ??
-            InputDecoration(
-              labelText: label,
-              labelStyle: GoogleFonts.montserrat(
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w400,
-              ),
-              border: const OutlineInputBorder(),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+    padding: const EdgeInsets.symmetric(vertical: 6.0), // Reduced padding
+    child: TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      maxLines: maxLines,
+      decoration: decoration ??
+          InputDecoration(
+            labelText: label,
+            labelStyle: GoogleFonts.montserrat(
+              color: Colors.grey[500],
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
             ),
-        validator: validator,
-      ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colorfile.textColor, width: 1.5),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+            filled: true,
+            fillColor: Colors.white,
+          ),
+      validator: validator,
     ),
   );
 }
@@ -109,30 +122,40 @@ Widget NonEditTextField(
   TextInputType keyboardType = TextInputType.text,
   bool enabled = false,
   String? Function(String?)? validator,
-  InputDecoration? decoration, // Added decoration parameter
+  InputDecoration? decoration,
 }) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8.0),
-    child: Material(
-      child: TextFormField(
-        controller: controller,
-        keyboardType: keyboardType,
-        enabled: enabled,
-        decoration: decoration ??
-            InputDecoration(
-              labelText: label,
-              labelStyle: GoogleFonts.montserrat(
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w400,
-              ),
-              border: const OutlineInputBorder(),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-              filled: true,
-              fillColor: Colors.grey[200],
+    padding: const EdgeInsets.symmetric(vertical: 6.0),
+    child: TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      enabled: enabled,
+      decoration: decoration ??
+          InputDecoration(
+            labelText: label,
+            labelStyle: GoogleFonts.montserrat(
+              color: Colors.grey[500],
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
             ),
-        validator: validator,
-      ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colorfile.textColor, width: 1.5),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+            filled: true,
+            fillColor: Colors.grey[100],
+          ),
+      validator: validator,
     ),
   );
 }
@@ -148,38 +171,39 @@ class _ProfilePageState extends State<ProfilePageNew> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: Text(
           'Edit Profile',
           style: GoogleFonts.montserrat(
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.w600,
             color: Colorfile.textColor,
           ),
         ),
-        backgroundColor: Color(0xFFFFFFFF),
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
             color: Colorfile.textColor,
+            size: 22,
           ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1.0),
+          preferredSize: const Size.fromHeight(0.5),
           child: Container(
-            color: Color(0xFFD9D9D9),
-            height: 1.0,
+            color: Color(0xFFE0E0E0),
+            height: 0.5,
           ),
         ),
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(12.0),
           child: ProfileForm(),
         ),
       ),
@@ -535,21 +559,33 @@ class _ProfileFormState extends State<ProfileForm> {
     if (scaffoldMessenger != null) {
       scaffoldMessenger.showSnackBar(
         SnackBar(
-          content: Text(message),
+          content: Text(
+            message,
+            style: GoogleFonts.montserrat(fontSize: 14),
+          ),
           duration: const Duration(seconds: 3),
+          backgroundColor: Colors.grey[800],
         ),
       );
     } else {
-      print('No ScaffoldMessenger found for showing SnackBar: $message');
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Notice'),
-          content: Text(message),
+          title: Text(
+            'Notice',
+            style: GoogleFonts.montserrat(fontWeight: FontWeight.w600),
+          ),
+          content: Text(
+            message,
+            style: GoogleFonts.montserrat(fontSize: 14),
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
+              child: Text(
+                'OK',
+                style: GoogleFonts.montserrat(color: Colorfile.textColor),
+              ),
             ),
           ],
         ),
@@ -678,11 +714,11 @@ class _ProfileFormState extends State<ProfileForm> {
         final jsonResponse = jsonDecode(responseBody);
 
         if (response.statusCode == 200 && jsonResponse['status'] == 'true') {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const Editprofilepage()),
-            (route) => route.isFirst,
-          );
+          // Navigator.pushAndRemoveUntil(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => const Editprofilepage()),
+          //   (route) => route.isFirst,
+          // );
           _showSnackBar(context, 'Profile saved successfully');
         } else if (response.statusCode == 401) {
           _showSnackBar(context,
@@ -719,13 +755,13 @@ class _ProfileFormState extends State<ProfileForm> {
           children: [
             Center(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
                 child: Stack(
                   alignment: Alignment.bottomRight,
                   children: [
                     CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.white,
+                      radius: 45,
+                      backgroundColor: Colors.grey[200],
                       backgroundImage: _profileImage != null
                           ? FileImage(_profileImage!)
                           : _profileImageUrl != null &&
@@ -737,8 +773,8 @@ class _ProfileFormState extends State<ProfileForm> {
                                   _profileImageUrl!.isEmpty)
                           ? Icon(
                               Icons.person,
-                              size: 50,
-                              color: Colors.grey[600],
+                              size: 45,
+                              color: Colors.grey[500],
                             )
                           : null,
                     ),
@@ -747,7 +783,7 @@ class _ProfileFormState extends State<ProfileForm> {
                         child: GestureDetector(
                           onTap: _deleteProfileImage,
                           child: Container(
-                            padding: const EdgeInsets.all(4),
+                            padding: const EdgeInsets.all(3),
                             decoration: const BoxDecoration(
                               color: Colors.red,
                               shape: BoxShape.circle,
@@ -755,7 +791,7 @@ class _ProfileFormState extends State<ProfileForm> {
                             child: const Icon(
                               Icons.delete,
                               color: Colors.white,
-                              size: 20,
+                              size: 16,
                             ),
                           ),
                         ),
@@ -764,140 +800,100 @@ class _ProfileFormState extends State<ProfileForm> {
                 ),
               ),
             ),
-            // First Name Field
+            Text(
+              'First Name*',
+              style: GoogleFonts.montserrat(
+                color: Colorfile.textColor, // Example: blue color
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                'First Name*',
-                style: GoogleFonts.montserrat(
-                  color: Colorfile.textColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            CustomTextField(
-              _firstNameController,
-              'First Name',
-              decoration: InputDecoration(
-                hintText: 'Enter first name',
-                hintStyle: GoogleFonts.montserrat(
-                  color: Colors.grey[400],
-                  fontWeight: FontWeight.w400,
-                ),
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                ),
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                ),
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(
-                    vertical: 12.0, horizontal: 16.0),
-              ),
-              validator: (value) => _validateRequired(value, 'first name'),
-            ),
-            // Last Name Field
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                'Last Name*',
-                style: GoogleFonts.montserrat(
-                  color: Colorfile.textColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            CustomTextField(
-              _lastNameController,
-              'Last Name',
-              decoration: InputDecoration(
-                hintText: 'Enter last name',
-                hintStyle: GoogleFonts.montserrat(
-                  color: Colors.grey[400],
-                  fontWeight: FontWeight.w400,
-                ),
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                ),
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                ),
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(
-                    vertical: 12.0, horizontal: 16.0),
-              ),
-              validator: (value) => _validateRequired(value, 'last name'),
-            ),
-            // Email Field
-            Visibility(
-              visible: _emailController.text.isNotEmpty,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      'Email*',
-                      style: GoogleFonts.montserrat(
-                        color: Colorfile.textColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+              padding: const EdgeInsets.symmetric(vertical: 6.0),
+              child: TextFormField(
+                controller: _firstNameController,
+                decoration: InputDecoration(
+                  hintText: 'Enter first name',
+                  hintStyle: GoogleFonts.montserrat(
+                    color: Colors.grey[400],
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
                   ),
-                  NonEditTextField(
-                    _emailController,
-                    'Email',
-                    keyboardType: TextInputType.emailAddress,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      hintText: 'Enter email',
-                      hintStyle: GoogleFonts.montserrat(
-                        color: Colorfile.textColor,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      border: const OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                      ),
-                      enabledBorder: const OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                      ),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 12.0, horizontal: 16.0),
-                    ),
-                    validator: _validateEmail,
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                    borderRadius: BorderRadius.circular(4),
                   ),
-                ],
-              ),
-            ),
-            // Gender Dropdown
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                'Gender*',
-                style: GoogleFonts.montserrat(
-                  color: Colorfile.textColor,
-                  fontWeight: FontWeight.w500,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colorfile.textColor, width: 1.5),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 10.0,
+                    horizontal: 8.0,
+                  ),
                 ),
+                validator: (value) => _validateRequired(value, 'first name'),
+              ),
+            ),
+            Text(
+              'Last Name*',
+              style: GoogleFonts.montserrat(
+                color: Colorfile.textColor, // Example: blue color
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.symmetric(vertical: 6.0),
+              child: TextFormField(
+                controller: _lastNameController,
+                decoration: InputDecoration(
+                  hintText: 'Enter last name',
+                  hintStyle: GoogleFonts.montserrat(
+                    color: Colors.grey[400],
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colorfile.textColor, width: 1.5),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 10.0,
+                    horizontal: 8.0,
+                  ),
+                ),
+                validator: (value) => _validateRequired(value, 'last name'),
+              ),
+            ),
+            Text(
+              'Gender*',
+              style: GoogleFonts.montserrat(
+                color: Colorfile.textColor, // Example: blue color
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6.0),
               child: Material(
                 child: DropdownButtonFormField<String>(
                   decoration: InputDecoration(
@@ -905,29 +901,36 @@ class _ProfileFormState extends State<ProfileForm> {
                     hintStyle: GoogleFonts.montserrat(
                       color: Colors.grey[400],
                       fontWeight: FontWeight.w400,
+                      fontSize: 14,
                     ),
-                    border: const OutlineInputBorder(
+                    border: OutlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                    enabledBorder: const OutlineInputBorder(
+                    enabledBorder: OutlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                    focusedBorder: const OutlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
                       borderSide:
-                          BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                          BorderSide(color: Colorfile.textColor, width: 1.5),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                     filled: true,
                     fillColor: Colors.white,
                     contentPadding: const EdgeInsets.symmetric(
-                        vertical: 12.0, horizontal: 16.0),
+                        vertical: 10.0, horizontal: 8.0),
                   ),
                   value: _selectedGender,
                   items: _genders
                       .map((gender) => DropdownMenuItem<String>(
                             value: gender,
-                            child: Text(gender),
+                            child: Text(
+                              gender,
+                              style: GoogleFonts.montserrat(fontSize: 14),
+                            ),
                           ))
                       .toList(),
                   onChanged: (value) {
@@ -940,208 +943,370 @@ class _ProfileFormState extends State<ProfileForm> {
                 ),
               ),
             ),
-            // Country Dropdown
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                'Country*',
-                style: GoogleFonts.montserrat(
-                  color: Colorfile.textColor,
-                  fontWeight: FontWeight.w500,
-                ),
+            Visibility(
+              visible: _emailController.text.isNotEmpty,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Email*',
+                    style: GoogleFonts.montserrat(
+                      color: Colorfile.textColor, // Example: blue color
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
+                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 6.0),
+                  //   child: TextFormField(
+                  //     controller: _emailController,
+                  //     readOnly: true, // Makes it view-only
+                  //     decoration: InputDecoration(
+                  //       hintText: 'Email',
+                  //       hintStyle: GoogleFonts.montserrat(
+                  //         color: Colors.grey[400],
+                  //         fontWeight: FontWeight.w400,
+                  //         fontSize: 14,
+                  //       ),
+                  //       border: OutlineInputBorder(
+                  //         borderSide:
+                  //             BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                  //         borderRadius: BorderRadius.circular(4),
+                  //       ),
+                  //       enabledBorder: OutlineInputBorder(
+                  //         borderSide:
+                  //             BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                  //         borderRadius: BorderRadius.circular(4),
+                  //       ),
+                  //       focusedBorder: OutlineInputBorder(
+                  //         borderSide: BorderSide(
+                  //             color: Colorfile.textColor, width: 1.5),
+                  //         borderRadius: BorderRadius.circular(4),
+                  //       ),
+                  //       filled: true,
+                  //       fillColor: Colors.grey[100],
+                  //       contentPadding: const EdgeInsets.symmetric(
+                  //           vertical: 10.0, horizontal: 8.0),
+                  //     ),
+                  //     validator: _validateEmail,
+                  //   ),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(
+                          color: Color(0xFFD9D9D9), // Hex color #D9D9D9
+                          width: 1, // 1px border
+                        ),
+                      ),
+                      child: Text(
+                        _emailController.text,
+                        style: GoogleFonts.montserrat(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              'Country*',
+              style: GoogleFonts.montserrat(
+                color: Colorfile.textColor, // Example: blue color
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Material(
-                child: DropdownButtonFormField<Country>(
-                  decoration: InputDecoration(
+              padding: const EdgeInsets.symmetric(vertical: 6.0),
+              child: DropdownSearch<Country>(
+                popupProps: PopupProps.menu(
+                  showSearchBox: true,
+                  searchFieldProps: TextFieldProps(
+                    decoration: InputDecoration(
+                      hintText: 'Search country',
+                      hintStyle: GoogleFonts.montserrat(
+                        color: Colors.grey[400],
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colorfile.textColor, width: 1.5),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 8.0),
+                    ),
+                  ),
+                  menuProps: MenuProps(
+                    backgroundColor: Colors.white,
+                  ),
+                ),
+                dropdownDecoratorProps: DropDownDecoratorProps(
+                  dropdownSearchDecoration: InputDecoration(
                     hintText: 'Select country',
                     hintStyle: GoogleFonts.montserrat(
                       color: Colors.grey[400],
                       fontWeight: FontWeight.w400,
+                      fontSize: 14,
                     ),
-                    border: const OutlineInputBorder(
+                    border: OutlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                    enabledBorder: const OutlineInputBorder(
+                    enabledBorder: OutlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                    focusedBorder: const OutlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
                       borderSide:
-                          BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                          BorderSide(color: Colorfile.textColor, width: 1.5),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                     filled: true,
                     fillColor: Colors.white,
                     contentPadding: const EdgeInsets.symmetric(
-                        vertical: 12.0, horizontal: 16.0),
+                        vertical: 10.0, horizontal: 8.0),
                   ),
-                  value: _selectedCountry,
-                  items: _countries
-                      .map((country) => DropdownMenuItem<Country>(
-                            value: country,
-                            child: Text(country.name),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedCountry = value;
-                      _selectedState = null;
-                      _selectedCity = null;
-                      _states = [];
-                      _cities = [];
-                    });
-                    _fetchStates();
-                  },
-                  validator: (value) =>
-                      value == null ? 'Please select a country' : null,
                 ),
+                items: _countries,
+                itemAsString: (Country country) => country.name,
+                selectedItem: _selectedCountry,
+                onChanged: (Country? value) {
+                  setState(() {
+                    _selectedCountry = value;
+                    _selectedState = null;
+                    _selectedCity = null;
+                    _states = [];
+                    _cities = [];
+                  });
+                  _fetchStates();
+                },
+                validator: (Country? value) =>
+                    value == null ? 'Please select a country' : null,
               ),
             ),
-            // State Dropdown
             if (_selectedCountry != null)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      'State*',
-                      style: GoogleFonts.montserrat(
-                        color: Colorfile.textColor,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  Text(
+                    'State*',
+                    style: GoogleFonts.montserrat(
+                      color: Colorfile.textColor, // Example: blue color
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Material(
-                      child: DropdownButtonFormField<Region>(
-                        decoration: InputDecoration(
+                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                    child: DropdownSearch<Region>(
+                      popupProps: PopupProps.menu(
+                        showSearchBox: true,
+                        searchFieldProps: TextFieldProps(
+                          decoration: InputDecoration(
+                            hintText: 'Search state',
+                            hintStyle: GoogleFonts.montserrat(
+                              color: Colors.grey[400],
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color(0xFFD9D9D9), width: 1),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color(0xFFD9D9D9), width: 1),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colorfile.textColor, width: 1.5),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 8.0),
+                          ),
+                        ),
+                        menuProps: MenuProps(
+                          backgroundColor: Colors.white,
+                        ),
+                      ),
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
                           hintText: 'Select state',
                           hintStyle: GoogleFonts.montserrat(
                             color: Colors.grey[400],
                             fontWeight: FontWeight.w400,
+                            fontSize: 14,
                           ),
-                          border: const OutlineInputBorder(
+                          border: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                            borderRadius: BorderRadius.circular(4),
                           ),
-                          enabledBorder: const OutlineInputBorder(
+                          enabledBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                            borderRadius: BorderRadius.circular(4),
                           ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colorfile.textColor, width: 1.5),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                           filled: true,
                           fillColor: Colors.white,
                           contentPadding: const EdgeInsets.symmetric(
-                              vertical: 12.0, horizontal: 16.0),
+                              vertical: 10.0, horizontal: 8.0),
                         ),
-                        value: _selectedState,
-                        items: _states
-                            .map((state) => DropdownMenuItem<Region>(
-                                  value: state,
-                                  child: Text(state.name),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          if (_states.isNotEmpty) {
-                            setState(() {
-                              _selectedState = value;
-                              _selectedCity = null;
-                              _cities = [];
-                            });
-                            _fetchCities();
-                          }
-                        },
-                        validator: (value) =>
-                            value == null ? 'Please select a state' : null,
                       ),
+                      items: _states,
+                      itemAsString: (Region state) => state.name,
+                      selectedItem: _selectedState,
+                      onChanged: (Region? value) {
+                        if (_states.isNotEmpty) {
+                          setState(() {
+                            _selectedState = value;
+                            _selectedCity = null;
+                            _cities = [];
+                          });
+                          _fetchCities();
+                        }
+                      },
+                      validator: (Region? value) =>
+                          value == null ? 'Please select a state' : null,
                     ),
                   ),
                 ],
               ),
-            // City Dropdown
             if (_selectedState != null)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      'City*',
-                      style: GoogleFonts.montserrat(
-                        color: Colorfile.textColor,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  Text(
+                    'City*',
+                    style: GoogleFonts.montserrat(
+                      color: Colorfile.textColor, // Example: blue color
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Material(
-                      child: DropdownButtonFormField<City>(
-                        decoration: InputDecoration(
+                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                    child: DropdownSearch<City>(
+                      popupProps: PopupProps.menu(
+                        showSearchBox: true,
+                        searchFieldProps: TextFieldProps(
+                          decoration: InputDecoration(
+                            hintText: 'Search city',
+                            hintStyle: GoogleFonts.montserrat(
+                              color: Colors.grey[400],
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color(0xFFD9D9D9), width: 1),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color(0xFFD9D9D9), width: 1),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colorfile.textColor, width: 1.5),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 8.0),
+                          ),
+                        ),
+                        menuProps: MenuProps(
+                          backgroundColor: Colors.white,
+                        ),
+                      ),
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
                           hintText: 'Select city',
                           hintStyle: GoogleFonts.montserrat(
                             color: Colors.grey[400],
                             fontWeight: FontWeight.w400,
+                            fontSize: 14,
                           ),
-                          border: const OutlineInputBorder(
+                          border: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                            borderRadius: BorderRadius.circular(4),
                           ),
-                          enabledBorder: const OutlineInputBorder(
+                          enabledBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                            borderRadius: BorderRadius.circular(4),
                           ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colorfile.textColor, width: 1.5),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                           filled: true,
                           fillColor: Colors.white,
                           contentPadding: const EdgeInsets.symmetric(
-                              vertical: 12.0, horizontal: 16.0),
+                              vertical: 10.0, horizontal: 8.0),
                         ),
-                        value: _selectedCity,
-                        items: _cities
-                            .map((city) => DropdownMenuItem<City>(
-                                  value: city,
-                                  child: Text(city.name),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          if (_cities.isNotEmpty) {
-                            setState(() {
-                              _selectedCity = value;
-                            });
-                          }
-                        },
-                        validator: (value) =>
-                            value == null ? 'Please select a city' : null,
                       ),
+                      items: _cities,
+                      itemAsString: (City city) => city.name,
+                      selectedItem: _selectedCity,
+                      onChanged: (City? value) {
+                        if (_cities.isNotEmpty) {
+                          setState(() {
+                            _selectedCity = value;
+                          });
+                        }
+                      },
+                      validator: (City? value) =>
+                          value == null ? 'Please select a city' : null,
                     ),
                   ),
                 ],
               ),
-            // Currency Dropdown
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                'Currency*',
-                style: GoogleFonts.montserrat(
-                  color: Colorfile.textColor,
-                  fontWeight: FontWeight.w500,
-                ),
+            Text(
+              'Currency*',
+              style: GoogleFonts.montserrat(
+                color: Colorfile.textColor, // Example: blue color
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.symmetric(vertical: 6.0),
               child: Material(
                 child: DropdownButtonFormField<Currency>(
                   decoration: InputDecoration(
@@ -1149,29 +1314,36 @@ class _ProfileFormState extends State<ProfileForm> {
                     hintStyle: GoogleFonts.montserrat(
                       color: Colors.grey[400],
                       fontWeight: FontWeight.w400,
+                      fontSize: 14,
                     ),
-                    border: const OutlineInputBorder(
+                    border: OutlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                    enabledBorder: const OutlineInputBorder(
+                    enabledBorder: OutlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                    focusedBorder: const OutlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
                       borderSide:
-                          BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                          BorderSide(color: Colorfile.textColor, width: 1.5),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                     filled: true,
                     fillColor: Colors.white,
                     contentPadding: const EdgeInsets.symmetric(
-                        vertical: 12.0, horizontal: 16.0),
+                        vertical: 10.0, horizontal: 8.0),
                   ),
                   value: _selectedCurrency,
                   items: _currencies
                       .map((currency) => DropdownMenuItem<Currency>(
                             value: currency,
-                            child: Text(currency.name),
+                            child: Text(
+                              currency.name,
+                              style: GoogleFonts.montserrat(fontSize: 14),
+                            ),
                           ))
                       .toList(),
                   onChanged: (value) {
@@ -1187,103 +1359,149 @@ class _ProfileFormState extends State<ProfileForm> {
                 ),
               ),
             ),
-            // Designation Field
+            Text(
+              'Description*',
+              style: GoogleFonts.montserrat(
+                color: Colorfile.textColor, // Example: blue color
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                'Designation*',
-                style: GoogleFonts.montserrat(
-                  color: Colorfile.textColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            CustomTextField(
-              _designationController,
-              'Designation',
-              decoration: InputDecoration(
-                hintText: 'Enter designation',
-                hintStyle: GoogleFonts.montserrat(
-                  color: Colors.grey[400],
-                  fontWeight: FontWeight.w400,
-                ),
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                ),
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                ),
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(
-                    vertical: 12.0, horizontal: 16.0),
-              ),
-              validator: (value) => _validateRequired(value, 'designation'),
-            ),
-            // Mobile Number Section
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Mobile number* ',
-                          style: GoogleFonts.montserrat(
-                            color: Colorfile.textColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16.0, // Adjust as needed
-                          ),
-                        ),
-                        TextSpan(
-                          text: '(For updates, share your WhatsApp no.)',
-                          style: GoogleFonts.montserrat(
-                            color: Colorfile.textColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12.0, // Smaller size for this part
-                          ),
-                        ),
-                      ],
-                    ),
+              padding: const EdgeInsets.symmetric(vertical: 6.0),
+              child: TextFormField(
+                controller: _designationController,
+                decoration: InputDecoration(
+                  hintText: 'Enter description',
+                  hintStyle: GoogleFonts.montserrat(
+                    color: Colors.grey[400],
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colorfile.textColor, width: 1.5),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 10.0,
+                    horizontal: 8.0,
                   ),
                 ),
-                SizedBox(
-                  height: 50,
+                validator: (value) => _validateRequired(value, 'designation'),
+              ),
+            ),
+            Text(
+              'Address*',
+              style: GoogleFonts.montserrat(
+                color: Colorfile.textColor, // Example: blue color
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6.0),
+              child: TextFormField(
+                controller: _addressController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  hintText: 'Enter address',
+                  hintStyle: GoogleFonts.montserrat(
+                    color: Colors.grey[400],
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colorfile.textColor, width: 1.5),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 10.0,
+                    horizontal: 8.0,
+                  ),
+                ),
+                validator: (value) => _validateRequired(value, 'address'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6.0),
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Mobile number* ',
+                      style: GoogleFonts.montserrat(
+                        color: Colorfile.textColor, // Example: blue color
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
                   child: Material(
                     child: DropdownButtonFormField<Country>(
                       decoration: InputDecoration(
-                        hintText: 'Select code',
+                        hintText: 'Code',
                         hintStyle: GoogleFonts.montserrat(
                           color: Colors.grey[400],
                           fontWeight: FontWeight.w400,
+                          fontSize: 14,
                         ),
-                        border: const OutlineInputBorder(
+                        border: OutlineInputBorder(
                           borderSide:
                               BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                        enabledBorder: const OutlineInputBorder(
+                        enabledBorder: OutlineInputBorder(
                           borderSide:
                               BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colorfile.textColor, width: 1.5),
+                          borderRadius: BorderRadius.circular(4),
                         ),
                         filled: true,
                         fillColor: Colors.white,
                         contentPadding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 12),
+                            vertical: 10.0, horizontal: 8.0),
                       ),
                       value: _selectedCountryCode,
                       items: _staticCountryCodes
                           .map((country) => DropdownMenuItem<Country>(
                                 value: country,
-                                child: Text(country.code),
+                                child: Text(
+                                  country.code,
+                                  style: GoogleFonts.montserrat(fontSize: 14),
+                                ),
                               ))
                           .toList(),
                       onChanged: (value) {
@@ -1295,144 +1513,112 @@ class _ProfileFormState extends State<ProfileForm> {
                     ),
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomTextField(
-                  _mobileController,
-                  'Mobile Number',
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText: 'Enter mobile number',
-                    hintStyle: GoogleFonts.montserrat(
-                      color: Colors.grey[400],
-                      fontWeight: FontWeight.w400,
-                    ),
-                    border: const OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                    ),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 12.0, horizontal: 16.0),
+                const SizedBox(width: 8),
+                Expanded(
+                  flex: 5,
+                  child: CustomTextField(
+                    _mobileController,
+                    'Mobile Number',
+                    keyboardType: TextInputType.number,
+                    validator: _validateMobile,
                   ),
-                  validator: _validateMobile,
                 ),
               ],
             ),
-            // Address Field
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                'Address*',
-                style: GoogleFonts.montserrat(
-                  color: Colorfile.textColor,
-                  fontWeight: FontWeight.w500,
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white, // Optional: for better contrast
+                border: Border.all(
+                  color: Color(0xFFD9D9D9), // Hex color #D9D9D9
+                  width: 1.0,
                 ),
+                borderRadius: BorderRadius.circular(4.0), // Radius 4
               ),
-            ),
-            CustomTextField(
-              _addressController,
-              'Address',
-              maxLines: 3,
-              decoration: InputDecoration(
-                hintText: 'Enter address',
-                hintStyle: GoogleFonts.montserrat(
-                  color: Colors.grey[400],
-                  fontWeight: FontWeight.w400,
-                ),
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                ),
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
-                ),
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(
-                    vertical: 12.0, horizontal: 16.0),
-              ),
-              validator: (value) => _validateRequired(value, 'address'),
-            ),
-            ElevatedButton.icon(
-              onPressed: _pickImage,
-              icon: const Icon(Icons.upload),
-              label: Text(
-                _profileImage == null ? 'Upload Picture' : 'Change Picture',
-                style: GoogleFonts.montserrat(fontWeight: FontWeight.w500),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colorfile.textColor, // Set the button color
-                foregroundColor: Colors.white, // Set the icon and text color
-                padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4), // Set rounded corners
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Upload Profile Picture',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: _pickImage,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue.shade50,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        side: BorderSide(
+                          color: Colors.blue.shade200,
+                          width: 1.0,
+                        ),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      _profileImage == null
+                          ? 'Upload Picture'
+                          : 'Change Picture',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.blue.shade700,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             if (_profileImage != null)
               Padding(
-                padding: const EdgeInsets.only(top: 12),
+                padding: const EdgeInsets.only(top: 8),
                 child: Text(
                   _profileImage!.path.split('/').last,
                   style: GoogleFonts.montserrat(
                     color: Colors.grey[600],
-                    fontSize: 13,
+                    fontSize: 12,
                     fontWeight: FontWeight.w400,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             _isLoading
                 ? Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(16.0),
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                            Theme.of(context).primaryColor),
-                      ),
+                    child: CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Colorfile.textColor),
                     ),
                   )
-                : ElevatedButton.icon(
+                : ElevatedButton(
                     onPressed: _saveForm,
-                    label: Text(
+                    child: Text(
                       'Save',
-                      style:
-                          GoogleFonts.montserrat(fontWeight: FontWeight.w500),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          Colorfile.textColor, // Set the button color
-                      foregroundColor:
-                          Colors.white, // Set the icon and text color
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 16),
-                      minimumSize: const Size(double.infinity, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(4), // Set rounded corners
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: Colors.white,
                       ),
                     ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colorfile.textColor,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
+                      minimumSize: const Size(double.infinity, 48),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 0,
+                    ),
                   ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
           ],
         ),
       ),

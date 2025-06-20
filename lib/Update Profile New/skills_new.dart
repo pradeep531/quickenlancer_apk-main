@@ -22,6 +22,7 @@ class _SkillsNewState extends State<SkillsNew> {
   final _skillRateController = TextEditingController();
   final List<Map<String, dynamic>> _skills = [];
   List<Map<String, String>> _availableSkills = [];
+  bool _hasNewSkill = false; // Track if a new skill is added from dropdown
 
   @override
   void initState() {
@@ -89,8 +90,10 @@ class _SkillsNewState extends State<SkillsNew> {
         final responseData = jsonDecode(response.body);
         if (responseData['status'] == 'true' && responseData['data'] != null) {
           final skillsData = responseData['data']['skills'] as List;
+          log('Skills Data from API: $skillsData'); // Debug: Log API skills data
           setState(() {
             _skills.clear();
+            _hasNewSkill = false; // Ensure API-fetched skills don't enable Save
             for (var skill in skillsData) {
               if (skill['skill_id'] != null &&
                   skill['skill_id'] != 0 &&
@@ -101,6 +104,7 @@ class _SkillsNewState extends State<SkillsNew> {
                   'pkey': skill['pkey'].toString(),
                   'skill_id': skill['skill_id'].toString(),
                   'rate': double.tryParse(skill['rate'].toString()) ?? 0.0,
+                  'isNew': false, // Mark API-fetched skills as not new
                 });
               } else {
                 print('Skipping invalid skill: $skill');
@@ -179,16 +183,27 @@ class _SkillsNewState extends State<SkillsNew> {
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.grey),
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.blueGrey,
+        behavior: SnackBarBehavior.floating, // makes it float
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: BorderSide(color: Colors.black12),
+        ),
+        elevation: 8, // adds shadow, available in newer Flutter versions
+      ),
     );
   }
 
   Future<void> _saveForm() async {
-    if (_skills.isEmpty) {
+    // Filter only newly added skills
+    final newSkills = _skills.where((skill) => skill['isNew'] == true).toList();
+    if (newSkills.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Please add at least one skill before saving',
+            'Please add at least one new skill before saving',
             style: GoogleFonts.montserrat(
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -216,7 +231,7 @@ class _SkillsNewState extends State<SkillsNew> {
 
       final Map<String, dynamic> requestBody = {
         'user_id': userId,
-        'skill_details': _skills
+        'skill_details': newSkills
             .map((skill) => {
                   'skill_id': skill['skill_id'],
                   'rate': skill['rate'].toString(),
@@ -224,7 +239,7 @@ class _SkillsNewState extends State<SkillsNew> {
             .toList(),
       };
 
-      print('Request Body: $requestBody');
+      print('Request Body (New Skills Only): $requestBody');
 
       final response = await http.post(
         Uri.parse(URLS().set_skills),
@@ -246,7 +261,7 @@ class _SkillsNewState extends State<SkillsNew> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Skills saved successfully',
+                'New skills saved successfully',
                 style: GoogleFonts.montserrat(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -257,15 +272,17 @@ class _SkillsNewState extends State<SkillsNew> {
             ),
           );
 
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const Editprofilepage()),
+            MaterialPageRoute(builder: (context) => const SkillsNew()),
           );
 
           setState(() {
-            _skills.clear();
+            // Remove only the saved new skills
+            _skills.removeWhere((skill) => skill['isNew'] == true);
             _selectedSkill = null;
             _skillRateController.clear();
+            _hasNewSkill = false; // Reset after saving
           });
         } else {
           throw Exception('Failed to save skills: ${jsonResponse['message']}');
@@ -294,6 +311,11 @@ class _SkillsNewState extends State<SkillsNew> {
 
   @override
   Widget build(BuildContext context) {
+    print('Skills list in build: $_skills'); // Debug: Log the skills list
+    print(
+        'Skills isEmpty: ${_skills.isEmpty}'); // Debug: Check if skills is empty
+    print('Has new skill: $_hasNewSkill'); // Debug: Check new skill flag
+
     const Color textColor = Colors.black; // Define textColor (adjust as needed)
     const String currency = ''; // Define currency (adjust as needed)
 
@@ -305,7 +327,7 @@ class _SkillsNewState extends State<SkillsNew> {
             color: Color(0xFFFFFFFF),
             border: Border(
               bottom: BorderSide(
-                color: Color(0xFFD9D9D9), // #D9D9D9
+                color: Color(0xFFD9D9D9),
                 width: 1.0,
               ),
             ),
@@ -328,7 +350,7 @@ class _SkillsNewState extends State<SkillsNew> {
           ),
         ),
       ),
-      backgroundColor: Color(0xFFFFFFFF),
+      backgroundColor: const Color(0xFFFFFFFF),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -346,78 +368,78 @@ class _SkillsNewState extends State<SkillsNew> {
               ),
             ),
             DropdownSearch<Map<String, String>>(
-              popupProps: PopupProps.menu(
-                showSearchBox: true, // Enable search functionality
+              popupProps: const PopupProps.menu(
+                showSearchBox: true,
                 searchFieldProps: TextFieldProps(
                   decoration: InputDecoration(
                     hintText: 'Search skills...',
-                    hintStyle: GoogleFonts.montserrat(
+                    hintStyle: TextStyle(
                       fontSize: 14,
-                      color: textColor.withOpacity(0.6),
+                      color: Colors.black54,
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: const BorderSide(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      borderSide: BorderSide(
                         color: Color(0xFFD9D9D9),
                         width: 1.0,
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: const BorderSide(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      borderSide: BorderSide(
                         color: Color(0xFFD9D9D9),
                         width: 1.0,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: const BorderSide(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      borderSide: BorderSide(
                         color: Color(0xFFD9D9D9),
                         width: 1.0,
                       ),
                     ),
                     contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                 ),
                 fit: FlexFit.loose,
                 menuProps: MenuProps(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
                 ),
               ),
-              dropdownDecoratorProps: DropDownDecoratorProps(
+              dropdownDecoratorProps: const DropDownDecoratorProps(
                 dropdownSearchDecoration: InputDecoration(
                   labelText: 'Select Skill',
-                  labelStyle: GoogleFonts.montserrat(
+                  labelStyle: TextStyle(
                     fontSize: 14,
-                    color: textColor,
+                    color: Colors.black,
                   ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    borderSide: BorderSide(
                       color: Color(0xFFD9D9D9),
                       width: 1.0,
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    borderSide: BorderSide(
                       color: Color(0xFFD9D9D9),
                       width: 1.0,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    borderSide: BorderSide(
                       color: Color(0xFFD9D9D9),
                       width: 1.0,
                     ),
                   ),
                   contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  suffixIcon: const Icon(
-                    CupertinoIcons.chevron_down, // Cupertino icon for dropdown
-                    color: Colors.black, // Adjust color as needed
+                      EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  suffixIcon: Icon(
+                    CupertinoIcons.chevron_down,
+                    color: Colors.black,
                     size: 20,
                   ),
                 ),
@@ -438,12 +460,31 @@ class _SkillsNewState extends State<SkillsNew> {
               const SizedBox(height: 10),
               TextField(
                 controller: _skillRateController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Cost (USD)',
                   hintText: 'Enter cost in USD',
+                  filled: true,
+                  fillColor: Colors.white, // Plain white background
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                  labelStyle: TextStyle(color: Colors.grey),
+                  hintStyle: TextStyle(color: Colors.grey),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Color(0xFFD9D9D9),
+                        width: 1.5), // You can customize this color
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFD9D9D9), width: 1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
                 ),
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
               ),
               const SizedBox(height: 10),
               Align(
@@ -461,7 +502,9 @@ class _SkillsNewState extends State<SkillsNew> {
                           'skill_id': _selectedSkill!['skill_id']!,
                           'rate': rate,
                           'pkey': '',
+                          'isNew': true,
                         });
+                        _hasNewSkill = true;
                         _selectedSkill = null;
                         _skillRateController.clear();
                       });
@@ -473,12 +516,25 @@ class _SkillsNewState extends State<SkillsNew> {
                       );
                     }
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colorfile.textColor,
+                    foregroundColor: Colors.white,
+                    elevation: 6,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   child: const Text('Add'),
                 ),
-              ),
+              )
             ],
             const SizedBox(height: 20),
-            // Table for Skills
             Expanded(
               child: SingleChildScrollView(
                 child: Table(
@@ -488,12 +544,11 @@ class _SkillsNewState extends State<SkillsNew> {
                     borderRadius: const BorderRadius.all(Radius.circular(8)),
                   ),
                   columnWidths: const {
-                    0: FlexColumnWidth(3), // Skill column
-                    1: FlexColumnWidth(2), // Cost column
-                    2: FlexColumnWidth(1), // Action column
+                    0: FlexColumnWidth(3),
+                    1: FlexColumnWidth(2),
+                    2: FlexColumnWidth(1),
                   },
                   children: [
-                    // Table Header
                     TableRow(
                       decoration: const BoxDecoration(color: Color(0xFFF5F7FA)),
                       children: [
@@ -534,110 +589,145 @@ class _SkillsNewState extends State<SkillsNew> {
                         ),
                       ],
                     ),
-
-                    ..._skills
-                        .map((skill) => TableRow(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Row(
-                                    children: [
-                                      if (skill['name'] ==
-                                          'Hibernate') // Highlighted row example
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 8.0),
-                                          child: Container(
-                                            width: 8,
-                                            height: 8,
-                                            decoration: const BoxDecoration(
-                                              color: Colors.blue,
-                                              shape: BoxShape.circle,
-                                            ),
+                    ..._skills.map((skill) => TableRow(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: [
+                                  if (skill['name'] == 'Hibernate')
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: Container(
+                                        width: 8,
+                                        height: 8,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.blue,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                    ),
+                                  Text(
+                                    skill['name'] as String,
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colorfile.textColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Text(
+                                '$currency ${skill['rate'].toStringAsFixed(2)}',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 11,
+                                  color: Colorfile.textColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            IconButton(
+                              icon: Image.asset(
+                                'assets/delete_icon.png',
+                                width: 14,
+                                height: 14,
+                                color: Colorfile.textColor,
+                              ),
+                              onPressed: () async {
+                                final bool? confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    backgroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    title: Text(
+                                      'Confirm Deletion',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colorfile.textColor,
+                                      ),
+                                    ),
+                                    content: Text(
+                                      'Are you sure you want to delete ${skill['name']}?',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    actionsPadding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                    actions: [
+                                      TextButton(
+                                        style: TextButton.styleFrom(
+                                          foregroundColor: Colors.grey[700],
+                                        ),
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(false),
+                                        child: const Text(
+                                          'Cancel',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colorfile.textColor,
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 8),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                           ),
                                         ),
-                                      Text(
-                                        skill['name'] as String,
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colorfile.textColor,
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(true),
+                                        child: const Text(
+                                          'Delete',
+                                          style: TextStyle(fontSize: 16),
                                         ),
                                       ),
                                     ],
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Text(
-                                    '$currency ${skill['rate'].toStringAsFixed(2)}',
-                                    style: GoogleFonts.montserrat(
-                                      fontSize: 11,
-                                      color: Colorfile.textColor,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: Image.asset(
-                                    'assets/delete_icon.png', // Replace with your asset path
-                                    width: 14,
-                                    height: 14,
-                                    color: Colorfile
-                                        .textColor, // Optional: tint the image if it's a single color
-                                  ),
-                                  onPressed: () async {
-                                    final bool? confirm =
-                                        await showDialog<bool>(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        title: const Text('Confirm Deletion'),
-                                        content: Text(
-                                            'Are you sure you want to delete ${skill['name']}?'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.of(context)
-                                                    .pop(false),
-                                            child: const Text('Cancel'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.of(context).pop(true),
-                                            child: const Text('Delete'),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                    if (confirm == true) {
-                                      try {
-                                        if (skill['pkey'].isNotEmpty) {
-                                          await _deleteSkill(skill['pkey']);
-                                        }
-                                        setState(() {
-                                          _skills.remove(skill);
-                                        });
-                                      } catch (e) {
-                                        // Error handled in _deleteSkill
-                                      }
+                                );
+
+                                if (confirm == true) {
+                                  try {
+                                    if (skill['pkey'].isNotEmpty) {
+                                      await _deleteSkill(skill['pkey']);
                                     }
-                                  },
-                                ),
-                              ],
-                            ))
-                        .toList(),
+                                    setState(() {
+                                      _skills.remove(skill);
+                                      _hasNewSkill = _skills
+                                          .any((s) => s['isNew'] == true);
+                                    });
+                                  } catch (e) {
+                                    // Error handled in _deleteSkill
+                                  }
+                                }
+                              },
+                            ),
+                          ],
+                        )),
                   ],
                 ),
               ),
             ),
-            // Save Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _saveForm,
+                onPressed: _hasNewSkill ? _saveForm : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colorfile.textColor,
+                  backgroundColor:
+                      _hasNewSkill ? Colorfile.textColor : Colors.grey[400],
+                  disabledBackgroundColor: Colors.grey[400],
+                  disabledForegroundColor: Colors.grey[600],
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4.0),

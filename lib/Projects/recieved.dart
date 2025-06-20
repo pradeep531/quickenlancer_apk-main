@@ -807,7 +807,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                         [])
                                     .map((skill) => Padding(
                                           padding: const EdgeInsets.only(
-                                              bottom: 5.0),
+                                              bottom: 8.0),
                                           child: Container(
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 8, vertical: 8),

@@ -74,7 +74,7 @@ class _ForgotpasswordPageState extends State<Forgotpassword> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: TextField(
-                    obscureText: true,
+                    obscureText: false,
                     decoration: InputDecoration(
                       labelText: '',
                       filled: true,

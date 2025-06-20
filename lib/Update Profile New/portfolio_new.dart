@@ -1,17 +1,19 @@
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:quickenlancer_apk/Colors/colorfile.dart';
 import 'package:quickenlancer_apk/editprofilepage.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:file_picker/file_picker.dart';
 import '../../api/network/uri.dart';
-import '../Update Profile/shared_widgets.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 
-// Sample SharedWidgets.textField implementation (if not already defined)
 class SharedWidgets {
   static Widget textField(
     TextEditingController controller,
@@ -19,7 +21,7 @@ class SharedWidgets {
     TextInputType? keyboardType,
     int? maxLines,
     String? Function(String?)? validator,
-    String? hintText, // Added hintText parameter
+    String? hintText,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,27 +45,27 @@ class SharedWidgets {
             color: Colors.black,
           ),
           decoration: InputDecoration(
-            hintText: hintText, // Added hintText to InputDecoration
+            hintText: hintText,
             hintStyle: GoogleFonts.montserrat(
               fontSize: 14,
-              color: Colors.grey[600], // Consistent with app's color scheme
+              color: Colors.grey[600],
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(4.0),
               borderSide: const BorderSide(
                 color: Color(0xFFD9D9D9),
                 width: 1.0,
               ),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(4.0),
               borderSide: const BorderSide(
                 color: Color(0xFFD9D9D9),
                 width: 1.0,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(4.0),
               borderSide: const BorderSide(
                 color: Color(0xFFD9D9D9),
                 width: 1.0,
@@ -77,16 +79,58 @@ class SharedWidgets {
     );
   }
 
-  // Placeholder for pickFile (adjust as per your implementation)
-  static void pickFile({
+  static Future<void> pickFile({
     required Function(File) onFilePicked,
     required List<String> allowedExtensions,
-  }) {
-    // Implement file picker logic here
+    BuildContext? context,
+  }) async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: allowedExtensions,
+        allowMultiple: false,
+      );
+
+      if (result != null && result.files.single.path != null) {
+        File file = File(result.files.single.path!);
+        onFilePicked(file);
+      } else {
+        if (context != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'No file selected',
+                style: GoogleFonts.montserrat(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+              backgroundColor: Colors.grey,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Error picking file: $e',
+              style: GoogleFonts.montserrat(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }
 
-// StyledButton class remains unchanged
 class StyledButton extends StatelessWidget {
   final String text;
   final IconData? icon;
@@ -143,6 +187,8 @@ class PortfolioNew extends StatefulWidget {
 }
 
 class _PortfolioFormState extends State<PortfolioNew> {
+  bool _isBold = false, _isUnderline = false;
+  final _formKey = GlobalKey<FormState>();
   final _projectNameController = TextEditingController();
   final _projectUrlController = TextEditingController();
   final List<String> _selectedSkills = [];
@@ -152,14 +198,20 @@ class _PortfolioFormState extends State<PortfolioNew> {
   bool _isLoading = false;
   List<Map<String, dynamic>> _availableSkills = [];
   static const Color textColor = Colors.black;
-
+// Copyright 2013 The Flutter Authors. All rights reserved.
+  String? _descriptionXssError;
+  String? _otherSkillsXssError;
   @override
   void initState() {
     super.initState();
     _fetchSkills();
   }
 
-  // _fetchSkills, _saveForm, _showSnackBar, and dispose methods remain unchanged
+  TextStyle _getTextStyle() => TextStyle(
+        fontWeight: _isBold ? FontWeight.bold : FontWeight.normal,
+        decoration:
+            _isUnderline ? TextDecoration.underline : TextDecoration.none,
+      );
   Future<void> _fetchSkills() async {
     setState(() => _isLoading = true);
     try {
@@ -171,8 +223,8 @@ class _PortfolioFormState extends State<PortfolioNew> {
           'Authorization': 'Bearer $authToken',
         },
       );
-      print('Skills Request: GET ${URLS().get_skills_api}');
-      print('Skills Response: ${response.statusCode} ${response.body}');
+      log('Skills Request: GET ${URLS().get_skills_api}');
+      log('Skills Response: ${response.statusCode} ${response.body}');
 
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
@@ -186,15 +238,15 @@ class _PortfolioFormState extends State<PortfolioNew> {
                 .toList();
           });
         } else {
-          print('No skills found in response');
+          log('No skills found in response');
           _showSnackBar('No skills found');
         }
       } else {
-        print('Failed to fetch skills: ${response.statusCode}');
+        log('Failed to fetch skills: ${response.statusCode}');
         _showSnackBar('Failed to fetch skills');
       }
     } catch (e) {
-      print('Error fetching skills: $e');
+      log('Error fetching skills: $e');
       _showSnackBar('Error fetching skills');
     } finally {
       setState(() => _isLoading = false);
@@ -202,92 +254,78 @@ class _PortfolioFormState extends State<PortfolioNew> {
   }
 
   Future<void> _saveForm() async {
-    if (_projectNameController.text.isEmpty) {
-      _showSnackBar('Please enter a project name');
-      return;
-    }
-    if (_projectUrlController.text.isEmpty) {
-      _showSnackBar('Please enter a project URL');
-      return;
-    }
-    if (_selectedSkills.isEmpty) {
-      _showSnackBar('Please select at least one project skill');
-      return;
-    }
-    if (_projectDescriptionController.text.isEmpty) {
-      _showSnackBar('Please enter a project description');
-      return;
-    }
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final userId = prefs.getString('user_id') ?? '';
+        final String? authToken = prefs.getString('auth_token');
 
-    setState(() => _isLoading = true);
+        final skillIds = _selectedSkills
+            .map((skillName) => _availableSkills
+                .firstWhere((skill) => skill['name'] == skillName)['id'])
+            .toList();
 
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final userId = prefs.getString('user_id') ?? '';
-      final String? authToken = prefs.getString('auth_token');
-
-      final skillIds = _selectedSkills
-          .map((skillName) => _availableSkills
-              .firstWhere((skill) => skill['name'] == skillName)['id'])
-          .toList();
-
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(URLS().set_portfolio),
-      );
-      request.headers['Authorization'] = 'Bearer $authToken';
-      request.fields['project_name'] = _projectNameController.text;
-      request.fields['user_id'] = userId;
-      request.fields['project_url'] = _projectUrlController.text;
-      request.fields['project_skills'] = jsonEncode(skillIds);
-      request.fields['other_skills'] = _otherSkillsController.text;
-      request.fields['project_desc'] = _projectDescriptionController.text;
-      if (widget.portfolioId != null) {
-        request.fields['portfolio_id'] = widget.portfolioId!;
-      }
-      if (_projectLogo != null) {
-        request.files.add(
-          await http.MultipartFile.fromPath('logo', _projectLogo!.path),
+        var request = http.MultipartRequest(
+          'POST',
+          Uri.parse(URLS().set_portfolio),
         );
+        request.headers['Authorization'] = 'Bearer $authToken';
+        request.fields['project_name'] = _projectNameController.text;
+        request.fields['user_id'] = userId;
+        request.fields['project_url'] = _projectUrlController.text;
+        request.fields['project_skills'] = jsonEncode(skillIds);
+        request.fields['other_skills'] = _otherSkillsController.text;
+        request.fields['project_desc'] = _projectDescriptionController.text;
+        if (widget.portfolioId != null) {
+          request.fields['portfolio_id'] = widget.portfolioId!;
+        }
+        if (_projectLogo != null) {
+          request.files.add(
+            await http.MultipartFile.fromPath('logo', _projectLogo!.path),
+          );
+        }
+
+        log('Portfolio Request: POST ${URLS().set_portfolio}');
+        log('Portfolio Request Body: ${request.fields}');
+        if (_projectLogo != null) {
+          log('Portfolio Request File: ${_projectLogo!.path}');
+        }
+
+        final response = await request.send();
+        final responseBody = await response.stream.bytesToString();
+
+        log('Portfolio Response: ${response.statusCode} $responseBody');
+
+        if (response.statusCode == 200) {
+          _showSnackBar('Project saved successfully');
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => const Editprofilepage()),
+          // );
+          setState(() {
+            _projectNameController.clear();
+            _projectUrlController.clear();
+            _selectedSkills.clear();
+            _otherSkillsController.clear();
+            _projectDescriptionController.clear();
+            _projectLogo = null;
+          });
+        } else {
+          _showSnackBar('Failed to save project: ${response.statusCode}');
+        }
+      } catch (e) {
+        log('Error saving portfolio: $e');
+        _showSnackBar('Error saving project');
+      } finally {
+        setState(() => _isLoading = false);
       }
-
-      print('Portfolio Request: POST ${URLS().set_portfolio}');
-      print('Portfolio Request Body: ${request.fields}');
-      if (_projectLogo != null) {
-        print('Portfolio Request File: ${_projectLogo!.path}');
-      }
-
-      final response = await request.send();
-      final responseBody = await response.stream.bytesToString();
-
-      print('Portfolio Response: ${response.statusCode} $responseBody');
-
-      if (response.statusCode == 200) {
-        _showSnackBar('Project saved successfully');
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Editprofilepage()),
-        );
-
-        setState(() {
-          _projectNameController.clear();
-          _projectUrlController.clear();
-          _selectedSkills.clear();
-          _otherSkillsController.clear();
-          _projectDescriptionController.clear();
-          _projectLogo = null;
-        });
-      } else {
-        _showSnackBar('Failed to save project: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error saving portfolio: $e');
-      _showSnackBar('Error saving project');
-    } finally {
-      setState(() => _isLoading = false);
     }
   }
 
+  void _toggleBold() => setState(() => _isBold = !_isBold);
+  void _toggleUnderline() => setState(() => _isUnderline = !_isUnderline);
+  void _clearText() => _projectDescriptionController.clear();
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -302,6 +340,16 @@ class _PortfolioFormState extends State<PortfolioNew> {
         backgroundColor: Colors.grey,
       ),
     );
+  }
+
+  bool _containsScriptTag(String input) {
+    // Case-insensitive regex to detect <script> tags, including attributes and malformed tags
+    final RegExp scriptTag = RegExp(
+      r'<\s*script\b[^>]*>(.*?)<\s*/\s*script\s*>|<\s*script\b[^>]*>',
+      caseSensitive: false,
+      multiLine: true,
+    );
+    return scriptTag.hasMatch(input);
   }
 
   @override
@@ -343,309 +391,441 @@ class _PortfolioFormState extends State<PortfolioNew> {
                 color: Colors.black,
               ),
             ),
+            // centerTitle: true,
           ),
         ),
       ),
-      backgroundColor: const Color(0xFFFFFFFF),
+      backgroundColor: const Color(0xFFFAFAFA),
       body: Stack(
         children: [
           SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Project Name
-                SharedWidgets.textField(
-                  _projectNameController,
-                  'Project Name',
-                  hintText: 'Select Project Name', // Added hint text
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter a project name' : null,
-                ),
-                const SizedBox(height: 12),
-                // Project URL
-                SharedWidgets.textField(
-                  _projectUrlController,
-                  'Project URL',
-                  hintText: 'Enter Project URL', // Added hint text
-                  keyboardType: TextInputType.url,
-                  validator: (value) {
-                    if (value!.isEmpty) return 'Please enter a project URL';
-                    if (!Uri.parse(value).isAbsolute)
-                      return 'Please enter a valid URL';
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-                // Multi-select skills dropdown with DropdownSearch
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Project Skills',
-                        style: GoogleFonts.montserrat(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: textColor,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      DropdownSearch<String>.multiSelection(
-                        popupProps: PopupPropsMultiSelection.menu(
-                          showSearchBox: true,
-                          searchFieldProps: TextFieldProps(
-                            decoration: InputDecoration(
-                              hintText: 'Search skills...',
-                              hintStyle: GoogleFonts.montserrat(
-                                fontSize: 14,
-                                color: textColor.withOpacity(0.6),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: const BorderSide(
-                                  color: Color(0xFFD9D9D9),
-                                  width: 1.0,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: const BorderSide(
-                                  color: Color(0xFFD9D9D9),
-                                  width: 1.0,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: const BorderSide(
-                                  color: Color(0xFFD9D9D9),
-                                  width: 1.0,
-                                ),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
-                            ),
-                          ),
-                          fit: FlexFit.loose,
-                          menuProps: MenuProps(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                        dropdownDecoratorProps: DropDownDecoratorProps(
-                          dropdownSearchDecoration: InputDecoration(
-                            labelText: 'Enter Project Skill',
-                            labelStyle: GoogleFonts.montserrat(
-                              fontSize: 14,
-                              color: textColor,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFD9D9D9),
-                                width: 1.0,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFD9D9D9),
-                                width: 1.0,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFD9D9D9),
-                                width: 1.0,
-                              ),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
-                            suffixIcon: const Icon(
-                              CupertinoIcons.chevron_down,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                        items: _availableSkills
-                            .map((skill) => skill['name'] as String)
-                            .toList(),
-                        selectedItems: _selectedSkills,
-                        onChanged: (List<String> selected) {
-                          setState(() {
-                            _selectedSkills.clear();
-                            _selectedSkills.addAll(selected);
-                          });
-                        },
-                        validator: (List<String>? value) =>
-                            value == null || value.isEmpty
-                                ? 'Select at least one skill'
-                                : null,
-                      ),
-                      if (_selectedSkills.isNotEmpty) ...[
-                        const SizedBox(height: 12),
-                        Wrap(
-                          spacing: 8.0,
-                          runSpacing: 8.0,
-                          children: _selectedSkills
-                              .map((skill) => Chip(
-                                    label: Text(
-                                      skill,
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 14,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    backgroundColor: Colors.blueAccent,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    deleteIcon: const Icon(Icons.close,
-                                        size: 18, color: Colors.white70),
-                                    onDeleted: () {
-                                      setState(() {
-                                        _selectedSkills.remove(skill);
-                                      });
-                                    },
-                                    elevation: 3,
-                                    shadowColor:
-                                        Colors.blueAccent.withOpacity(0.3),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                  ))
-                              .toList(),
-                        ),
-                      ],
-                    ],
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SharedWidgets.textField(
+                    _projectNameController,
+                    'Project Name *',
+                    hintText: 'Enter Project Name',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a project name';
+                      }
+                      return null;
+                    },
                   ),
-                ),
-                const SizedBox(height: 12),
-                // Other Skills
-                SharedWidgets.textField(
-                  _otherSkillsController,
-                  'Other Skills (Optional)',
-                  hintText: 'Enter Your Skills', // Added hint text
-                ),
-                const SizedBox(height: 12),
-
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: const Color(0xFFD9D9D9),
-                      width: 1.0,
+                  const SizedBox(height: 16),
+                  SharedWidgets.textField(
+                    _projectUrlController,
+                    'Project URL',
+                    hintText: 'Enter Project URL (e.g., https://example.com)',
+                    keyboardType: TextInputType.url,
+                    // validator: (value) {
+                    //   if (value!.isEmpty) return 'Please enter a project URL';
+                    //   if (!Uri.parse(value).isAbsolute)
+                    //     return 'Please enter a valid URL';
+                    //   return null;
+                    // },
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Project Skill *',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
                     ),
-                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Choose files to upload',
-                            style: GoogleFonts.montserrat(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: const Color(0xFFA5A5A5),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () => SharedWidgets.pickFile(
-                              onFilePicked: (file) =>
-                                  setState(() => _projectLogo = file),
-                              allowedExtensions: ['png', 'jpeg', 'jpg'],
-                            ),
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4.0),
-                                side: const BorderSide(
-                                  color: Color(0xFFD9D9D9),
-                                  width: 0.6,
-                                ),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'Choose File',
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500,
-                                    color: const Color(0xFF757575),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (_projectLogo != null) ...[
-                        const SizedBox(height: 12),
-                        Text(
-                          _projectLogo!.path.split('/').last,
-                          style: GoogleFonts.montserrat(
-                            color: Colors.grey[600],
-                            fontSize: 13,
+                  const SizedBox(height: 16),
+                  DropdownSearch<String>.multiSelection(
+                    popupProps: PopupPropsMultiSelection.menu(
+                      showSearchBox: true,
+                      searchFieldProps: TextFieldProps(
+                        decoration: InputDecoration(
+                          hintText: 'Search skills...',
+                          hintStyle: GoogleFonts.montserrat(
+                            fontSize: 14,
+                            color: Colors.grey.shade600,
                             fontWeight: FontWeight.w400,
                           ),
-                          overflow: TextOverflow.ellipsis,
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 1.0,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: const BorderSide(
+                              color: Colors.blue,
+                              width: 2.0,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
+                          ),
+                          prefixIcon: Icon(
+                            CupertinoIcons.search,
+                            color: Colors.grey.shade600,
+                            size: 20,
+                          ),
                         ),
-                        const SizedBox(height: 12),
-                        Image.file(
-                          _projectLogo!,
-                          height: 100,
-                          width: 100,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Text('Error loading image'),
+                      ),
+                      menuProps: MenuProps(
+                        borderRadius: BorderRadius.circular(12.0),
+                        elevation: 8,
+                        backgroundColor: Colors.white,
+                      ),
+                      itemBuilder: (context, item, isSelected) => Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color:
+                              isSelected ? Colors.blue.shade50 : Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        child: Text(
+                          item,
+                          style: GoogleFonts.montserrat(
+                            fontSize: 14,
+                            fontWeight:
+                                isSelected ? FontWeight.w600 : FontWeight.w400,
+                            color: isSelected
+                                ? Colors.blue.shade700
+                                : Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ),
+                    dropdownDecoratorProps: DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                        labelText: 'Select Project Skills *',
+                        labelStyle: GoogleFonts.montserrat(
+                          fontSize: 14,
+                          color: Colors.grey.shade700,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: BorderSide(
+                            color: Colors.grey.shade300,
+                            width: 1.0,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: BorderSide(
+                            color: Colors.grey.shade300,
+                            width: 1.0,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: const BorderSide(
+                            color: Colors.blue,
+                            width: 2.0,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                        suffixIcon: const Icon(
+                          CupertinoIcons.chevron_down,
+                          color: Colors.black87,
+                          size: 20,
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: const BorderSide(
+                            color: Colors.red,
+                            width: 1.0,
+                          ),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          borderSide: const BorderSide(
+                            color: Colors.red,
+                            width: 2.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    items: _availableSkills
+                        .map((skill) => skill['name'] as String)
+                        .toList(),
+                    selectedItems: _selectedSkills,
+                    onChanged: (List<String> selected) {
+                      setState(() {
+                        _selectedSkills.clear();
+                        _selectedSkills.addAll(selected);
+                      });
+                    },
+                    validator: (List<String>? value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please select at least one skill';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  SharedWidgets.textField(
+                    _otherSkillsController,
+                    'Other Skills (Optional)',
+                    hintText: 'Enter additional skills (comma-separated)',
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Upload Logo',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.grey.shade300,
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(4.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
                         ),
                       ],
-                    ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                'Upload Project Logo',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () => SharedWidgets.pickFile(
+                                onFilePicked: (file) =>
+                                    setState(() => _projectLogo = file),
+                                allowedExtensions: ['png', 'jpeg', 'jpg'],
+                                context: context,
+                              ),
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                backgroundColor: Colors.blue.shade50,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4.0),
+                                  side: BorderSide(
+                                    color: Colors.blue.shade200,
+                                    width: 1.0,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                'Choose File',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.blue.shade700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (_projectLogo != null) ...[
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(4.0),
+                                child: Image.file(
+                                  _projectLogo!,
+                                  height: 80,
+                                  width: 80,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(
+                                    Icons.error,
+                                    color: Colors.red,
+                                    size: 40,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  _projectLogo!.path.split('/').last,
+                                  style: GoogleFonts.montserrat(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
-                ),
-                // Project Description
-                const SizedBox(height: 12),
-                // Upload Logo Container
-                SharedWidgets.textField(
-                  _projectDescriptionController,
-                  'Project Description',
-                  hintText:
-                      'Describe your project in detail', // Added hint text
-                  maxLines: 4,
-                  validator: (value) => value!.isEmpty
-                      ? 'Please enter a project description'
-                      : null,
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: StyledButton(
-                    text: 'Save',
-                    onPressed: _saveForm,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: textColor,
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4.0),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Project Description',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(8)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF1F1F1),
+                            border: Border(
+                                bottom: BorderSide(
+                                    color: Color(0xFFD9D9D9), width: 2.0)),
+                          ),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                  icon: Icon(Icons.format_bold,
+                                      color:
+                                          _isBold ? Colors.blue : Colors.black),
+                                  onPressed: _toggleBold),
+                              IconButton(
+                                  icon: Icon(Icons.format_underline,
+                                      color: _isUnderline
+                                          ? Colors.blue
+                                          : Colors.black),
+                                  onPressed: _toggleUnderline),
+                              IconButton(
+                                icon: FaIcon(
+                                  FontAwesomeIcons.eraser,
+                                  color: Colors.black,
+                                  size: 20.0,
+                                ),
+                                onPressed: _clearText,
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(12.0),
+                          child: TextField(
+                            controller: _projectDescriptionController,
+                            maxLines: 5,
+                            keyboardType: TextInputType.multiline,
+                            style: _getTextStyle(),
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Describe your project...',
+                                errorText: _descriptionXssError,
+                                errorStyle: GoogleFonts.montserrat(
+                                    fontSize: 12, color: Colors.red)),
+                            onChanged: (value) {
+                              setState(() {
+                                _descriptionXssError = _containsScriptTag(value)
+                                    ? 'Script tags are not allowed'
+                                    : null;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // const SizedBox(height: 24),
+                  // Text(
+                  //   'Project Description',
+                  //   style: GoogleFonts.montserrat(
+                  //     fontSize: 14,
+                  //     fontWeight: FontWeight.w500,
+                  //     color: Colors.black87,
+                  //   ),
+                  // ),
+                  // // const SizedBox(height: 16),
+                  // SharedWidgets.textField(
+                  //   _projectDescriptionController,
+                  //   '',
+                  //   hintText: 'Describe your project in detail',
+                  //   maxLines: 5,
+                  //   // validator: (value) => value!.isEmpty
+                  //   //     ? 'Please enter a project description'
+                  //   //     : null,
+                  // ),
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    width: double.infinity,
+                    child: StyledButton(
+                      text: 'Save',
+                      onPressed: _saveForm,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colorfile.textColor,
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        elevation: 2,
                       ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                ],
+              ),
             ),
           ),
           if (_isLoading)
-            const Center(
-              child: CircularProgressIndicator(),
+            Container(
+              color: Colors.black.withOpacity(0.3),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                ),
+              ),
             ),
         ],
       ),

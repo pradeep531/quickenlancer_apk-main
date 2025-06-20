@@ -139,10 +139,10 @@ class _PasswordNewState extends State<PasswordNew> {
         _currentPasswordController.clear();
         _newPasswordController.clear();
         _confirmPasswordController.clear();
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Editprofilepage()),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const Editprofilepage()),
+        // );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

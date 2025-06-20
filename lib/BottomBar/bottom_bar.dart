@@ -39,10 +39,11 @@ class MyBottomBar extends StatelessWidget {
         ],
       ),
       child: CupertinoTabBar(
-        currentIndex: selectedIndex,
+        currentIndex:
+            selectedIndex >= 0 ? selectedIndex : 0, // Fallback to 0 if -1
         onTap: onItemTapped,
         backgroundColor: Colors.transparent,
-        activeColor: Colors.black,
+        activeColor: Colors.grey,
         inactiveColor: Colors.black45,
         border: Border.all(color: Colors.transparent),
         items: [
@@ -76,7 +77,7 @@ class MyBottomBar extends StatelessWidget {
       duration: Duration(milliseconds: 300),
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
-        gradient: selectedIndex == index
+        gradient: selectedIndex == index && selectedIndex >= 0
             ? LinearGradient(
                 colors: [Color(0xFFB7D7F9), Color(0xFFE5ACCB)],
                 begin: Alignment.topLeft,
@@ -84,7 +85,7 @@ class MyBottomBar extends StatelessWidget {
               )
             : null,
         shape: BoxShape.circle,
-        boxShadow: selectedIndex == index
+        boxShadow: selectedIndex == index && selectedIndex >= 0
             ? [
                 // BoxShadow(
                 //   color: Colors.blue.withOpacity(0.6),
@@ -98,8 +99,10 @@ class MyBottomBar extends StatelessWidget {
         assetPath,
         height: screenWidth *
             0.06, // Dynamically set icon size based on screen width
-        width: screenWidth * 0.1,
-        color: selectedIndex == index ? null : Colors.black45,
+        width: screenWidth * 0.06,
+        color: selectedIndex == index && selectedIndex >= 0
+            ? null
+            : Colors.black45,
       ),
     );
   }

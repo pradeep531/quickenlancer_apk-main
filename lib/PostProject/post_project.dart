@@ -960,92 +960,154 @@ class _PostProjectState extends State<PostProject> {
 
   Widget _buildReviewSection() {
     return Container(
-      padding: EdgeInsets.all(16.0),
+      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.grey, width: 1.0), // Added grey border
+        borderRadius: BorderRadius.circular(10.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 6,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Review and Post',
             style: GoogleFonts.montserrat(
-                fontSize: 16, fontWeight: FontWeight.bold),
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
           ),
-          SizedBox(height: 16),
-          _buildRow(
-              'Project Name: ',
-              _projectNameController.text.isEmpty
-                  ? 'Not set'
-                  : _projectNameController.text),
-          _buildRow(
-              'Description: ',
-              _descriptionController.text.isEmpty
-                  ? 'Not set'
-                  : _descriptionController.text),
-          _buildRow(
-              'Skills: ',
-              selectedSkillIds.isEmpty
-                  ? 'None'
-                  : selectedSkillIds
-                      .map((id) => allSkills.firstWhere(
-                          (s) => int.parse(s['id'].toString()) == id)['skill'])
-                      .join(', ')),
-          _buildRow('Other Skills: ',
-              _otherSkills.isEmpty ? 'None' : _otherSkills.join(', ')),
-          _buildRow(
-              'Requirement Type: ',
-              selectedRequiredType == -1
-                  ? 'Not set'
-                  : options[0]['items'][selectedRequiredType]['label']),
-          _buildRow(
-              'Looking For: ',
-              selectedLookingFor == -1
-                  ? 'Not set'
-                  : options[1]['items'][selectedLookingFor]['label']),
-          _buildRow(
-              'Payment Mode: ',
-              selectedPaymentType == -1
-                  ? 'Not set'
-                  : options[3]['items'][selectedPaymentType]['label']),
-          _buildRow(
-              'Connect Type: ',
-              selectedConnectType == -1
-                  ? 'Not set'
-                  : options[2]['items'][selectedConnectType]['label']),
-          _buildRow(
-              'Currency: ',
-              selectedCurrency == null
-                  ? 'Not set'
-                  : '${selectedCurrency!['currency']} (${selectedCurrency!['lable']})'),
-          _buildRow(
-              'Project Cost: ',
-              _projectCostController.text.isEmpty
-                  ? 'Not set'
-                  : _projectCostController.text),
-          _buildRow('Uploaded Files: ',
-              _files.isEmpty ? 'None' : _files.map((f) => f.name).join(', ')),
+          const SizedBox(height: 12),
+          Table(
+            border: TableBorder(
+              horizontalInside:
+                  BorderSide(color: Colors.grey.shade200, width: 0.5),
+              verticalInside:
+                  BorderSide(color: Colors.grey.shade200, width: 0.5),
+              borderRadius: BorderRadius.circular(6.0),
+            ),
+            columnWidths: const {
+              0: FlexColumnWidth(2),
+              1: FlexColumnWidth(3),
+            },
+            children: [
+              _buildRow(
+                'Project Name: ',
+                _projectNameController.text.isEmpty
+                    ? 'Not set'
+                    : _projectNameController.text,
+                isFirst: true,
+              ),
+              _buildRow(
+                'Description: ',
+                _descriptionController.text.isEmpty
+                    ? 'Not set'
+                    : _descriptionController.text,
+              ),
+              _buildRow(
+                'Skills: ',
+                selectedSkillIds.isEmpty
+                    ? 'None'
+                    : selectedSkillIds
+                        .map((id) => allSkills.firstWhere((s) =>
+                            int.parse(s['id'].toString()) == id)['skill'])
+                        .join(', '),
+              ),
+              _buildRow(
+                'Other Skills: ',
+                _otherSkills.isEmpty ? 'None' : _otherSkills.join(', '),
+              ),
+              _buildRow(
+                'Requirement Type: ',
+                selectedRequiredType == -1
+                    ? 'Not set'
+                    : options[0]['items'][selectedRequiredType]['label'],
+              ),
+              _buildRow(
+                'Looking For: ',
+                selectedLookingFor == -1
+                    ? 'Not set'
+                    : options[1]['items'][selectedLookingFor]['label'],
+              ),
+              _buildRow(
+                'Payment Mode: ',
+                selectedPaymentType == -1
+                    ? 'Not set'
+                    : options[3]['items'][selectedPaymentType]['label'],
+              ),
+              _buildRow(
+                'Connect Type: ',
+                selectedConnectType == -1
+                    ? 'Not set'
+                    : options[2]['items'][selectedConnectType]['label'],
+              ),
+              _buildRow(
+                'Currency: ',
+                selectedCurrency == null
+                    ? 'Not set'
+                    : '${selectedCurrency!['currency']} (${selectedCurrency!['lable']})',
+              ),
+              _buildRow(
+                'Project Cost: ',
+                _projectCostController.text.isEmpty
+                    ? 'Not set'
+                    : _projectCostController.text,
+              ),
+              _buildRow(
+                'Uploaded Files: ',
+                _files.isEmpty ? 'None' : _files.map((f) => f.name).join(', '),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildRow(String label, String value) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
+  TableRow _buildRow(String label, String value, {bool isFirst = false}) {
+    return TableRow(
+      decoration: BoxDecoration(
+        color: isFirst ? Colors.grey.shade50 : Colors.white,
+        borderRadius: isFirst
+            ? const BorderRadius.vertical(top: Radius.circular(6.0))
+            : null,
+      ),
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+          child: Text(
             label,
             style: GoogleFonts.montserrat(
-                fontSize: 14, fontWeight: FontWeight.bold),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: GoogleFonts.montserrat(fontSize: 14),
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
             ),
           ),
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+          child: Text(
+            value,
+            style: GoogleFonts.montserrat(
+              fontSize: 13,
+              fontWeight: FontWeight.w400,
+              color: Colors.black54,
+              height: 1.4,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+          ),
+        ),
+      ],
     );
   }
 
@@ -1287,12 +1349,13 @@ class _PostProjectState extends State<PostProject> {
                           () => _isContainerVisible = !_isContainerVisible),
                       child: Container(
                         width: double.infinity,
-                        height: 120,
                         decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                colors: [Color(0xFFB7D7F9), Color(0xFFE5ACCB)],
-                                begin: Alignment.bottomLeft,
-                                end: Alignment.topRight)),
+                          gradient: LinearGradient(
+                            colors: [Color(0xFFB7D7F9), Color(0xFFE5ACCB)],
+                            begin: Alignment.bottomLeft,
+                            end: Alignment.topRight,
+                          ),
+                        ),
                         child: Padding(
                           padding: EdgeInsets.all(16.0),
                           child: Column(
@@ -1303,91 +1366,278 @@ class _PostProjectState extends State<PostProject> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
-                                      child: Text(
-                                          'Why Quickenlancer Is The Best To',
-                                          style: GoogleFonts.montserrat(
-                                              color: Colorfile.textColor,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold))),
+                                    child: Text(
+                                      'Why Quickenlancer Is The Best To',
+                                      style: GoogleFonts.montserrat(
+                                        color: Colorfile.textColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
                                   Container(
                                     width: 25,
                                     height: 25,
                                     decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            color: Colorfile.textColor,
-                                            width: 1)),
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Colorfile.textColor,
+                                        width: 1,
+                                      ),
+                                    ),
                                     child: Center(
-                                        child: Transform.rotate(
-                                            angle: _isContainerVisible
-                                                ? 1.57
-                                                : 4.72,
-                                            child: Icon(
-                                                Icons.chevron_left_outlined,
-                                                color: Colorfile.textColor,
-                                                size: 20))),
+                                      child: Transform.rotate(
+                                        angle:
+                                            _isContainerVisible ? 1.57 : 4.72,
+                                        child: Icon(
+                                          Icons.chevron_left_outlined,
+                                          color: Colorfile.textColor,
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
                               SizedBox(height: 8),
                               Text(
-                                  'Quickenlancer offers a swift and effortless project posting method, allowing users to submit their projects.',
-                                  style: GoogleFonts.montserrat(
-                                      color: Colorfile.textColor,
-                                      fontSize: 10)),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              colors: [Color(0xFFB7D7F9), Color(0xFFE5ACCB)],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight)),
-                      width: double.infinity,
-                      height: _isContainerVisible ? 150 : 0,
-                      child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(20.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(
-                                    color: Color(0xFFE0E0E0), width: 1)),
-                            child: ListTile(
-                              leading: Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: LinearGradient(
-                                        colors: [
-                                          Color(0xFFB7D7F9),
-                                          Color(0xFFE5ACCB)
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight)),
-                                child: ClipOval(
-                                    child: Padding(
-                                        padding: EdgeInsets.all(6.0),
-                                        child: Icon(Icons.verified_user,
-                                            color: Colors.white))),
+                                'Quickenlancer offers a swift and effortless project posting method, allowing users to submit their projects.',
+                                style: GoogleFonts.montserrat(
+                                  color: Colorfile.textColor,
+                                  fontSize: 13,
+                                ),
                               ),
-                              title: Text('Verified Freelancer',
-                                  style: GoogleFonts.montserrat(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colorfile.textColor)),
-                              subtitle: Text(
-                                  'Engage with thoroughly vetted and trusted freelancers.',
-                                  style: GoogleFonts.montserrat(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w500)),
-                            ),
+                              Visibility(
+                                visible: _isContainerVisible,
+                                child: Padding(
+                                  padding: EdgeInsets.all(20.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                        color: Color(0xFFE0E0E0),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: ListTile(
+                                      leading: Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Color(0xFFB7D7F9),
+                                              Color(0xFFE5ACCB),
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                        ),
+                                        child: ClipOval(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(6.0),
+                                            child: Icon(
+                                              Icons.verified_user,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      title: Text(
+                                        'Verified Freelancer',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colorfile.textColor,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        'Engage with thoroughly vetted and trusted freelancers.',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: _isContainerVisible,
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.only(left: 20.0, right: 20),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                        color: Color(0xFFE0E0E0),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: ListTile(
+                                      leading: Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Color(0xFFB7D7F9),
+                                              Color(0xFFE5ACCB),
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                        ),
+                                        child: ClipOval(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(6.0),
+                                            child: Icon(
+                                              Icons.verified_rounded,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      title: Text(
+                                        'Verified Company',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colorfile.textColor,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        'Engage with thoroughly vetted and trusted freelancers.',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: _isContainerVisible,
+                                child: Padding(
+                                  padding: EdgeInsets.all(20.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                        color: Color(0xFFE0E0E0),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: ListTile(
+                                      leading: Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Color(0xFFB7D7F9),
+                                              Color(0xFFE5ACCB),
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                        ),
+                                        child: ClipOval(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(6.0),
+                                            child: Icon(
+                                              Icons.person,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      title: Text(
+                                        'Direct Call Approach',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colorfile.textColor,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        'Communicate directly with freelancers and companies via calls.',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: _isContainerVisible,
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.only(left: 20.0, right: 20),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                        color: Color(0xFFE0E0E0),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: ListTile(
+                                      leading: Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Color(0xFFB7D7F9),
+                                              Color(0xFFE5ACCB),
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                        ),
+                                        child: ClipOval(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(6.0),
+                                            child: Icon(
+                                              Icons.person,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      title: Text(
+                                        'No Commission for Posting Projects',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colorfile.textColor,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        'Post your projects for free without any hidden fees.',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -1395,10 +1645,14 @@ class _PostProjectState extends State<PostProject> {
                     SizedBox(height: 20),
                     AnotherStepper(
                       stepperList: List.generate(
-                          4,
-                          (_) => StepperData(
-                              iconWidget: Icon(Icons.circle,
-                                  size: 20, color: Color(0xFF8B3A99)))),
+                        4,
+                        (index) => StepperData(
+                          iconWidget: Icon(Icons.circle,
+                              size: 20, color: Color(0xFF8B3A99)),
+                          title: StepperText(
+                              "Step ${index + 1}"), // Use StepperText instead of Text
+                        ),
+                      ),
                       stepperDirection: Axis.horizontal,
                       activeBarColor: Color(0xFF8B3A99),
                       inActiveBarColor: Color(0xFFD9D9D9),

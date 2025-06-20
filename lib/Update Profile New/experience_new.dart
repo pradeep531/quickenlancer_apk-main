@@ -105,12 +105,12 @@ class _ExperienceNewState extends State<ExperienceNew> {
       final response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Editprofilepage(),
-          ),
-        );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => Editprofilepage(),
+        //   ),
+        // );
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(

@@ -786,7 +786,8 @@ class _ProfileFormState extends State<ProfileForm> {
               validator: (value) => _validateRequired(value, 'address'),
             ),
             StyledButton(
-              text: _profileImage == null ? 'Upload Picture' : 'Change Picture',
+              text:
+                  _profileImage == null ? 'Upload Pictussre' : 'Change Picture',
               icon: Icons.upload,
               onPressed: _pickImage,
             ),
