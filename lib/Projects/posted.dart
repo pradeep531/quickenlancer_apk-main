@@ -1571,6 +1571,7 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                                       final url =
                                                           imagePath[index];
                                                       return Container(
+                                                        height: 50,
                                                         margin: const EdgeInsets
                                                             .symmetric(
                                                             vertical: 2),
@@ -1601,14 +1602,8 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                                               ),
                                                             ),
                                                             const Spacer(), // Push the icon to the right
-                                                            IconButton(
-                                                              icon: const Icon(
-                                                                  Icons
-                                                                      .download,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  size: 30),
-                                                              onPressed: () =>
+                                                            GestureDetector(
+                                                              onTap: () =>
                                                                   _showDialog(
                                                                 title:
                                                                     'Confirm Download',
@@ -1664,6 +1659,13 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                                                     ),
                                                                   ),
                                                                 ],
+                                                              ),
+                                                              child: const Icon(
+                                                                Icons.download,
+                                                                color:
+                                                                    Colors.grey,
+                                                                size:
+                                                                    24, // You can fine-tune the size if needed
                                                               ),
                                                             ),
                                                           ],

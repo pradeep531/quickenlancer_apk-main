@@ -162,7 +162,6 @@ class _PasswordNewState extends State<PasswordNew> {
     }
   }
 
-  // Handle the refresh action
   Future<void> _onRefresh() async {
     setState(() {
       _currentPasswordController.clear();
@@ -191,7 +190,7 @@ class _PasswordNewState extends State<PasswordNew> {
       child: Row(
         children: [
           Icon(
-            isValid ? Icons.check_circle : Icons.circle_outlined,
+            isValid ? Icons.check_circle : Icons.cancel,
             color: isValid ? Colors.teal : Colors.grey.shade500,
             size: 14,
           ),
@@ -199,9 +198,9 @@ class _PasswordNewState extends State<PasswordNew> {
           Text(
             text,
             style: TextStyle(
-              color: isValid ? Colors.teal : Colors.grey.shade600,
+              color: isValid ? Colors.teal : Colors.black,
               fontSize: 12,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -211,31 +210,45 @@ class _PasswordNewState extends State<PasswordNew> {
 
   Widget _buildTextField(
       TextEditingController controller, String label, String? errorText) {
-    return TextField(
-      controller: controller,
-      keyboardType: TextInputType.visiblePassword,
-      obscureText: true,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(
-          color: Colors.grey.shade700,
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.black87,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        errorText: errorText,
-        errorStyle: const TextStyle(color: Colors.redAccent, fontSize: 12),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
-          borderRadius: BorderRadius.circular(8),
+        const SizedBox(height: 8),
+        TextField(
+          controller: controller,
+          keyboardType: TextInputType.visiblePassword,
+          obscureText: true,
+          decoration: InputDecoration(
+            labelText: label, // Restore the original hint text
+            labelStyle: TextStyle(
+              color: Colors.grey.shade700,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+            errorText: errorText,
+            errorStyle: const TextStyle(color: Colors.redAccent, fontSize: 12),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.teal, width: 1.5),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          ),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.teal, width: 1.5),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      ),
-      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+      ],
     );
   }
 
@@ -265,12 +278,11 @@ class _PasswordNewState extends State<PasswordNew> {
       body: Stack(
         children: [
           RefreshIndicator(
-            onRefresh: _onRefresh, // Triggered when user swipes down
-            color: Colorfile.textColor, // Color of the refresh indicator
-            backgroundColor: Colors.white, // Background color of the indicator
+            onRefresh: _onRefresh,
+            color: Colorfile.textColor,
+            backgroundColor: Colors.white,
             child: SingleChildScrollView(
-              physics:
-                  const AlwaysScrollableScrollPhysics(), // Ensures scrollability
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -289,26 +301,42 @@ class _PasswordNewState extends State<PasswordNew> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
+                        color: Color(0xFFFAFAFA),
                         borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Color(0xFFD9D9D9), // Hex code for #D9D9D9
+                          width: 1, // 1px border width
+                        ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Password Requirements',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                            ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.lock_outline,
+                                color: Colors.blue,
+                                size: 20,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'Your password need to:',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 8),
-                          _buildValidationItem('One lowercase & uppercase',
+                          _buildValidationItem('A capital and lowercase letter',
                               _hasLowerAndUpperCase),
                           _buildValidationItem(
-                              'One number & symbol', _hasNumberAndSymbol),
-                          _buildValidationItem('6+ characters', _hasMinLength),
+                              'A number and a special symbol (like ! or @)',
+                              _hasNumberAndSymbol),
+                          _buildValidationItem(
+                              'At least 6 characters total', _hasMinLength),
                         ],
                       ),
                     ),
