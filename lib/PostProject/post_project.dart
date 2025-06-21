@@ -18,6 +18,7 @@ class PostProject extends StatefulWidget {
 }
 
 class _PostProjectState extends State<PostProject> {
+  bool isExpanded = false;
   bool _isContainerVisible = false;
   int _currentStep = 0;
   bool _isSubmitting = false;
@@ -964,7 +965,7 @@ class _PostProjectState extends State<PostProject> {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Colors.grey, width: 1.0), // Added grey border
+        border: Border.all(color: Colors.grey.shade300, width: 1.0),
         borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
@@ -987,127 +988,527 @@ class _PostProjectState extends State<PostProject> {
             ),
           ),
           const SizedBox(height: 12),
-          Table(
-            border: TableBorder(
-              horizontalInside:
-                  BorderSide(color: Colors.grey.shade200, width: 0.5),
-              verticalInside:
-                  BorderSide(color: Colors.grey.shade200, width: 0.5),
-              borderRadius: BorderRadius.circular(6.0),
-            ),
-            columnWidths: const {
-              0: FlexColumnWidth(2),
-              1: FlexColumnWidth(3),
-            },
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildRow(
-                'Project Name: ',
-                _projectNameController.text.isEmpty
-                    ? 'Not set'
-                    : _projectNameController.text,
-                isFirst: true,
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Project Name',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _projectNameController.text.isEmpty
+                          ? 'Not set'
+                          : _projectNameController.text,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black54,
+                        height: 1.4,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                  ],
+                ),
               ),
-              _buildRow(
-                'Description: ',
-                _descriptionController.text.isEmpty
-                    ? 'Not set'
-                    : _descriptionController.text,
+              const SizedBox(height: 8),
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Description',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final textStyle = GoogleFonts.montserrat(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black54,
+                          height: 1.4,
+                        );
+                        final span = TextSpan(
+                            text: _descriptionController.text,
+                            style: textStyle);
+                        final tp = TextPainter(
+                          text: span,
+                          maxLines: 2,
+                          ellipsis: '...',
+                          textDirection: TextDirection.ltr,
+                        );
+                        tp.layout(maxWidth: constraints.maxWidth);
+
+                        if (!tp.didExceedMaxLines && !isExpanded) {
+                          return Text(
+                            _descriptionController.text,
+                            style: textStyle,
+                          );
+                        }
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _descriptionController.text,
+                              maxLines: isExpanded ? null : 2,
+                              overflow: isExpanded
+                                  ? TextOverflow.visible
+                                  : TextOverflow.ellipsis,
+                              style: textStyle,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isExpanded = !isExpanded;
+                                });
+                              },
+                              child: Text(
+                                isExpanded ? 'Read less' : 'Read more',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
-              _buildRow(
-                'Skills: ',
-                selectedSkillIds.isEmpty
-                    ? 'None'
-                    : selectedSkillIds
-                        .map((id) => allSkills.firstWhere((s) =>
-                            int.parse(s['id'].toString()) == id)['skill'])
-                        .join(', '),
+              const SizedBox(height: 8),
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Skills',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    selectedSkillIds.isEmpty
+                        ? Text(
+                            'None',
+                            style: GoogleFonts.montserrat(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black54,
+                              height: 1.4,
+                            ),
+                          )
+                        : Wrap(
+                            spacing: 8.0,
+                            runSpacing: 8.0,
+                            children: selectedSkillIds.map((id) {
+                              final skill = allSkills.firstWhere((s) =>
+                                  int.parse(s['id'].toString()) == id)['skill'];
+                              return Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8.0, vertical: 4.0),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFE8F1FC),
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
+                                child: Text(
+                                  skill,
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                  ],
+                ),
               ),
-              _buildRow(
-                'Other Skills: ',
-                _otherSkills.isEmpty ? 'None' : _otherSkills.join(', '),
+              const SizedBox(height: 8),
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Other Skills',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    _otherSkills.isEmpty
+                        ? Text(
+                            'None',
+                            style: GoogleFonts.montserrat(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black54,
+                              height: 1.4,
+                            ),
+                          )
+                        : Wrap(
+                            spacing: 8.0,
+                            runSpacing: 8.0,
+                            children: _otherSkills.map((skill) {
+                              return Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8.0, vertical: 4.0),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFE8F1FC),
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
+                                child: Text(
+                                  skill,
+                                  style: GoogleFonts.montserrat(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                  ],
+                ),
               ),
-              _buildRow(
-                'Requirement Type: ',
-                selectedRequiredType == -1
-                    ? 'Not set'
-                    : options[0]['items'][selectedRequiredType]['label'],
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(1.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6.0),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFFB7D7F9),
+                      Color(0xFFE5ACCB),
+                    ],
+                    transform: GradientRotation(140.96 * 3.14159 / 180),
+                  ),
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(7.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4.0, horizontal: 8.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Requirement Type: ',
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colorfile.textColor,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      selectedRequiredType == -1
+                                          ? 'Not set'
+                                          : options[0]['items']
+                                              [selectedRequiredType]['label'],
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colorfile.textColor,
+                                        height: 1.2,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4.0, horizontal: 8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Connect Type: ',
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colorfile.textColor,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      selectedConnectType == -1
+                                          ? 'Not set'
+                                          : options[2]['items']
+                                              [selectedConnectType]['label'],
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colorfile.textColor,
+                                        height: 1.2,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4.0, horizontal: 8.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Looking For: ',
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colorfile.textColor,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      selectedLookingFor == -1
+                                          ? 'Not set'
+                                          : options[1]['items']
+                                              [selectedLookingFor]['label'],
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colorfile.textColor,
+                                        height: 1.2,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4.0, horizontal: 8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Currency: ',
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colorfile.textColor,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      selectedCurrency == null
+                                          ? 'Not set'
+                                          : '${selectedCurrency!['currency']} (${selectedCurrency!['lable']})',
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colorfile.textColor,
+                                        height: 1.2,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4.0, horizontal: 8.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'How To Pay: ',
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colorfile.textColor,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      selectedPaymentType == -1
+                                          ? 'Not set'
+                                          : options[3]['items']
+                                              [selectedPaymentType]['label'],
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colorfile.textColor,
+                                        height: 1.2,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4.0, horizontal: 8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Project Cost: ',
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colorfile.textColor,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      _projectCostController.text.isEmpty
+                                          ? 'Not set'
+                                          : _projectCostController.text,
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colorfile.textColor,
+                                        height: 1.2,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              _buildRow(
-                'Looking For: ',
-                selectedLookingFor == -1
-                    ? 'Not set'
-                    : options[1]['items'][selectedLookingFor]['label'],
-              ),
-              _buildRow(
-                'Payment Mode: ',
-                selectedPaymentType == -1
-                    ? 'Not set'
-                    : options[3]['items'][selectedPaymentType]['label'],
-              ),
-              _buildRow(
-                'Connect Type: ',
-                selectedConnectType == -1
-                    ? 'Not set'
-                    : options[2]['items'][selectedConnectType]['label'],
-              ),
-              _buildRow(
-                'Currency: ',
-                selectedCurrency == null
-                    ? 'Not set'
-                    : '${selectedCurrency!['currency']} (${selectedCurrency!['lable']})',
-              ),
-              _buildRow(
-                'Project Cost: ',
-                _projectCostController.text.isEmpty
-                    ? 'Not set'
-                    : _projectCostController.text,
-              ),
-              _buildRow(
-                'Uploaded Files: ',
-                _files.isEmpty ? 'None' : _files.map((f) => f.name).join(', '),
+              const SizedBox(height: 10),
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Uploaded Files',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      width: double.infinity,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFFFFF), // Background color
+                        border: Border.all(
+                          color: Color(0xFFD9D9D9), // Border color
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                            4), // Optional: Rounded corners
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.insert_drive_file,
+                            color: Colors.blue,
+                            size: 20,
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              _files.isEmpty
+                                  ? 'None'
+                                  : _files.map((f) => f.name).join(', '),
+                              style: GoogleFonts.montserrat(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black54,
+                                height: 1.4,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ],
           ),
         ],
       ),
-    );
-  }
-
-  TableRow _buildRow(String label, String value, {bool isFirst = false}) {
-    return TableRow(
-      decoration: BoxDecoration(
-        color: isFirst ? Colors.grey.shade50 : Colors.white,
-        borderRadius: isFirst
-            ? const BorderRadius.vertical(top: Radius.circular(6.0))
-            : null,
-      ),
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-          child: Text(
-            label,
-            style: GoogleFonts.montserrat(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-          child: Text(
-            value,
-            style: GoogleFonts.montserrat(
-              fontSize: 13,
-              fontWeight: FontWeight.w400,
-              color: Colors.black54,
-              height: 1.4,
-            ),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
-          ),
-        ),
-      ],
     );
   }
 
@@ -1407,57 +1808,60 @@ class _PostProjectState extends State<PostProject> {
                                   fontSize: 13,
                                 ),
                               ),
-                              Visibility(
-                                visible: _isContainerVisible,
-                                child: Padding(
-                                  padding: EdgeInsets.all(20.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(15),
-                                      border: Border.all(
-                                        color: Color(0xFFE0E0E0),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: ListTile(
-                                      leading: Container(
-                                        width: 50,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Color(0xFFB7D7F9),
-                                              Color(0xFFE5ACCB),
-                                            ],
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                          ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Visibility(
+                                  visible: _isContainerVisible,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(15),
+                                        border: Border.all(
+                                          color: Color(0xFFE0E0E0),
+                                          width: 1,
                                         ),
-                                        child: ClipOval(
-                                          child: Padding(
-                                            padding: EdgeInsets.all(6.0),
-                                            child: Icon(
-                                              Icons.verified_user,
-                                              color: Colors.white,
+                                      ),
+                                      child: ListTile(
+                                        leading: Container(
+                                          width: 50,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                Color(0xFFB7D7F9),
+                                                Color(0xFFE5ACCB),
+                                              ],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                            ),
+                                          ),
+                                          child: ClipOval(
+                                            child: Padding(
+                                              padding: EdgeInsets.all(6.0),
+                                              child: Icon(
+                                                Icons.verified_user,
+                                                color: Colors.white,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      title: Text(
-                                        'Verified Freelancer',
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colorfile.textColor,
+                                        title: Text(
+                                          'Verified Freelancer',
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colorfile.textColor,
+                                          ),
                                         ),
-                                      ),
-                                      subtitle: Text(
-                                        'Engage with thoroughly vetted and trusted freelancers.',
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w500,
+                                        subtitle: Text(
+                                          'Engage with thoroughly vetted and trusted freelancers.',
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -1467,8 +1871,7 @@ class _PostProjectState extends State<PostProject> {
                               Visibility(
                                 visible: _isContainerVisible,
                                 child: Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 20.0, right: 20),
+                                  padding: EdgeInsets.all(8.0),
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -1525,7 +1928,7 @@ class _PostProjectState extends State<PostProject> {
                               Visibility(
                                 visible: _isContainerVisible,
                                 child: Padding(
-                                  padding: EdgeInsets.all(20.0),
+                                  padding: EdgeInsets.all(8.0),
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -1582,8 +1985,7 @@ class _PostProjectState extends State<PostProject> {
                               Visibility(
                                 visible: _isContainerVisible,
                                 child: Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 20.0, right: 20),
+                                  padding: EdgeInsets.all(8.0),
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -1673,32 +2075,38 @@ class _PostProjectState extends State<PostProject> {
                             Container(
                               height: 42,
                               decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      colors: [
-                                        Color(0xFFB7D7F9),
-                                        Color(0xFFE5ACCB)
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight),
-                                  borderRadius: BorderRadius.circular(6)),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFFB7D7F9),
+                                    Color(0xFFE5ACCB)
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
                               child: ElevatedButton(
                                 onPressed: () => setState(() => _currentStep--),
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.transparent,
-                                    shadowColor: Colors.transparent,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(4))),
-                                child: Row(children: [
-                                  Icon(Icons.arrow_back,
-                                      color: Colorfile.textColor),
-                                  SizedBox(width: 8),
-                                  Text('Previous',
-                                      style:
-                                          TextStyle(color: Colorfile.textColor))
-                                ]),
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.arrow_back,
+                                        color: Colorfile.textColor),
+                                    SizedBox(width: 8),
+                                    Text('Previous',
+                                        style: TextStyle(
+                                            color: Colorfile.textColor)),
+                                  ],
+                                ),
                               ),
                             ),
+                          Spacer(), // Pushes the Next button to the right
                           ElevatedButton(
                             onPressed: () {
                               if (_currentStep < stepContents.length - 1) {
@@ -1717,7 +2125,8 @@ class _PostProjectState extends State<PostProject> {
                               foregroundColor: Colors.white,
                               padding: EdgeInsets.symmetric(vertical: 14),
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6)),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
                             ),
                             child: Text(_currentStep == stepContents.length - 1
                                 ? 'Submit'

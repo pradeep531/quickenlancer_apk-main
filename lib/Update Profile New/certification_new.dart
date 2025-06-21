@@ -409,6 +409,15 @@ class _CertificationNewState extends State<CertificationNew> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    'Certification Name*',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colorfile.textColor,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
                   TextField(
                     controller: _certificationNameController,
                     decoration: InputDecoration(

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:quickenlancer_apk/Colors/colorfile.dart';
 import 'package:quickenlancer_apk/editprofilepage.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -415,7 +416,7 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                 // Project Name
                 SharedWidgets.textField(
                   _projectNameController,
-                  'Project Name',
+                  'Project Name *',
                   hintText: 'Select Project Name',
                   validator: (value) =>
                       value!.isEmpty ? 'Please enter a project name' : null,
@@ -435,6 +436,14 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                   },
                 ),
                 const SizedBox(height: 12),
+
+                // Other Skills
+                SharedWidgets.textField(
+                  _otherSkillsController,
+                  'Other Skills (Optional)',
+                  hintText: 'Enter Your Skills',
+                ),
+
                 // Multi-select skills dropdown with DropdownSearch
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -442,10 +451,10 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Project Skills',
+                        'Project Skills *',
                         style: GoogleFonts.montserrat(
                           fontSize: 15,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                           color: textColor,
                         ),
                       ),
@@ -458,72 +467,124 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                               hintText: 'Search skills...',
                               hintStyle: GoogleFonts.montserrat(
                                 fontSize: 14,
-                                color: textColor.withOpacity(0.6),
+                                color: Colors.grey.shade600,
+                                fontWeight: FontWeight.w400,
                               ),
+                              filled: true,
+                              fillColor: Colors.white,
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: const BorderSide(
-                                  color: Color(0xFFD9D9D9),
+                                borderRadius: BorderRadius.circular(12.0),
+                                borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
                                   width: 1.0,
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: const BorderSide(
-                                  color: Color(0xFFD9D9D9),
+                                borderRadius: BorderRadius.circular(12.0),
+                                borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
                                   width: 1.0,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
+                                borderRadius: BorderRadius.circular(12.0),
                                 borderSide: const BorderSide(
-                                  color: Color(0xFFD9D9D9),
-                                  width: 1.0,
+                                  color: Colors.blue,
+                                  width: 2.0,
                                 ),
                               ),
                               contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 8),
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
+                              prefixIcon: Icon(
+                                CupertinoIcons.search,
+                                color: Colors.grey.shade600,
+                                size: 20,
+                              ),
                             ),
                           ),
-                          fit: FlexFit.loose,
                           menuProps: MenuProps(
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(12.0),
+                            elevation: 8,
+                            backgroundColor: Colors.white,
+                          ),
+                          itemBuilder: (context, item, isSelected) => Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? Colors.blue.shade50
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(4.0),
+                            ),
+                            child: Text(
+                              item,
+                              style: GoogleFonts.montserrat(
+                                fontSize: 14,
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
+                                color: isSelected
+                                    ? Colors.blue.shade700
+                                    : Colors.black87,
+                              ),
+                            ),
                           ),
                         ),
                         dropdownDecoratorProps: DropDownDecoratorProps(
                           dropdownSearchDecoration: InputDecoration(
-                            labelText: 'Enter Project Skill',
+                            labelText: 'Select Project Skills *',
                             labelStyle: GoogleFonts.montserrat(
                               fontSize: 14,
-                              color: textColor,
+                              color: Colors.grey.shade700,
+                              fontWeight: FontWeight.w500,
                             ),
+                            filled: true,
+                            fillColor: Colors.white,
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFD9D9D9),
+                              borderRadius: BorderRadius.circular(4.0),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
                                 width: 1.0,
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFD9D9D9),
+                              borderRadius: BorderRadius.circular(4.0),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade300,
                                 width: 1.0,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(4.0),
                               borderSide: const BorderSide(
-                                color: Color(0xFFD9D9D9),
-                                width: 1.0,
+                                color: Colors.blue,
+                                width: 2.0,
                               ),
                             ),
                             contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
                             suffixIcon: const Icon(
                               CupertinoIcons.chevron_down,
-                              color: Colors.black,
+                              color: Colors.black87,
                               size: 20,
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(4.0),
+                              borderSide: const BorderSide(
+                                color: Colors.red,
+                                width: 1.0,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(4.0),
+                              borderSide: const BorderSide(
+                                color: Colors.red,
+                                width: 2.0,
+                              ),
                             ),
                           ),
                         ),
@@ -537,10 +598,12 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                             _selectedSkills.addAll(selected);
                           });
                         },
-                        validator: (List<String>? value) =>
-                            value == null || value.isEmpty
-                                ? 'Select at least one skill'
-                                : null,
+                        validator: (List<String>? value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select at least one skill';
+                          }
+                          return null;
+                        },
                       ),
                       if (_selectedSkills.isNotEmpty) ...[
                         const SizedBox(height: 12),
@@ -578,13 +641,6 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                       ],
                     ],
                   ),
-                ),
-                const SizedBox(height: 12),
-                // Other Skills
-                SharedWidgets.textField(
-                  _otherSkillsController,
-                  'Other Skills (Optional)',
-                  hintText: 'Enter Your Skills',
                 ),
                 const SizedBox(height: 12),
                 // Upload Logo Container
@@ -707,7 +763,7 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                   child: ElevatedButton(
                     onPressed: _saveForm,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: textColor,
+                      backgroundColor: Colorfile.textColor,
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4.0),

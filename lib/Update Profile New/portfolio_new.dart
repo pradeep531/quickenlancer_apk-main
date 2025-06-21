@@ -435,7 +435,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
                     'Project Skill *',
                     style: GoogleFonts.montserrat(
                       fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                       color: Colors.black87,
                     ),
                   ),
@@ -470,7 +470,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.0),
                             borderSide: const BorderSide(
-                              color: Colors.blue,
+                              color: Colors.grey,
                               width: 2.0,
                             ),
                           ),
@@ -504,9 +504,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
                             fontSize: 14,
                             fontWeight:
                                 isSelected ? FontWeight.w600 : FontWeight.w400,
-                            color: isSelected
-                                ? Colors.blue.shade700
-                                : Colors.black87,
+                            color: isSelected ? Colors.grey : Colors.black87,
                           ),
                         ),
                       ),
@@ -538,7 +536,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(4.0),
                           borderSide: const BorderSide(
-                            color: Colors.blue,
+                            color: Colors.grey,
                             width: 2.0,
                           ),
                         ),

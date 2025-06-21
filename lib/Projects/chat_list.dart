@@ -19,7 +19,7 @@ class ChatList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5), // Softer background for minimal look
+      backgroundColor: Colors.white, // Match CallsList background
       appBar: AppBar(
         title: Text(
           'Chat List',
@@ -31,7 +31,7 @@ class ChatList extends StatelessWidget {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        centerTitle: true, // Centered title for cleaner look
+        // centerTitle: true, // Centered title to match CallsList
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0), // Thin border height
           child: Container(
@@ -46,13 +46,13 @@ class ChatList extends StatelessWidget {
                 'No chats available',
                 style: GoogleFonts.montserrat(
                   color: Colors.black45,
-                  fontSize: 14, // Smaller font for subtlety
+                  fontSize: 14, // Match CallsList font size
                   fontWeight: FontWeight.w400,
                 ),
               ),
             )
           : ListView.builder(
-              padding: const EdgeInsets.all(12), // Reduced padding
+              padding: const EdgeInsets.all(12), // Match CallsList padding
               itemCount: chats!.length,
               itemBuilder: (context, index) {
                 final chat = chats![index];
@@ -61,107 +61,73 @@ class ChatList extends StatelessWidget {
                       vertical: 6), // Tighter spacing
                   elevation: 0, // No shadow for flat design
                   color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                        color: Colors.grey.shade200,
-                        width: 0.5), // Subtle border
-                    borderRadius: BorderRadius.circular(8), // Softer corners
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10), // Reduced padding
-                    child: Row(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.center, // Center alignment
-                      children: [
-                        CircleAvatar(
-                          radius: 20, // Smaller avatar
-                          backgroundImage: chat['profile_pic_url'] != null &&
-                                  chat['profile_pic_url'].isNotEmpty
-                              ? NetworkImage(chat['profile_pic_url'])
-                              : const NetworkImage(
-                                  'https://www.quickensol.com/quickenlancer-new/images/profile_pic/profile.png'),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Color(0xFFE2E2E2), // Match CallsList border
+                          width: 1.0,
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${chat['f_name'] ?? ''} ${chat['l_name'] ?? ''}',
-                                style: GoogleFonts.montserrat(
-                                  color: Colors.black87,
-                                  fontSize: 14, // Smaller, cleaner font
-                                  fontWeight: FontWeight.w500, // Lighter weight
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                'Last Chat: ${chat['sent_on_text'] ?? 'N/A'}',
-                                style: GoogleFonts.montserrat(
-                                  color: Colors.black45, // Softer color
-                                  fontSize: 11, // Smaller font
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    height: 32, // Smaller button
-                                    child: TextButton(
-                                      onPressed: () {
-                                        // Navigate to a detailed chat view or perform an action
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'Chat with ${chat['f_name'] ?? ''} ${chat['l_name'] ?? ''}',
-                                              style: GoogleFonts.montserrat(),
-                                            ),
-                                            backgroundColor: Colors.green,
-                                          ),
-                                        );
-                                      },
-                                      style: TextButton.styleFrom(
-                                        foregroundColor: Colorfile.textColor,
-                                        backgroundColor: Colors
-                                            .grey.shade100, // Light background
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              6), // Softer corners
-                                        ),
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 0),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Icon(Icons.chat,
-                                              size: 14,
-                                              color: Colorfile.textColor),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            'Chat',
-                                            style: GoogleFonts.montserrat(
-                                              fontSize: 12, // Smaller font
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                      ),
+                    ),
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.all(10), // Match CallsList padding
+                      child: Row(
+                        crossAxisAlignment:
+                            CrossAxisAlignment.center, // Center alignment
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                bottom:
+                                    35.0), // Match CallsList avatar alignment
+                            child: CircleAvatar(
+                              radius: 20, // Smaller avatar
+                              backgroundImage: chat['profile_pic_url'] !=
+                                          null &&
+                                      chat['profile_pic_url'].isNotEmpty
+                                  ? NetworkImage(chat['profile_pic_url'])
+                                  : const NetworkImage(
+                                      'https://www.quickensol.com/quickenlancer-new/images/profile_pic/profile.png'),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${chat['f_name'] ?? ''} ${chat['l_name'] ?? ''}',
+                                  style: GoogleFonts.montserrat(
+                                    color: Colors.black87,
+                                    fontSize: 14, // Match CallsList font
+                                    fontWeight: FontWeight
+                                        .w600, // Match CallsList weight
                                   ),
-                                  const SizedBox(width: 12),
-                                  if (chat['is_hire_me_button'] == 1)
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Last Chat: ${chat['sent_on_text'] ?? 'N/A'}',
+                                  style: GoogleFonts.montserrat(
+                                    color: Colorfile
+                                        .textColor, // Match CallsList color
+                                    fontSize: 11, // Match CallsList font
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Row(
+                                  children: [
                                     SizedBox(
-                                      height: 32, // Smaller button
+                                      height:
+                                          32, // Match CallsList button height
                                       child: TextButton(
                                         onPressed: () {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             SnackBar(
                                               content: Text(
-                                                'Hire Me action triggered',
+                                                'Chat with ${chat['f_name'] ?? ''} ${chat['l_name'] ?? ''}',
                                                 style: GoogleFonts.montserrat(),
                                               ),
                                               backgroundColor: Colors.green,
@@ -169,31 +135,117 @@ class ChatList extends StatelessWidget {
                                           );
                                         },
                                         style: TextButton.styleFrom(
-                                          foregroundColor: Colorfile.textColor,
-                                          backgroundColor: Colors.grey
-                                              .shade100, // Light background
+                                          foregroundColor: Color(
+                                              0xFF191E3E), // Match CallsList button color
+                                          backgroundColor: Color(0xFFFFFFFF),
+                                          side: BorderSide(
+                                            color: Color(
+                                                0xFF191E3E), // Match CallsList border
+                                            width: 1.0,
+                                          ),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(6),
+                                            borderRadius: BorderRadius.circular(
+                                                6), // Match CallsList corners
                                           ),
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 0),
+                                              horizontal: 10, vertical: 0),
                                         ),
-                                        child: Text(
-                                          'Hire Me',
-                                          style: GoogleFonts.montserrat(
-                                            fontSize: 12, // Smaller font
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Icon(Icons.chat,
+                                                size: 14,
+                                                color: Color(
+                                                    0xFF191E3E)), // Match CallsList icon
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              'Chat',
+                                              style: GoogleFonts.montserrat(
+                                                fontSize:
+                                                    12, // Match CallsList font
+                                                fontWeight: FontWeight.w500,
+                                                color: Color(0xFF191E3E),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                ],
-                              ),
-                            ],
+                                    // const SizedBox(width: 12),
+                                    if (chat['is_hire_me_button'] == 1)
+                                      SizedBox(
+                                        height:
+                                            32, // Match CallsList button height
+                                        child: TextButton(
+                                          onPressed: () {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Hire Me action triggered',
+                                                  style:
+                                                      GoogleFonts.montserrat(),
+                                                ),
+                                                backgroundColor: Colors.green,
+                                              ),
+                                            );
+                                          },
+                                          style: TextButton.styleFrom(
+                                            foregroundColor: Colors
+                                                .black, // Match CallsList text color
+                                            backgroundColor: Colors
+                                                .transparent, // Transparent for gradient
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12, vertical: 0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(
+                                                  6), // Match CallsList corners
+                                            ),
+                                          ),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  Color(
+                                                      0xFFB7D7F9), // Match CallsList gradient
+                                                  Color(0xFFE6ACCB),
+                                                ],
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                                transform: GradientRotation(127.3 *
+                                                    3.1415927 /
+                                                    180), // Match CallsList rotation
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
+                                            child: Center(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  'Hire Me',
+                                                  style: GoogleFonts.montserrat(
+                                                    fontSize:
+                                                        12, // Match CallsList font
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors
+                                                        .black, // Match CallsList text color
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );

@@ -42,7 +42,7 @@ class CallsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5), // Softer background for minimal look
+      backgroundColor: Colors.white, // Softer background for minimal look
       appBar: AppBar(
         title: Text(
           'Call List',
@@ -54,7 +54,7 @@ class CallsList extends StatelessWidget {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-        centerTitle: true, // Centered title for cleaner look
+        // centerTitle: true, // Centered title for cleaner look
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0), // Thin border height
           child: Container(
@@ -84,253 +84,272 @@ class CallsList extends StatelessWidget {
                       vertical: 6), // Tighter spacing
                   elevation: 0, // No shadow for flat design
                   color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                        color: Colors.grey.shade200,
-                        width: 0.5), // Subtle border
-                    borderRadius: BorderRadius.circular(8), // Softer corners
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10), // Reduced padding
-                    child: Row(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.center, // Center alignment
-                      children: [
-                        CircleAvatar(
-                          radius: 20, // Smaller avatar
-                          backgroundImage: call['profile_pic_url'] != null &&
-                                  call['profile_pic_url'].isNotEmpty
-                              ? NetworkImage(call['profile_pic_url'])
-                              : const NetworkImage(
-                                  'https://www.quickensol.com/quickenlancer-new/images/profile_pic/profile.png'),
+
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Color(0xFFE2E2E2),
+                          width: 1.0,
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${call['f_name'] ?? ''} ${call['l_name'] ?? ''}',
-                                style: GoogleFonts.montserrat(
-                                  color: Colors.black87,
-                                  fontSize: 14, // Smaller, cleaner font
-                                  fontWeight: FontWeight.w500, // Lighter weight
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10), // Reduced padding
+                      child: Row(
+                        crossAxisAlignment:
+                            CrossAxisAlignment.center, // Center alignment
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 35.0),
+                            child: CircleAvatar(
+                              radius: 20, // Smaller avatar
+                              backgroundImage: call['profile_pic_url'] !=
+                                          null &&
+                                      call['profile_pic_url'].isNotEmpty
+                                  ? NetworkImage(call['profile_pic_url'])
+                                  : const NetworkImage(
+                                      'https://www.quickensol.com/quickenlancer-new/images/profile_pic/profile.png'),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${call['f_name'] ?? ''} ${call['l_name'] ?? ''}',
+                                  style: GoogleFonts.montserrat(
+                                    color: Colors.black87,
+                                    fontSize: 14, // Smaller, cleaner font
+                                    fontWeight:
+                                        FontWeight.w600, // Lighter weight
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                'Last Call: ${call['sent_on_text'] ?? 'N/A'}',
-                                style: GoogleFonts.montserrat(
-                                  color: Colors.black45, // Softer color
-                                  fontSize: 11, // Smaller font
-                                  fontWeight: FontWeight.w400,
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Last Call: ${call['sent_on_text'] ?? 'N/A'}',
+                                  style: GoogleFonts.montserrat(
+                                    color: Colorfile.textColor, // Softer color
+                                    fontSize: 11, // Smaller font
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 6),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    height: 32, // Smaller button
-                                    child: TextButton(
-                                      onPressed: () async {
-                                        final prefs = await SharedPreferences
-                                            .getInstance();
-                                        final String? userId =
-                                            prefs.getString('user_id');
-                                        final String? authToken =
-                                            prefs.getString('auth_token');
+                                const SizedBox(height: 6),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      height: 32, // Smaller button
+                                      child: TextButton(
+                                        onPressed: () async {
+                                          final prefs = await SharedPreferences
+                                              .getInstance();
+                                          final String? userId =
+                                              prefs.getString('user_id');
+                                          final String? authToken =
+                                              prefs.getString('auth_token');
 
-                                        if (userId == null ||
-                                            authToken == null) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                  'User ID or auth token not available'),
-                                              backgroundColor: Colors.red,
-                                            ),
-                                          );
-                                          return;
-                                        }
+                                          if (userId == null ||
+                                              authToken == null) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'User ID or auth token not available'),
+                                                backgroundColor: Colors.red,
+                                              ),
+                                            );
+                                            return;
+                                          }
 
-                                        final String callApiUrl =
-                                            URLS().set_call_entry;
-                                        final requestBody = jsonEncode({
-                                          'user_id': userId,
-                                          'project_id': projectId,
-                                          'project_owner_id':
-                                              call['user_id']?.toString() ??
-                                                  userId,
-                                          'used_token_id': call['used_token_id']
-                                                  ?.toString() ??
-                                              '',
-                                        });
-                                        debugPrint(
-                                            'API Request Body: $requestBody');
-
-                                        try {
-                                          final callResponse = await http.post(
-                                            Uri.parse(callApiUrl),
-                                            headers: {
-                                              'Content-Type':
-                                                  'application/json',
-                                              'Authorization':
-                                                  'Bearer $authToken',
-                                            },
-                                            body: requestBody,
-                                          );
-
+                                          final String callApiUrl =
+                                              URLS().set_call_entry;
+                                          final requestBody = jsonEncode({
+                                            'user_id': userId,
+                                            'project_id': projectId,
+                                            'project_owner_id':
+                                                call['user_id']?.toString() ??
+                                                    userId,
+                                            'used_token_id':
+                                                call['used_token_id']
+                                                        ?.toString() ??
+                                                    '',
+                                          });
                                           debugPrint(
-                                              'API Response Status: ${callResponse.statusCode}');
-                                          debugPrint(
-                                              'API Response Body: ${callResponse.body}');
+                                              'API Request Body: $requestBody');
 
-                                          if (callResponse.statusCode == 200 ||
-                                              callResponse.statusCode == 201) {
-                                            final responseData =
-                                                jsonDecode(callResponse.body);
-                                            if (responseData['status'] ==
-                                                    'true' &&
-                                                responseData['data'] != null) {
-                                              final String receiverMobileNo =
-                                                  responseData['data']
-                                                      ['receiver_mobile_no'];
-                                              _openPhoneDialer(
-                                                  receiverMobileNo, context);
+                                          try {
+                                            final callResponse =
+                                                await http.post(
+                                              Uri.parse(callApiUrl),
+                                              headers: {
+                                                'Content-Type':
+                                                    'application/json',
+                                                'Authorization':
+                                                    'Bearer $authToken',
+                                              },
+                                              body: requestBody,
+                                            );
+
+                                            debugPrint(
+                                                'API Response Status: ${callResponse.statusCode}');
+                                            debugPrint(
+                                                'API Response Body: ${callResponse.body}');
+
+                                            if (callResponse.statusCode ==
+                                                    200 ||
+                                                callResponse.statusCode ==
+                                                    201) {
+                                              final responseData =
+                                                  jsonDecode(callResponse.body);
+                                              if (responseData['status'] ==
+                                                      'true' &&
+                                                  responseData['data'] !=
+                                                      null) {
+                                                final String receiverMobileNo =
+                                                    responseData['data']
+                                                        ['receiver_mobile_no'];
+                                                _openPhoneDialer(
+                                                    receiverMobileNo, context);
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                        'Invalid response from server. Please try again.'),
+                                                    backgroundColor: Colors.red,
+                                                  ),
+                                                );
+                                              }
                                             } else {
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 const SnackBar(
                                                   content: Text(
-                                                      'Invalid response from server. Please try again.'),
+                                                      'Failed to initiate call. Please try again.'),
                                                   backgroundColor: Colors.red,
                                                 ),
                                               );
                                             }
-                                          } else {
+                                          } catch (e) {
+                                            debugPrint(
+                                                'Error during API call: $e');
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
                                               const SnackBar(
                                                 content: Text(
-                                                    'Failed to initiate call. Please try again.'),
+                                                    'An error occurred. Please try again.'),
                                                 backgroundColor: Colors.red,
                                               ),
                                             );
                                           }
-                                        } catch (e) {
-                                          debugPrint(
-                                              'Error during API call: $e');
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                  'An error occurred. Please try again.'),
-                                              backgroundColor: Colors.red,
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      style: TextButton.styleFrom(
-                                        foregroundColor: Colorfile.textColor,
-                                        backgroundColor: Colors
-                                            .grey.shade100, // Light background
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              6), // Softer corners
-                                        ),
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 0),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Icon(Icons.phone,
-                                              size: 14,
-                                              color: Colorfile.textColor),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            'Call',
-                                            style: GoogleFonts.montserrat(
-                                              fontSize: 12, // Smaller font
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  // const SizedBox(width: 5),
-                                  if (call['is_hire_me_button'] == 1)
-                                    SizedBox(
-                                      height: 32, // Smaller button
-                                      child: TextButton(
-                                        onPressed: () {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'Hire Me action triggered',
-                                                style: GoogleFonts.montserrat(
-                                                  color: Colors
-                                                      .black, // Black text
-                                                ),
-                                              ),
-                                              backgroundColor: Colors.green,
-                                            ),
-                                          );
                                         },
                                         style: TextButton.styleFrom(
-                                          foregroundColor: Colors
-                                              .black, // Black text for interaction states
-                                          backgroundColor: Colors
-                                              .transparent, // Transparent to show gradient
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 0),
+                                          foregroundColor: Color(0xFF191E3E),
+                                          backgroundColor: Color(0xFFFFFFFF),
+                                          side: BorderSide(
+                                            color: Color(0xFF191E3E),
+                                            width: 1.0,
+                                          ),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(6),
+                                            borderRadius: BorderRadius.circular(
+                                                6), // Softer corners
                                           ),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 0),
                                         ),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                Color(0xFFB7D7F9), // #B7D7F9
-                                                Color(0xFFE6ACCB), // #E6ACCB
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                              transform: GradientRotation(127.3 *
-                                                  3.1415927 /
-                                                  180), // Convert degrees to radians
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Icon(Icons.phone,
+                                                size: 14,
+                                                color: Color(0xFF191E3E)),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              'Call',
+                                              style: GoogleFonts.montserrat(
+                                                fontSize: 12, // Smaller font
+                                                fontWeight: FontWeight.w500,
+                                                color: Color(0xFF191E3E),
+                                              ),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(6),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    if (call['is_hire_me_button'] == 1)
+                                      SizedBox(
+                                        height: 32, // Smaller button
+                                        child: TextButton(
+                                          onPressed: () {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Hire Me action triggered',
+                                                  style: GoogleFonts.montserrat(
+                                                    color: Colors
+                                                        .black, // Black text
+                                                  ),
+                                                ),
+                                                backgroundColor: Colors.green,
+                                              ),
+                                            );
+                                          },
+                                          style: TextButton.styleFrom(
+                                            foregroundColor: Colors
+                                                .black, // Black text for interaction states
+                                            backgroundColor: Colors
+                                                .transparent, // Transparent to show gradient
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12, vertical: 0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
                                           ),
-                                          child: Center(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                'Hire Me',
-                                                style: GoogleFonts.montserrat(
-                                                  fontSize: 12, // Smaller font
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors
-                                                      .black, // Black text
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  Color(0xFFB7D7F9), // #B7D7F9
+                                                  Color(0xFFE6ACCB), // #E6ACCB
+                                                ],
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                                transform: GradientRotation(127.3 *
+                                                    3.1415927 /
+                                                    180), // Convert degrees to radians
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
+                                            child: Center(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  'Hire Me',
+                                                  style: GoogleFonts.montserrat(
+                                                    fontSize:
+                                                        12, // Smaller font
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors
+                                                        .black, // Black text
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                ],
-                              ),
-                            ],
+                                      )
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );

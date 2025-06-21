@@ -832,24 +832,23 @@ class _ProfilePageState extends State<Editprofilepage> {
                                       ? getPresignedUrl('$portfolioPath$file')
                                       : Future.value('assets/test.jpg');
 
-                              // Variable to hold the image URL
                               String? imageUrl;
 
                               return Container(
-                                padding: EdgeInsets.all(screenWidth * 0.02),
+                                padding: EdgeInsets.all(screenWidth * 0.015),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(8),
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.grey.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 5,
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
                                     ),
                                   ],
                                 ),
                                 margin: EdgeInsets.only(
-                                    bottom: screenHeight * 0.01),
+                                    bottom: screenHeight * 0.008),
                                 child: Row(
                                   children: [
                                     FutureBuilder<String>(
@@ -858,27 +857,25 @@ class _ProfilePageState extends State<Editprofilepage> {
                                         if (snapshot.connectionState ==
                                             ConnectionState.waiting) {
                                           return _buildSkeletonLoader(
-                                              screenWidth * 0.4,
-                                              screenWidth * 0.35);
+                                              screenWidth * 0.35,
+                                              screenWidth * 0.3);
                                         }
 
                                         if (snapshot.hasError ||
                                             !snapshot.hasData) {
-                                          imageUrl =
-                                              null; // Reset imageUrl on error
+                                          imageUrl = null;
                                           return Container(
-                                            width: screenWidth * 0.4,
-                                            height: screenWidth * 0.35,
+                                            width: screenWidth * 0.35,
+                                            height: screenWidth * 0.3,
                                             decoration: BoxDecoration(
-                                              color: Colors.grey[
-                                                  300], // Placeholder color
+                                              color: Colors.grey[300],
                                               borderRadius:
-                                                  BorderRadius.circular(10),
+                                                  BorderRadius.circular(8),
                                             ),
                                             child: Center(
                                               child: Icon(
                                                 Icons.image_not_supported,
-                                                size: 40,
+                                                size: 30,
                                                 color: Colors.grey,
                                               ),
                                             ),
@@ -892,8 +889,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                               responseData['status'] ==
                                                   'true' &&
                                               responseData['data'] is String) {
-                                            imageUrl = responseData[
-                                                'data']; // Set imageUrl
+                                            imageUrl = responseData['data'];
                                           } else {
                                             imageUrl = null;
                                           }
@@ -905,42 +901,49 @@ class _ProfilePageState extends State<Editprofilepage> {
 
                                         if (imageUrl == null ||
                                             imageUrl!.isEmpty) {
-                                          return Container(
-                                            width: screenWidth * 0.4,
-                                            height: screenWidth * 0.35,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[300],
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Center(
-                                              child: Icon(
-                                                Icons.image_not_supported,
-                                                size: 40,
-                                                color: Colors.grey,
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Container(
+                                              width: screenWidth * 0.35,
+                                              height: screenWidth * 0.3,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[300],
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.image_not_supported,
+                                                  size: 30,
+                                                  color: Colors.grey,
+                                                ),
                                               ),
                                             ),
                                           );
                                         }
 
-                                        return Container(
-                                          width: screenWidth * 0.4,
-                                          height: screenWidth * 0.35,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: NetworkImage(imageUrl!),
-                                              fit: BoxFit.cover,
-                                              onError: (exception,
-                                                      stackTrace) =>
-                                                  AssetImage('assets/test.jpg'),
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            width: screenWidth * 0.35,
+                                            height: screenWidth * 0.3,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: NetworkImage(imageUrl!),
+                                                fit: BoxFit.cover,
+                                                onError:
+                                                    (exception, stackTrace) =>
+                                                        AssetImage(
+                                                            'assets/test.jpg'),
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
                                           ),
                                         );
                                       },
                                     ),
-                                    SizedBox(width: screenWidth * 0.05),
+                                    SizedBox(width: screenWidth * 0.03),
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
@@ -953,14 +956,13 @@ class _ProfilePageState extends State<Editprofilepage> {
                                               Text(
                                                 item['name'] as String? ?? '',
                                                 style: TextStyle(
-                                                  fontSize: 15,
+                                                  fontSize: 14,
                                                   fontWeight: FontWeight.bold,
                                                   fontFamily: montserrat,
                                                 ),
                                               ),
                                               IconButton(
                                                 onPressed: () {
-                                                  // Navigate to PortfolioForm for editing
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
@@ -968,8 +970,8 @@ class _ProfilePageState extends State<Editprofilepage> {
                                                           PortfolioFormEdit(
                                                         portfolioId: item['id']
                                                             ?.toString(),
-                                                        imageUrl: imageUrl ??
-                                                            '', // Pass imageUrl
+                                                        imageUrl:
+                                                            imageUrl ?? '',
                                                         projectName:
                                                             item['name']
                                                                 as String?,
@@ -1009,36 +1011,23 @@ class _ProfilePageState extends State<Editprofilepage> {
                                               ),
                                             ],
                                           ),
-                                          Html(
-                                            data: truncateWithEllipsis(
+                                          Text(
+                                            truncateWithEllipsis(
                                                 item['description']
                                                         as String? ??
                                                     'Description not available',
-                                                100),
-                                            style: {
-                                              '*': Style(
-                                                fontSize: FontSize(12),
-                                                color: Colors.grey,
-                                                fontFamily: montserrat,
-                                              ),
-                                              'p': Style(margin: Margins.zero),
-                                              'ul': Style(
-                                                margin: Margins(
-                                                  left: Margin(16),
-                                                  top: Margin(8),
-                                                  bottom: Margin(8),
-                                                ),
-                                              ),
-                                              'li': Style(
-                                                  margin: Margins(
-                                                      bottom: Margin(4))),
-                                            },
-                                            shrinkWrap: true,
+                                                80),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              color: Colors.grey,
+                                              fontFamily: montserrat,
+                                            ),
                                           ),
-                                          SizedBox(height: 15),
+                                          SizedBox(height: 10),
                                           OutlinedButton(
                                             onPressed: () {
-                                              // Navigate to PortfolioForm for viewing
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -1048,8 +1037,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                                         item['id']?.toString(),
                                                     projectName:
                                                         item['name'] as String?,
-                                                    imageUrl: imageUrl ??
-                                                        '', // Pass imageUrl
+                                                    imageUrl: imageUrl ?? '',
                                                     projectUrl: item['url']
                                                             as String? ??
                                                         '',
@@ -1085,14 +1073,14 @@ class _ProfilePageState extends State<Editprofilepage> {
                                                     BorderRadius.circular(4),
                                               ),
                                               padding: EdgeInsets.symmetric(
-                                                  vertical: 6),
+                                                  vertical: 4),
                                               minimumSize:
-                                                  Size(screenWidth * 0.25, 32),
+                                                  Size(screenWidth * 0.2, 28),
                                             ),
                                             child: Text(
                                               'View',
                                               style: TextStyle(
-                                                fontSize: screenWidth * 0.04,
+                                                fontSize: screenWidth * 0.035,
                                                 color: textColor,
                                                 fontFamily: montserrat,
                                               ),
@@ -1203,91 +1191,92 @@ class _ProfilePageState extends State<Editprofilepage> {
                       _addMoreButton('language'),
                       SizedBox(height: screenHeight * 0.02),
                       _divider(),
-                      SizedBox(height: screenHeight * 0.02),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _sectionTitle('Skills & Price :'),
-                          Padding(
-                            padding: EdgeInsets.only(top: 4),
-                            child: IconButton(
-                              icon: Image.asset(
-                                'assets/Group 237842.png',
-                                height: 25,
-                                width: 25,
-                                fit: BoxFit.contain,
-                              ),
-                              onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SkillsNew(),
-                                ),
+                          Spacer(),
+                          IconButton(
+                            icon: Image.asset(
+                              'assets/Group 237842.png',
+                              height: 25,
+                              width: 25,
+                              fit: BoxFit.contain,
+                            ),
+                            onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SkillsNew(),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: screenHeight * 0.02),
-                      Table(
-                        border: TableBorder.all(
-                          color: Color(0xFFD9D9D9),
-                          width: 1,
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        ),
-                        children: [
-                          TableRow(
-                            decoration: BoxDecoration(color: Color(0xFFF5F7FA)),
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.all(8),
-                                child: Text(
-                                  'Skill',
-                                  style: GoogleFonts.montserrat(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                    color: textColor,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(8),
-                                child: Text(
-                                  'Cost',
-                                  style: GoogleFonts.montserrat(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                    color: textColor,
-                                  ),
-                                ),
-                              ),
-                            ],
+                      // SizedBox(height: screenHeight * 0.02),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Table(
+                          border: TableBorder.all(
+                            color: Color(0xFFD9D9D9),
+                            width: 1,
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
                           ),
-                          ...?skills
-                              ?.where((skill) =>
-                                  skill['skill'] != null &&
-                                  skill['skill'] is String)
-                              .map((skill) => TableRow(
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(8),
-                                        child: Text(
-                                          skill['skill'] as String,
-                                          style: GoogleFonts.montserrat(
-                                              fontSize: 11, color: textColor),
+                          children: [
+                            TableRow(
+                              decoration:
+                                  BoxDecoration(color: Color(0xFFF5F7FA)),
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    'Skill',
+                                    style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                      color: textColor,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    'Cost',
+                                    style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                      color: textColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            ...?skills
+                                ?.where((skill) =>
+                                    skill['skill'] != null &&
+                                    skill['skill'] is String)
+                                .map((skill) => TableRow(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.all(8),
+                                          child: Text(
+                                            skill['skill'] as String,
+                                            style: GoogleFonts.montserrat(
+                                                fontSize: 11, color: textColor),
+                                          ),
                                         ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(8),
-                                        child: Text(
-                                          '$currency ${skill['rate'] ?? 'N/A'}',
-                                          style: GoogleFonts.montserrat(
-                                              fontSize: 11, color: textColor),
+                                        Padding(
+                                          padding: EdgeInsets.all(8),
+                                          child: Text(
+                                            '$currency ${skill['rate'] ?? 'N/A'}',
+                                            style: GoogleFonts.montserrat(
+                                                fontSize: 11, color: textColor),
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ))
-                              .toList(),
-                        ],
+                                      ],
+                                    ))
+                                .toList(),
+                          ],
+                        ),
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       ...[
@@ -1322,8 +1311,8 @@ class _ProfilePageState extends State<Editprofilepage> {
                                   TableRow(
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 5, vertical: 8),
+                                        padding: const EdgeInsets.only(
+                                            top: 12.0, left: 8),
                                         child: Text(
                                           section['title'] as String,
                                           style: GoogleFonts.montserrat(
@@ -1334,7 +1323,8 @@ class _ProfilePageState extends State<Editprofilepage> {
                                         ),
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(top: 4),
+                                        padding:
+                                            EdgeInsets.only(top: 9, right: 6),
                                         child: GestureDetector(
                                           onTap: () {
                                             Navigator.push(
@@ -1366,12 +1356,31 @@ class _ProfilePageState extends State<Editprofilepage> {
                                   1: FixedColumnWidth(screenWidth * 0.3),
                                 },
                                 children: isCertificate
-                                    ? data.map<TableRow>((cert) {
+                                    ? data
+                                        .asMap()
+                                        .entries
+                                        .map<TableRow>((entry) {
+                                        int idx = entry.key;
+                                        var cert = entry.value;
+                                        bool isLast = idx == data.length - 1;
                                         return TableRow(
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              bottom: isLast
+                                                  ? BorderSide.none
+                                                  : BorderSide(
+                                                      color: Colors.grey[300]!,
+                                                      width: 1.0,
+                                                    ),
+                                            ),
+                                          ),
                                           children: [
                                             Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 5, vertical: 8),
+                                              padding: EdgeInsets.fromLTRB(
+                                                  8,
+                                                  idx == 0 ? 0 : 8,
+                                                  8,
+                                                  8), // top padding zero for first item
                                               child: Text(
                                                 cert['name'] as String? ?? '',
                                                 style: GoogleFonts.montserrat(
@@ -1381,16 +1390,24 @@ class _ProfilePageState extends State<Editprofilepage> {
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(), // Or a widget if you want to show data in the 2nd column
+                                            SizedBox(),
                                           ],
                                         );
                                       }).toList()
                                     : [
                                         TableRow(
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              bottom: BorderSide.none,
+                                            ),
+                                          ),
                                           children: [
                                             Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 5, vertical: 8),
+                                              padding: EdgeInsets.fromLTRB(
+                                                  8,
+                                                  0,
+                                                  8,
+                                                  8), // optional: match style, no top padding here
                                               child: Text(
                                                 data.isNotEmpty &&
                                                         data[0] != null
@@ -1403,11 +1420,11 @@ class _ProfilePageState extends State<Editprofilepage> {
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(), // Maintain alignment with second column
+                                            SizedBox(),
                                           ],
                                         ),
                                       ],
-                              ),
+                              )
                             ],
                           ),
                         );

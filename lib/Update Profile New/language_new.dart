@@ -271,6 +271,15 @@ class _LanguageFormState extends State<LanguageForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                'Language Name*',
+                style: GoogleFonts.montserrat(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colorfile.textColor,
+                ),
+              ),
+              const SizedBox(height: 12),
               TextField(
                 controller: _languageNameController,
                 decoration: InputDecoration(
@@ -415,8 +424,8 @@ class _LanguageFormState extends State<LanguageForm> {
               ],
               if (languages.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                const Text('Existing Languages',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Language Known  :',
+                    style: TextStyle(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
                 ...languages.map((language) => Container(
                       margin: const EdgeInsets.only(bottom: 8),

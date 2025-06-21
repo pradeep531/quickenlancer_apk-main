@@ -1199,6 +1199,187 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
     );
   }
 
+  Widget _buildInfoRow({
+    required String label,
+    required String value,
+    required TextStyle style,
+    TextStyle? valueStyle,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 1.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: style,
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: valueStyle ?? style,
+              textAlign: TextAlign.right,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAvailabilityRow(
+      Map<String, dynamic> job, TextStyle jobTextStyle, String projectId) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Availability Time',
+            style: jobTextStyle,
+          ),
+          const Spacer(), // Pushes the button to the rightmost side
+          TextButton(
+            style: TextButton.styleFrom(
+              minimumSize: Size.zero,
+              padding: EdgeInsets.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            onPressed: () {
+              final availability =
+                  job['time_availability'] as Map<String, dynamic>?;
+              if (availability == null ||
+                  ![
+                    'monday',
+                    'tuesday',
+                    'wednesday',
+                    'thursday',
+                    'friday',
+                    'saturday',
+                    'sunday'
+                  ].any((day) => availability[day] == '1')) {
+                _showAddAvailabilityDialog(projectId);
+              } else {
+                final result = [
+                  'monday',
+                  'tuesday',
+                  'wednesday',
+                  'thursday',
+                  'friday',
+                  'saturday',
+                  'sunday'
+                ]
+                    .where((day) => availability[day] == '1')
+                    .map((day) => {
+                          'day': day.capitalize(),
+                          'from': availability['from_$day'] ?? 'N/A',
+                          'to': availability['to_$day'] ?? 'N/A',
+                        })
+                    .toList();
+
+                _showDialog(
+                  title: 'Availability',
+                  content: result.isEmpty
+                      ? Text(
+                          'No availability specified',
+                          style: jobTextStyle,
+                        )
+                      : SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: result.map((slot) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 80.0,
+                                      child: Text(
+                                        slot['day'],
+                                        style: jobTextStyle.copyWith(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12.0,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8.0),
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.all(8.0),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFFFFFFF),
+                                          border: Border.all(
+                                              color: const Color(0xFFDADADA)),
+                                          borderRadius:
+                                              BorderRadius.circular(6.0),
+                                        ),
+                                        child: Text(
+                                          slot['from'],
+                                          style: jobTextStyle.copyWith(
+                                            fontSize: 12.0,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8.0),
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.all(8.0),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFFFFFFF),
+                                          border: Border.all(
+                                              color: const Color(0xFFDADADA)),
+                                          borderRadius:
+                                              BorderRadius.circular(6.0),
+                                        ),
+                                        child: Text(
+                                          slot['to'],
+                                          style: jobTextStyle.copyWith(
+                                            fontSize: 12.0,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                );
+              }
+            },
+            child: Text(
+              (job['time_availability'] as Map<String, dynamic>?)?.entries.any(
+                          (entry) =>
+                              [
+                                'monday',
+                                'tuesday',
+                                'wednesday',
+                                'thursday',
+                                'friday',
+                                'saturday',
+                                'sunday'
+                              ].contains(entry.key) &&
+                              entry.value == '1') ==
+                      true
+                  ? 'Schedule'
+                  : 'Add Schedule',
+              style: jobTextStyle.copyWith(
+                decoration: TextDecoration.underline,
+                color: Colors.blue,
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final jobTextStyle = GoogleFonts.montserrat(
@@ -1299,187 +1480,102 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                   padding: const EdgeInsets.all(1),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(8)),
-                                    padding: const EdgeInsets.all(16),
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    padding: const EdgeInsets.all(10),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                                'Posted On: ${job['created_on']?.isNotEmpty == true ? DateFormat('dd/MM/yyyy').format(DateTime.parse(job['created_on'])) : 'N/A'}',
-                                                style: jobTextStyle),
-                                            Text(
-                                                'Project Cost: ${job['amount'] ?? 'No Amount'}',
-                                                style: jobTextStyle),
-                                          ],
+                                        _buildInfoRow(
+                                          label: 'Posted On',
+                                          value:
+                                              job['created_on']?.isNotEmpty ==
+                                                      true
+                                                  ? DateFormat('dd/MM/yyyy')
+                                                      .format(DateTime.parse(
+                                                          job['created_on']))
+                                                  : 'N/A',
+                                          style: jobTextStyle,
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                                'How to Pay: ${job['project_type'] == '0' ? 'Fixed' : job['project_type'] == '1' ? 'Hourly' : 'N/A'}',
-                                                style: jobTextStyle),
-                                            TextButton(
-                                              style: TextButton.styleFrom(
-                                                  minimumSize: Size.zero,
-                                                  padding: EdgeInsets.zero,
-                                                  tapTargetSize:
-                                                      MaterialTapTargetSize
-                                                          .shrinkWrap),
-                                              onPressed: () {
-                                                final availability = job[
-                                                        'time_availability']
-                                                    as Map<String, dynamic>?;
-                                                if (availability == null ||
-                                                    ![
-                                                      'monday',
-                                                      'tuesday',
-                                                      'wednesday',
-                                                      'thursday',
-                                                      'friday',
-                                                      'saturday',
-                                                      'sunday'
-                                                    ].any((day) =>
-                                                        availability[day] ==
-                                                        '1')) {
-                                                  _showAddAvailabilityDialog(
-                                                      projectId);
-                                                } else {
-                                                  final result = [
-                                                    'monday',
-                                                    'tuesday',
-                                                    'wednesday',
-                                                    'thursday',
-                                                    'friday',
-                                                    'saturday',
-                                                    'sunday'
-                                                  ]
-                                                      .where((day) =>
-                                                          availability[day] ==
-                                                          '1')
-                                                      .map((day) =>
-                                                          '${day.capitalize()}: ${availability['from_$day'] ?? 'N/A'} - ${availability['to_$day'] ?? 'N/A'}')
-                                                      .join('\n');
-                                                  _showDialog(
-                                                      title: 'Availability',
-                                                      content: Text(
-                                                          result.isEmpty
-                                                              ? 'No availability specified'
-                                                              : result,
-                                                          style: jobTextStyle));
-                                                }
-                                              },
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                        text:
-                                                            'Availability Time: ',
-                                                        style: jobTextStyle),
-                                                    TextSpan(
-                                                      text: (job['time_availability']
-                                                                      as Map<
-                                                                          String,
-                                                                          dynamic>?)
-                                                                  ?.entries
-                                                                  .any((entry) =>
-                                                                      [
-                                                                        'monday',
-                                                                        'tuesday',
-                                                                        'wednesday',
-                                                                        'thursday',
-                                                                        'friday',
-                                                                        'saturday',
-                                                                        'sunday'
-                                                                      ].contains(
-                                                                          entry
-                                                                              .key) &&
-                                                                      entry.value ==
-                                                                          '1') ==
-                                                              true
-                                                          ? 'Schedule'
-                                                          : 'Add Schedule',
-                                                      style:
-                                                          jobTextStyle.copyWith(
-                                                              decoration:
-                                                                  TextDecoration
-                                                                      .underline,
-                                                              color:
-                                                                  Colors.blue),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                        _buildInfoRow(
+                                          label: 'Project Cost',
+                                          value: job['amount'] ?? 'No Amount',
+                                          style: jobTextStyle,
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                                'Requirement Type: ${job['requirement_type'] == '0' ? 'Cold' : job['requirement_type'] == '1' ? 'Hot' : 'N/A'}',
-                                                style: jobTextStyle),
-                                          ],
+                                        _buildInfoRow(
+                                          label: 'How to Pay',
+                                          value: job['project_type'] == '0'
+                                              ? 'Fixed'
+                                              : job['project_type'] == '1'
+                                                  ? 'Hourly'
+                                                  : 'N/A',
+                                          style: jobTextStyle,
                                         ),
-                                        Text(
-                                            'Looking For: ${job['looking_for'] == '1' ? 'Company' : job['looking_for'] == '2' ? 'Freelancer' : 'Company/Freelancer'}',
-                                            style: jobTextStyle),
-                                        Text.rich(
-                                          TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: 'Status: ',
-                                                style:
-                                                    jobTextStyle, // Apply your custom label style here
-                                              ),
-                                              TextSpan(
-                                                text: job['button_label'],
-                                                style: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 12,
-                                                  color: job['project_status'] ==
-                                                          '0'
-                                                      ? Colors.grey
-                                                      : job['project_status'] ==
-                                                              '1'
-                                                          ? Colors.green
-                                                          : Colors.red,
-                                                ),
-                                              ),
-                                            ],
+                                        _buildAvailabilityRow(
+                                            job, jobTextStyle, projectId),
+                                        _buildInfoRow(
+                                          label: 'Requirement Type',
+                                          value: job['requirement_type'] == '0'
+                                              ? 'Cold'
+                                              : job['requirement_type'] == '1'
+                                                  ? 'Hot'
+                                                  : 'N/A',
+                                          style: jobTextStyle,
+                                        ),
+                                        _buildInfoRow(
+                                          label: 'Looking For:',
+                                          value: job['looking_for'] == '1'
+                                              ? 'Company'
+                                              : job['looking_for'] == '2'
+                                                  ? 'Freelancer'
+                                                  : 'Company/Freelancer',
+                                          style: jobTextStyle,
+                                        ),
+                                        _buildInfoRow(
+                                          label: 'Status',
+                                          value: job['button_label'],
+                                          valueStyle: GoogleFonts.montserrat(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 12,
+                                            color: job['project_status'] == '0'
+                                                ? Colors.grey
+                                                : job['project_status'] == '1'
+                                                    ? Colors.green
+                                                    : Colors.red,
                                           ),
+                                          style: jobTextStyle,
                                         ),
                                         if (proposals != null) ...[
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                  'Max Proposal Cost: ${proposals['max_mston_amount']?.toString() ?? 'N/A'}',
-                                                  style: jobTextStyle),
-                                              Text(
-                                                  'Min Proposal Cost: ${proposals['min_mston_amount']?.toString() ?? 'N/A'}',
-                                                  style: jobTextStyle),
-                                            ],
+                                          _buildInfoRow(
+                                            label: 'Max Proposal Cost',
+                                            value: proposals['max_mston_amount']
+                                                    ?.toString() ??
+                                                'N/A',
+                                            style: jobTextStyle,
                                           ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                  'Avg Proposal Cost: ${proposals['average_mston_amount']?.toString() ?? 'N/A'}',
-                                                  style: jobTextStyle),
-                                              Text(
-                                                  'Total Proposals: ${proposals['total_proposal']?.toString() ?? 'N/A'}',
-                                                  style: jobTextStyle),
-                                            ],
+                                          _buildInfoRow(
+                                            label: 'Min Proposal Cost',
+                                            value: proposals['min_mston_amount']
+                                                    ?.toString() ??
+                                                'N/A',
+                                            style: jobTextStyle,
+                                          ),
+                                          _buildInfoRow(
+                                            label: 'Avg Proposal Cost',
+                                            value: proposals[
+                                                        'average_mston_amount']
+                                                    ?.toString() ??
+                                                'N/A',
+                                            style: jobTextStyle,
+                                          ),
+                                          _buildInfoRow(
+                                            label: 'Total Proposals',
+                                            value: proposals['total_proposal']
+                                                    ?.toString() ??
+                                                'N/A',
+                                            style: jobTextStyle,
                                           ),
                                         ],
                                       ],

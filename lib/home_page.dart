@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer' show log;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,6 +17,7 @@ import 'package:quickenlancer_apk/Chat/chatpage.dart';
 import 'package:quickenlancer_apk/side_bar_drawer.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'Projects/project_details.dart';
 import 'SignUp/signIn.dart';
 import 'chat_page.dart';
 import 'editprofilepage.dart';
@@ -868,435 +870,540 @@ class _ListContainerState extends State<ListContainer> {
               final isChatLoading = _chatLoadingStates[job.id] ?? false;
               final isCallLoading = _callLoadingStates[job.id] ?? false;
 
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFB7D7F9), Color(0xFFE5ACCB)],
-                  ),
-                ),
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProjectDetailsPage(),
+                    ),
+                  );
+                },
+                borderRadius: BorderRadius.circular(10),
                 child: Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFB7D7F9), Color(0xFFE5ACCB)],
+                    ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              job.projectName,
-                              style: GoogleFonts.montserrat(
-                                fontSize: size.width * 0.040,
-                                fontWeight: FontWeight.w600,
-                                color: Colorfile.textColor,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                job.countryFlagPath.isNotEmpty
-                                    ? Image.network(
-                                        job.countryFlagPath,
-                                        width: size.width * 0.035,
-                                        height: size.width * 0.03,
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return Icon(
-                                            Icons.image_not_supported,
-                                            size: size.width * 0.035,
-                                            color: Colors.grey,
-                                          );
-                                        },
-                                      )
-                                    : Image.asset(
-                                        'assets/placeholder_flag.png',
-                                        width: size.width * 0.035,
-                                      ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  '${job.country} | ${job.requirementType == '0' ? 'Cold 🧊' : 'Hot 🔥'}',
-                                  style: GoogleFonts.montserrat(
-                                    fontSize: size.width * 0.032,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colorfile.textColor,
-                                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                job.projectName,
+                                style: GoogleFonts.montserrat(
+                                  fontSize: size.width * 0.040,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colorfile.textColor,
                                 ),
-                              ],
-                            ),
-                            Text(
-                              getLookingForText(job.lookingFor),
-                              style: GoogleFonts.montserrat(
-                                fontSize: size.width * 0.032,
-                                fontWeight: FontWeight.w500,
-                                color: Colorfile.textColor,
                               ),
-                            ),
-                            const SizedBox(height: 6),
-                            GestureDetector(
-                              onTap: () => setState(
-                                () => _expandedStates[index] = !isExpanded,
-                              ),
-                              child: Html(
-                                data: isExpanded
-                                    ? job.description
-                                    : job.description.length > 80
-                                        ? '${job.description.substring(0, 80)}...'
-                                        : job.description,
-                                style: {
-                                  '*': Style(
-                                    fontSize: FontSize(size.width * 0.034),
-                                    fontWeight: FontWeight.w500,
-                                    color: Colorfile.textColor,
-                                    maxLines: isExpanded ? null : 2,
-                                    textOverflow: isExpanded
-                                        ? null
-                                        : TextOverflow.ellipsis,
-                                  ),
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Wrap(
-                          spacing: 8,
-                          runSpacing: 4,
-                          children: job.tags
-                              .map(
-                                (tag) => Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFE8F1FC),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Text(
-                                    tag,
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  job.countryFlagPath.isNotEmpty
+                                      ? Image.network(
+                                          job.countryFlagPath,
+                                          width: size.width * 0.035,
+                                          height: size.width * 0.03,
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Icon(
+                                              Icons.image_not_supported,
+                                              size: size.width * 0.035,
+                                              color: Colors.grey,
+                                            );
+                                          },
+                                        )
+                                      : Image.asset(
+                                          'assets/placeholder_flag.png',
+                                          width: size.width * 0.035,
+                                        ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    '${job.country} | ${job.requirementType == '0' ? 'Cold 🧊' : 'Hot 🔥'}',
                                     style: GoogleFonts.montserrat(
-                                      fontSize: size.width * 0.030,
+                                      fontSize: size.width * 0.032,
                                       fontWeight: FontWeight.w500,
                                       color: Colorfile.textColor,
                                     ),
                                   ),
+                                ],
+                              ),
+                              Text(
+                                getLookingForText(job.lookingFor),
+                                style: GoogleFonts.montserrat(
+                                  fontSize: size.width * 0.032,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colorfile.textColor,
                                 ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '${job.currency} ${job.amount}',
-                              style: GoogleFonts.montserrat(
-                                fontSize: size.width * 0.036,
-                                fontWeight: FontWeight.w600,
-                                color: Colorfile.textColor,
                               ),
-                            ),
-                            Text(
-                              job.projectType == '0' ? 'Fixed' : 'Hourly',
-                              style: GoogleFonts.montserrat(
-                                fontSize: size.width * 0.036,
-                                fontWeight: FontWeight.w600,
-                                color: Colorfile.textColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 5),
-                        color: const Color(0xFFD9D9D9),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            if (job.chatButtonRedirection.isNotEmpty)
-                              Expanded(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 4),
-                                  child: _buildActionButton(
-                                    job.chatButtonRedirection == 'chat_page'
-                                        ? 'Chat Now'
-                                        : 'Chat${job.chatDontAskAgain == '0' ? '' : ''}', // Add star if chatDontAskAgain is '0'
-                                    'assets/chat.png',
-                                    size,
-                                    isLoading: isChatLoading,
-                                    onPressed: () async {
-                                      final prefs =
-                                          await SharedPreferences.getInstance();
-                                      final int? isLoggedIn =
-                                          prefs.getInt('is_logged_in');
-                                      final String? userId =
-                                          prefs.getString('user_id');
 
-                                      if (isLoggedIn == 1) {
-                                        if (job.chatButtonRedirection ==
-                                            'deduct_from_coin_balance') {
-                                          if (job.chatDontAskAgain == '1') {
-                                            setState(() =>
-                                                _chatLoadingStates[job.id] =
-                                                    true);
-                                            final success =
-                                                await _allocateChatCall(
-                                              context: context,
-                                              userId: userId ?? '',
-                                              projectId: job.id,
-                                              chatReceiver: job.chatReceiver,
-                                              chatSender: job.chatSender,
-                                              tokenFor: 1, // Chat
-                                              dontAskAgain: '0',
-                                              dialogContext:
-                                                  context, // Direct call
-                                            );
-                                            setState(() =>
-                                                _chatLoadingStates[job.id] =
-                                                    false);
-                                            if (success) {
+                              const SizedBox(height: 6),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ProjectDetailsPage(),
+                                    ),
+                                  );
+                                },
+                                child: Text.rich(
+                                  TextSpan(
+                                    text: job.description.length > 80
+                                        ? job.description.substring(0, 80)
+                                        : job.description,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colorfile.textColor,
+                                    ),
+                                    children: [
+                                      if (job.description.length > 80)
+                                        TextSpan(
+                                          text: ' Read more',
+                                          style: const TextStyle(
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.w500,
+
+                                            fontSize: 13,
+                                            decoration: TextDecoration
+                                                .underline, // Added underline
+                                          ),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      ChatPage(
-                                                    projectId: job.id,
-                                                    chatSender: job.chatSender,
-                                                    chatReceiver:
-                                                        job.chatReceiver,
-                                                  ),
+                                                      ProjectDetailsPage(),
                                                 ),
                                               );
-                                            }
-                                          } else {
-                                            _showCoinBalanceDialog(
-                                              context,
-                                              job: job,
-                                              isChat: true,
-                                              userId: userId ?? '0',
-                                            );
-                                          }
-                                        } else if (job.chatButtonRedirection ==
-                                            'buy_for_this_project') {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Buychatpage(id: job.id),
-                                            ),
-                                          );
-                                        } else if (job.chatButtonRedirection ==
-                                            'chat_page') {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => ChatPage(
-                                                projectId: job.id,
-                                                chatSender: job.chatSender,
-                                                chatReceiver: job.chatReceiver,
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      } else {
-                                        if (job.chatDontAskAgain == '1') {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SignInPage(),
-                                            ),
-                                          );
-                                        } else {
-                                          bool? confirm =
-                                              await _showConfirmationDialog(
-                                                  context);
-                                          if (confirm == true) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SignInPage(),
-                                              ),
-                                            );
-                                          }
-                                        }
-                                      }
-                                    },
+                                            },
+                                        ),
+                                    ],
                                   ),
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                            if (job.callButtonRedirection.isNotEmpty)
-                              Expanded(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 4),
-                                  child: _buildActionButton(
-                                    job.callButtonRedirection ==
-                                            'open_call_dial'
-                                        ? 'Call Now' // Show "Call Now" for open_call_dial
-                                        : 'Call${job.callDontAskAgain == '0' ? '' : ''}', // Original label for other cases
-                                    'assets/call.png',
-                                    size,
-                                    isLoading: isCallLoading,
-                                    onPressed: () async {
-                                      final prefs =
-                                          await SharedPreferences.getInstance();
-                                      final int? isLoggedIn =
-                                          prefs.getInt('is_logged_in');
-                                      final String? userId =
-                                          prefs.getString('user_id');
-                                      final String? authToken =
-                                          prefs.getString('auth_token');
+                              SizedBox(height: 6),
+                              // GestureDetector(
+                              //   onTap: () => setState(
+                              //     () => _expandedStates[index] = !isExpanded,
+                              //   ),
+                              //   child: Html(
+                              //     data: isExpanded
+                              //         ? job.description
+                              //         : job.description.length > 80
+                              //             ? '${job.description.substring(0, 80)}...'
+                              //             : job.description,
+                              //     style: {
+                              //       '*': Style(
+                              //         fontSize: FontSize(size.width * 0.034),
+                              //         fontWeight: FontWeight.w500,
+                              //         color: Colorfile.textColor,
+                              //         maxLines: isExpanded ? null : 2,
+                              //         textOverflow: isExpanded
+                              //             ? null
+                              //             : TextOverflow.ellipsis,
+                              //       ),
+                              //     },
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Wrap(
+                            spacing: 8,
+                            runSpacing: 4,
+                            children: job.tags
+                                .map(
+                                  (tag) => Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFE8F1FC),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Text(
+                                      tag,
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: size.width * 0.030,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colorfile.textColor,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${job.currency} ${job.amount}',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: size.width * 0.036,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colorfile.textColor,
+                                ),
+                              ),
+                              Text(
+                                job.projectType == '0' ? 'Fixed' : 'Hourly',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: size.width * 0.036,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colorfile.textColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 5),
+                          color: const Color(0xFFD9D9D9),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              if (job.chatButtonRedirection.isNotEmpty)
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4),
+                                    child: _buildActionButton(
+                                      job.chatButtonRedirection == 'chat_page'
+                                          ? 'Chat Now'
+                                          : 'Chat${job.chatDontAskAgain == '0' ? '' : ''}', // Add star if chatDontAskAgain is '0'
+                                      'assets/chat.png',
+                                      size,
+                                      isLoading: isChatLoading,
+                                      onPressed: () async {
+                                        final prefs = await SharedPreferences
+                                            .getInstance();
+                                        final int? isLoggedIn =
+                                            prefs.getInt('is_logged_in');
+                                        final String? userId =
+                                            prefs.getString('user_id');
 
-                                      if (isLoggedIn == 1) {
-                                        if (job.callButtonRedirection ==
-                                            'deduct_from_coin_balance') {
-                                          if (job.callDontAskAgain == '1') {
-                                            setState(() =>
-                                                _callLoadingStates[job.id] =
-                                                    true);
-                                            final success =
-                                                await _allocateChatCall(
-                                              context: context,
-                                              userId: userId ?? '',
-                                              projectId: job.id,
-                                              chatReceiver: job.chatReceiver,
-                                              chatSender: job.chatSender,
-                                              tokenFor: 2,
-                                              dontAskAgain: '0',
-                                              dialogContext: context,
-                                            );
-                                            setState(() =>
-                                                _callLoadingStates[job.id] =
-                                                    false);
-                                            if (success) {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Buycallpage(id: job.id),
-                                                ),
+                                        if (isLoggedIn == 1) {
+                                          if (job.chatButtonRedirection ==
+                                              'deduct_from_coin_balance') {
+                                            if (job.chatDontAskAgain == '1') {
+                                              setState(() =>
+                                                  _chatLoadingStates[job.id] =
+                                                      true);
+                                              final success =
+                                                  await _allocateChatCall(
+                                                context: context,
+                                                userId: userId ?? '',
+                                                projectId: job.id,
+                                                chatReceiver: job.chatReceiver,
+                                                chatSender: job.chatSender,
+                                                tokenFor: 1, // Chat
+                                                dontAskAgain: '0',
+                                                dialogContext:
+                                                    context, // Direct call
                                               );
-                                            }
-                                          } else {
-                                            _showCoinBalanceDialog(
-                                              context,
-                                              job: job,
-                                              isChat: false,
-                                              userId: userId ?? '0',
-                                            );
-                                          }
-                                        } else if (job.callButtonRedirection ==
-                                            'buy_for_this_project') {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Buycallpage(id: job.id),
-                                            ),
-                                          );
-                                        } else if (job.callButtonRedirection ==
-                                            'open_call_dial') {
-                                          try {
-                                            final String callApiUrl =
-                                                URLS().set_call_entry;
-                                            final requestBody = jsonEncode({
-                                              'user_id': userId,
-                                              'project_id': job.id,
-                                              'project_owner_id': job.userId,
-                                              'used_token_id': job.usedTokenId,
-                                            });
-                                            debugPrint(
-                                                'API Request Body: $requestBody');
-
-                                            final callResponse =
-                                                await http.post(
-                                              Uri.parse(callApiUrl),
-                                              headers: {
-                                                'Content-Type':
-                                                    'application/json',
-                                                'Authorization':
-                                                    'Bearer $authToken',
-                                              },
-                                              body: requestBody,
-                                            );
-
-                                            debugPrint(
-                                                'API Response Status: ${callResponse.statusCode}');
-                                            debugPrint(
-                                                'API Response Body: ${callResponse.body}');
-
-                                            if (callResponse.statusCode ==
-                                                    200 ||
-                                                callResponse.statusCode ==
-                                                    201) {
-                                              // Parse the API response
-                                              final responseData =
-                                                  jsonDecode(callResponse.body);
-                                              if (responseData['status'] ==
-                                                      'true' &&
-                                                  responseData['data'] !=
-                                                      null) {
-                                                final String receiverMobileNo =
-                                                    responseData['data']
-                                                        ['receiver_mobile_no'];
-                                                // Open phone dialer with receiver_mobile_no
-                                                _openPhoneDialer(
-                                                    receiverMobileNo);
-                                              } else {
-                                                // Handle invalid response format
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                        'Invalid response from server. Please try again.'),
+                                              setState(() =>
+                                                  _chatLoadingStates[job.id] =
+                                                      false);
+                                              if (success) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ChatPage(
+                                                      projectId: job.id,
+                                                      chatSender:
+                                                          job.chatSender,
+                                                      chatReceiver:
+                                                          job.chatReceiver,
+                                                    ),
                                                   ),
                                                 );
                                               }
                                             } else {
-                                              // Handle API failure
+                                              _showCoinBalanceDialog(
+                                                context,
+                                                job: job,
+                                                isChat: true,
+                                                userId: userId ?? '0',
+                                              );
+                                            }
+                                          } else if (job
+                                                  .chatButtonRedirection ==
+                                              'buy_for_this_project') {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Buychatpage(id: job.id),
+                                              ),
+                                            );
+                                          } else if (job
+                                                  .chatButtonRedirection ==
+                                              'chat_page') {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ChatPage(
+                                                  projectId: job.id,
+                                                  chatSender: job.chatSender,
+                                                  chatReceiver:
+                                                      job.chatReceiver,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        } else {
+                                          if (job.chatDontAskAgain == '1') {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SignInPage(),
+                                              ),
+                                            );
+                                          } else {
+                                            bool? confirm =
+                                                await _showConfirmationDialog(
+                                                    context);
+                                            if (confirm == true) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SignInPage(),
+                                                ),
+                                              );
+                                            }
+                                          }
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              if (job.callButtonRedirection.isNotEmpty)
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4),
+                                    child: _buildActionButton(
+                                      job.callButtonRedirection ==
+                                              'open_call_dial'
+                                          ? 'Call Now' // Show "Call Now" for open_call_dial
+                                          : 'Call${job.callDontAskAgain == '0' ? '' : ''}', // Original label for other cases
+                                      'assets/call.png',
+                                      size,
+                                      isLoading: isCallLoading,
+                                      onPressed: () async {
+                                        final prefs = await SharedPreferences
+                                            .getInstance();
+                                        final int? isLoggedIn =
+                                            prefs.getInt('is_logged_in');
+                                        final String? userId =
+                                            prefs.getString('user_id');
+                                        final String? authToken =
+                                            prefs.getString('auth_token');
+
+                                        if (isLoggedIn == 1) {
+                                          if (job.callButtonRedirection ==
+                                              'deduct_from_coin_balance') {
+                                            if (job.callDontAskAgain == '1') {
+                                              setState(() =>
+                                                  _callLoadingStates[job.id] =
+                                                      true);
+                                              final success =
+                                                  await _allocateChatCall(
+                                                context: context,
+                                                userId: userId ?? '',
+                                                projectId: job.id,
+                                                chatReceiver: job.chatReceiver,
+                                                chatSender: job.chatSender,
+                                                tokenFor: 2,
+                                                dontAskAgain: '0',
+                                                dialogContext: context,
+                                              );
+                                              setState(() =>
+                                                  _callLoadingStates[job.id] =
+                                                      false);
+                                              if (success) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Buycallpage(id: job.id),
+                                                  ),
+                                                );
+                                              }
+                                            } else {
+                                              _showCoinBalanceDialog(
+                                                context,
+                                                job: job,
+                                                isChat: false,
+                                                userId: userId ?? '0',
+                                              );
+                                            }
+                                          } else if (job
+                                                  .callButtonRedirection ==
+                                              'buy_for_this_project') {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Buycallpage(id: job.id),
+                                              ),
+                                            );
+                                          } else if (job
+                                                  .callButtonRedirection ==
+                                              'open_call_dial') {
+                                            try {
+                                              final String callApiUrl =
+                                                  URLS().set_call_entry;
+                                              final requestBody = jsonEncode({
+                                                'user_id': userId,
+                                                'project_id': job.id,
+                                                'project_owner_id': job.userId,
+                                                'used_token_id':
+                                                    job.usedTokenId,
+                                              });
+                                              debugPrint(
+                                                  'API Request Body: $requestBody');
+
+                                              final callResponse =
+                                                  await http.post(
+                                                Uri.parse(callApiUrl),
+                                                headers: {
+                                                  'Content-Type':
+                                                      'application/json',
+                                                  'Authorization':
+                                                      'Bearer $authToken',
+                                                },
+                                                body: requestBody,
+                                              );
+
+                                              debugPrint(
+                                                  'API Response Status: ${callResponse.statusCode}');
+                                              debugPrint(
+                                                  'API Response Body: ${callResponse.body}');
+
+                                              if (callResponse.statusCode ==
+                                                      200 ||
+                                                  callResponse.statusCode ==
+                                                      201) {
+                                                // Parse the API response
+                                                final responseData = jsonDecode(
+                                                    callResponse.body);
+                                                if (responseData['status'] ==
+                                                        'true' &&
+                                                    responseData['data'] !=
+                                                        null) {
+                                                  final String
+                                                      receiverMobileNo =
+                                                      responseData['data'][
+                                                          'receiver_mobile_no'];
+                                                  // Open phone dialer with receiver_mobile_no
+                                                  _openPhoneDialer(
+                                                      receiverMobileNo);
+                                                } else {
+                                                  // Handle invalid response format
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                          'Invalid response from server. Please try again.'),
+                                                    ),
+                                                  );
+                                                }
+                                              } else {
+                                                // Handle API failure
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                        'Failed to initiate call. Please try again.'),
+                                                  ),
+                                                );
+                                              }
+                                            } catch (e) {
+                                              // Handle network or other errors
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 SnackBar(
                                                   content: Text(
-                                                      'Failed to initiate call. Please try again.'),
+                                                      'Error occurred: $e'),
                                                 ),
                                               );
                                             }
-                                          } catch (e) {
-                                            // Handle network or other errors
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content:
-                                                    Text('Error occurred: $e'),
+                                          }
+                                        } else {
+                                          if (job.callDontAskAgain == '1') {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SignInPage(),
                                               ),
                                             );
+                                          } else {
+                                            bool? confirm =
+                                                await _showConfirmationDialog(
+                                                    context);
+                                            if (confirm == true) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SignInPage(),
+                                                ),
+                                              );
+                                            }
                                           }
                                         }
-                                      } else {
-                                        if (job.callDontAskAgain == '1') {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SignInPage(),
-                                            ),
-                                          );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              if (job.proposalButtonRedirection.isNotEmpty)
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4),
+                                    child: _buildActionButton(
+                                      'Proposal',
+                                      null,
+                                      size,
+                                      onPressed: () async {
+                                        final prefs = await SharedPreferences
+                                            .getInstance();
+                                        final int? isLoggedIn =
+                                            prefs.getInt('is_logged_in');
+                                        if (isLoggedIn == 1) {
+                                          // Add proposal button logic here
                                         } else {
                                           bool? confirm =
                                               await _showConfirmationDialog(
@@ -1311,49 +1418,15 @@ class _ListContainerState extends State<ListContainer> {
                                             );
                                           }
                                         }
-                                      }
-                                    },
+                                      },
+                                    ),
                                   ),
                                 ),
-                              ),
-                            if (job.proposalButtonRedirection.isNotEmpty)
-                              Expanded(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 4),
-                                  child: _buildActionButton(
-                                    'Proposal',
-                                    null,
-                                    size,
-                                    onPressed: () async {
-                                      final prefs =
-                                          await SharedPreferences.getInstance();
-                                      final int? isLoggedIn =
-                                          prefs.getInt('is_logged_in');
-                                      if (isLoggedIn == 1) {
-                                        // Add proposal button logic here
-                                      } else {
-                                        bool? confirm =
-                                            await _showConfirmationDialog(
-                                                context);
-                                        if (confirm == true) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SignInPage(),
-                                            ),
-                                          );
-                                        }
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );
