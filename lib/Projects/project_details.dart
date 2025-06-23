@@ -1087,19 +1087,19 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                         color: Colors.black),
                   ),
                   const SizedBox(height: 24),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                    decoration: BoxDecoration(
-                        color: const Color(0xFFF5F7FA),
-                        borderRadius: BorderRadius.circular(4)),
-                    child: Text(
-                        'List of Freelancers Who Have Bidded This Project',
-                        style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black)),
-                  ),
+                  // Container(
+                  //   padding:
+                  //       const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  //   decoration: BoxDecoration(
+                  //       color: const Color(0xFFF5F7FA),
+                  //       borderRadius: BorderRadius.circular(4)),
+                  //   child: Text(
+                  //       'List of Freelancers Who Have Bidded This Project',
+                  //       style: GoogleFonts.poppins(
+                  //           fontSize: 12,
+                  //           fontWeight: FontWeight.w600,
+                  //           color: Colors.black)),
+                  // ),
                 ],
               ),
             ),

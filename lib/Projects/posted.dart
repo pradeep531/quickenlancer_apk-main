@@ -27,6 +27,8 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
     with TickerProviderStateMixin {
   List<dynamic> projects = [];
   int offset = 0;
+  bool _showMore = false;
+
   bool isLoading = false, hasMore = true;
   final int limit = 10;
   Map<String, bool> descriptionExpandedMap = {};
@@ -1468,117 +1470,187 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                         fontSize: 15,
                                         fontWeight: FontWeight.w600)),
                                 const SizedBox(height: 8),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    gradient: const LinearGradient(colors: [
-                                      Color(0xFF51A5D1),
-                                      Color(0xFF82399C),
-                                      Color(0xFFF04E80)
-                                    ]),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  padding: const EdgeInsets.all(1),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _showMore = !_showMore;
+                                    });
+                                  },
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
+                                      gradient: const LinearGradient(
+                                        colors: [
+                                          Color(0xFF51A5D1),
+                                          Color(0xFF82399C),
+                                          Color(0xFFF04E80),
+                                        ],
+                                      ),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
-                                    padding: const EdgeInsets.all(10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        _buildInfoRow(
-                                          label: 'Posted On',
-                                          value:
-                                              job['created_on']?.isNotEmpty ==
-                                                      true
-                                                  ? DateFormat('dd/MM/yyyy')
-                                                      .format(DateTime.parse(
-                                                          job['created_on']))
-                                                  : 'N/A',
-                                          style: jobTextStyle,
-                                        ),
-                                        _buildInfoRow(
-                                          label: 'Project Cost',
-                                          value: job['amount'] ?? 'No Amount',
-                                          style: jobTextStyle,
-                                        ),
-                                        _buildInfoRow(
-                                          label: 'How to Pay',
-                                          value: job['project_type'] == '0'
-                                              ? 'Fixed'
-                                              : job['project_type'] == '1'
-                                                  ? 'Hourly'
-                                                  : 'N/A',
-                                          style: jobTextStyle,
-                                        ),
-                                        _buildAvailabilityRow(
-                                            job, jobTextStyle, projectId),
-                                        _buildInfoRow(
-                                          label: 'Requirement Type',
-                                          value: job['requirement_type'] == '0'
-                                              ? 'Cold'
-                                              : job['requirement_type'] == '1'
-                                                  ? 'Hot'
-                                                  : 'N/A',
-                                          style: jobTextStyle,
-                                        ),
-                                        _buildInfoRow(
-                                          label: 'Looking For:',
-                                          value: job['looking_for'] == '1'
-                                              ? 'Company'
-                                              : job['looking_for'] == '2'
-                                                  ? 'Freelancer'
-                                                  : 'Company/Freelancer',
-                                          style: jobTextStyle,
-                                        ),
-                                        _buildInfoRow(
-                                          label: 'Status',
-                                          value: job['button_label'],
-                                          valueStyle: GoogleFonts.poppins(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 12,
-                                            color: job['project_status'] == '0'
-                                                ? Colors.grey
-                                                : job['project_status'] == '1'
-                                                    ? Colors.green
-                                                    : Colors.red,
+                                    padding: const EdgeInsets.all(1),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      padding: const EdgeInsets.all(10),
+                                      child: Stack(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              // Always show first 3
+                                              _buildInfoRow(
+                                                label: 'Posted On',
+                                                value: job['created_on']
+                                                            ?.isNotEmpty ==
+                                                        true
+                                                    ? DateFormat('dd/MM/yyyy')
+                                                        .format(DateTime.parse(
+                                                            job['created_on']))
+                                                    : 'N/A',
+                                                style: jobTextStyle,
+                                              ),
+                                              _buildInfoRow(
+                                                label: 'Project Cost',
+                                                value: job['amount'] ??
+                                                    'No Amount',
+                                                style: jobTextStyle,
+                                              ),
+                                              _buildInfoRow(
+                                                label: 'How to Pay',
+                                                value: job['project_type'] ==
+                                                        '0'
+                                                    ? 'Fixed'
+                                                    : job['project_type'] == '1'
+                                                        ? 'Hourly'
+                                                        : 'N/A',
+                                                style: jobTextStyle,
+                                              ),
+                                              _buildAvailabilityRow(
+                                                  job, jobTextStyle, projectId),
+                                              _buildInfoRow(
+                                                label: 'Requirement Type',
+                                                value: job['requirement_type'] ==
+                                                        '0'
+                                                    ? 'Cold'
+                                                    : job['requirement_type'] ==
+                                                            '1'
+                                                        ? 'Hot'
+                                                        : 'N/A',
+                                                style: jobTextStyle,
+                                              ),
+
+                                              // Show extra details only if expanded
+                                              if (_showMore) ...[
+                                                _buildInfoRow(
+                                                  label: 'Looking For:',
+                                                  value: job['looking_for'] ==
+                                                          '1'
+                                                      ? 'Company'
+                                                      : job['looking_for'] ==
+                                                              '2'
+                                                          ? 'Freelancer'
+                                                          : 'Company/Freelancer',
+                                                  style: jobTextStyle,
+                                                ),
+                                                _buildInfoRow(
+                                                  label: 'Status',
+                                                  value: job['button_label'],
+                                                  valueStyle:
+                                                      GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 12,
+                                                    color: job['project_status'] ==
+                                                            '0'
+                                                        ? Colors.grey
+                                                        : job['project_status'] ==
+                                                                '1'
+                                                            ? Colors.green
+                                                            : Colors.red,
+                                                  ),
+                                                  style: jobTextStyle,
+                                                ),
+                                                if (proposals != null) ...[
+                                                  _buildInfoRow(
+                                                    label: 'Max Proposal Cost',
+                                                    value: proposals[
+                                                                'max_mston_amount']
+                                                            ?.toString() ??
+                                                        'N/A',
+                                                    style: jobTextStyle,
+                                                  ),
+                                                  _buildInfoRow(
+                                                    label: 'Min Proposal Cost',
+                                                    value: proposals[
+                                                                'min_mston_amount']
+                                                            ?.toString() ??
+                                                        'N/A',
+                                                    style: jobTextStyle,
+                                                  ),
+                                                  _buildInfoRow(
+                                                    label: 'Avg Proposal Cost',
+                                                    value: proposals[
+                                                                'average_mston_amount']
+                                                            ?.toString() ??
+                                                        'N/A',
+                                                    style: jobTextStyle,
+                                                  ),
+                                                  _buildInfoRow(
+                                                    label: 'Total Proposals',
+                                                    value: proposals[
+                                                                'total_proposal']
+                                                            ?.toString() ??
+                                                        'N/A',
+                                                    style: jobTextStyle,
+                                                  ),
+                                                ],
+                                              ],
+                                              // space for blur area
+                                            ],
                                           ),
-                                          style: jobTextStyle,
-                                        ),
-                                        if (proposals != null) ...[
-                                          _buildInfoRow(
-                                            label: 'Max Proposal Cost',
-                                            value: proposals['max_mston_amount']
-                                                    ?.toString() ??
-                                                'N/A',
-                                            style: jobTextStyle,
-                                          ),
-                                          _buildInfoRow(
-                                            label: 'Min Proposal Cost',
-                                            value: proposals['min_mston_amount']
-                                                    ?.toString() ??
-                                                'N/A',
-                                            style: jobTextStyle,
-                                          ),
-                                          _buildInfoRow(
-                                            label: 'Avg Proposal Cost',
-                                            value: proposals[
-                                                        'average_mston_amount']
-                                                    ?.toString() ??
-                                                'N/A',
-                                            style: jobTextStyle,
-                                          ),
-                                          _buildInfoRow(
-                                            label: 'Total Proposals',
-                                            value: proposals['total_proposal']
-                                                    ?.toString() ??
-                                                'N/A',
-                                            style: jobTextStyle,
-                                          ),
+
+                                          // Blur/fade only when collapsed
+                                          if (!_showMore)
+                                            Positioned(
+                                              bottom: 0,
+                                              left: 0,
+                                              right: 0,
+                                              height: 40,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                  bottomLeft:
+                                                      Radius.circular(8),
+                                                  bottomRight:
+                                                      Radius.circular(8),
+                                                ),
+                                                child: BackdropFilter(
+                                                  filter: ImageFilter.blur(
+                                                      sigmaX: 0.5, sigmaY: 1),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      gradient: LinearGradient(
+                                                        begin:
+                                                            Alignment.topCenter,
+                                                        end: Alignment
+                                                            .bottomCenter,
+                                                        colors: [
+                                                          Colors.white
+                                                              .withOpacity(0.0),
+                                                          Colors.white
+                                                              .withOpacity(0.5),
+                                                          Colors.white,
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                         ],
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -1807,336 +1879,200 @@ class _PostedProjectsPageState extends State<PostedProjectsTab>
                                   ],
                                 ),
                                 const SizedBox(height: 10),
-                                TabBar(
-                                  indicator: GradientTabIndicator(
-                                      gradient: LinearGradient(colors: [
-                                    Color(0xFF51A5D1),
-                                    Color(0xFF82399C),
-                                    Color(0xFFF04E80)
-                                  ])),
-                                  controller: tabControllers[projectId],
-                                  labelColor: Colorfile.textColor,
-                                  unselectedLabelColor: Colors.black54,
-                                  labelStyle: GoogleFonts.poppins(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600),
-                                  unselectedLabelStyle: GoogleFonts.poppins(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500),
-                                  labelPadding: const EdgeInsets.symmetric(
-                                      horizontal: 6.0),
-                                  tabs: [
-                                    if (hasHiredData)
-                                      const Tab(text: 'Hired On'),
-                                    Tab(child: _buildTab('Call', callCount)),
-                                    Tab(child: _buildTab('Chat', chatCount)),
-                                    Tab(
-                                        child: _buildTab(
-                                            'Proposal', proposalCount,
-                                            maxWidth: 90)),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                SizedBox(
-                                  height: 110,
-                                  child: TabBarView(
-                                    controller: tabControllers[projectId],
-                                    children: [
-                                      if (hasHiredData)
-                                        SingleChildScrollView(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      CircleAvatar(
-                                                          radius: 20,
-                                                          backgroundImage:
-                                                              NetworkImage(purchasedBy[
-                                                                      'profile_pic'] ??
-                                                                  'https://www.quickensol.com/quickenlancer-new/images/profile_pic/profile.png')),
-                                                      const SizedBox(width: 10),
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                              '${purchasedBy['f_name'] ?? ''} ${purchasedBy['l_name'] ?? ''}',
-                                                              style: GoogleFonts.poppins(
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colorfile
-                                                                      .textColor)),
-                                                          Row(
-                                                            children: [
-                                                              purchasedBy['country_flag_path'] !=
-                                                                      null
-                                                                  ? Image.network(
-                                                                      purchasedBy[
-                                                                          'country_flag_path'],
-                                                                      height:
-                                                                          20,
-                                                                      width: 20,
-                                                                      errorBuilder: (_, __, ___) => const Icon(
-                                                                          Icons
-                                                                              .image,
-                                                                          size:
-                                                                              20,
-                                                                          color: Colors
-                                                                              .grey))
-                                                                  : const Icon(
-                                                                      Icons
-                                                                          .image,
-                                                                      size: 20,
-                                                                      color: Colors
-                                                                          .grey),
-                                                              const SizedBox(
-                                                                  width: 4),
-                                                              Text(
-                                                                  '${purchasedBy['city_name'] ?? ''}, ${purchasedBy['country_name'] ?? ''}',
-                                                                  style: GoogleFonts.poppins(
-                                                                      fontSize:
-                                                                          12,
-                                                                      color: Colors
-                                                                          .black54)),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      if (purchasedBy[
-                                                                  'chat_button_redirections']
-                                                              ?.isNotEmpty ??
-                                                          false)
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            if (purchasedBy[
-                                                                    'chat_button_redirections'] ==
-                                                                'chat_page') {
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder: (context) => ChatPage(
-                                                                          projectId:
-                                                                              projectId,
-                                                                          chatSender: job['chat_sender']
-                                                                              .toString(),
-                                                                          chatReceiver:
-                                                                              job['chat_receiver'].toString())));
-                                                            } else if (purchasedBy[
-                                                                    'chat_button_redirections'] ==
-                                                                'send_chat_notification') {
-                                                              _showDialog(
-                                                                title:
-                                                                    'Send Notification',
-                                                                content: Text(
-                                                                    'Do you want to send a chat notification?',
-                                                                    style: GoogleFonts.poppins(
-                                                                        color: Colorfile
-                                                                            .textColor,
-                                                                        fontSize:
-                                                                            12)),
-                                                                actions: [
-                                                                  TextButton(
-                                                                      onPressed: () =>
-                                                                          Navigator.pop(
-                                                                              context),
-                                                                      child: Text(
-                                                                          'No',
-                                                                          style: GoogleFonts.poppins(
-                                                                              color: Colors.blue,
-                                                                              fontSize: 12,
-                                                                              fontWeight: FontWeight.w500))),
-                                                                  TextButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator.pop(
-                                                                          context);
-                                                                      _sendNotification(
-                                                                          projectId:
-                                                                              projectId,
-                                                                          bidderId: purchasedBy['bidder_id']
-                                                                              .toString(),
-                                                                          connectType:
-                                                                              '2');
-                                                                    },
-                                                                    child: Text(
-                                                                        'Yes',
-                                                                        style: GoogleFonts.poppins(
-                                                                            color: Colors
-                                                                                .blue,
-                                                                            fontSize:
-                                                                                12,
-                                                                            fontWeight:
-                                                                                FontWeight.w500)),
-                                                                  ),
-                                                                ],
-                                                              );
-                                                            }
-                                                          },
-                                                          child: Image.asset(
-                                                              'assets/Group 2237886.png',
-                                                              height: 30,
-                                                              width: 30),
-                                                        ),
-                                                      const SizedBox(width: 8),
-                                                      if (purchasedBy[
-                                                                  'call_button_redirections']
-                                                              ?.isNotEmpty ??
-                                                          false)
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            if (purchasedBy[
-                                                                    'call_button_redirections'] ==
-                                                                'open_call_dial') {
-                                                              final mobileNo =
-                                                                  purchasedBy[
-                                                                          'mobile_no'] ??
-                                                                      '';
-                                                              if (mobileNo
-                                                                  .isNotEmpty) {
-                                                                _openPhoneDialer(
-                                                                    mobileNo);
-                                                              } else {
-                                                                _showSnackBar(
-                                                                    'Mobile number not available',
-                                                                    Colors.red);
-                                                              }
-                                                            } else if (purchasedBy[
-                                                                    'call_button_redirections'] ==
-                                                                'send_call_notification') {
-                                                              _showDialog(
-                                                                title:
-                                                                    'Send Notification',
-                                                                content: Text(
-                                                                    'Do you want to send a call notification?',
-                                                                    style: GoogleFonts.poppins(
-                                                                        color: Colorfile
-                                                                            .textColor,
-                                                                        fontSize:
-                                                                            12)),
-                                                                actions: [
-                                                                  TextButton(
-                                                                      onPressed: () =>
-                                                                          Navigator.pop(
-                                                                              context),
-                                                                      child: Text(
-                                                                          'No',
-                                                                          style: GoogleFonts.poppins(
-                                                                              color: Colors.blue,
-                                                                              fontSize: 12,
-                                                                              fontWeight: FontWeight.w500))),
-                                                                  TextButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator.pop(
-                                                                          context);
-                                                                      _sendNotification(
-                                                                          projectId:
-                                                                              projectId,
-                                                                          bidderId: purchasedBy['bidder_id']
-                                                                              .toString(),
-                                                                          connectType:
-                                                                              '1');
-                                                                    },
-                                                                    child: Text(
-                                                                        'Yes',
-                                                                        style: GoogleFonts.poppins(
-                                                                            color: Colors
-                                                                                .blue,
-                                                                            fontSize:
-                                                                                12,
-                                                                            fontWeight:
-                                                                                FontWeight.w500)),
-                                                                  ),
-                                                                ],
-                                                              );
-                                                            }
-                                                          },
-                                                          child: Image.asset(
-                                                              'assets/Group 2237887.png',
-                                                              height: 30,
-                                                              width: 30),
-                                                        ),
-                                                    ],
-                                                  ),
-                                                ],
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    // Call Button
+                                    Stack(
+                                      alignment: Alignment.bottomCenter,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            final calls = job['project_calls']
+                                                    as List<dynamic>? ??
+                                                [];
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => CallsList(
+                                                  calls: calls,
+                                                  projectId: job['project_id']
+                                                      .toString(),
+                                                ),
                                               ),
-                                              const Divider(),
-                                              Table(
-                                                children: [
-                                                  TableRow(children: [
-                                                    Text('Hired on',
-                                                        style:
-                                                            GoogleFonts.poppins(
-                                                                fontSize: 12,
-                                                                color: Colors
-                                                                    .black54)),
-                                                    const Text(':',
-                                                        textAlign:
-                                                            TextAlign.center),
-                                                    Text(
-                                                        purchasedBy['confirmed_date']
-                                                                    ?.isNotEmpty ==
-                                                                true
-                                                            ? DateFormat(
-                                                                    'dd/MM/yyyy')
-                                                                .format(DateTime.parse(
-                                                                    purchasedBy[
-                                                                        'confirmed_date']))
-                                                            : '',
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                        style:
-                                                            GoogleFonts.poppins(
-                                                                fontSize: 12,
-                                                                color: Colors
-                                                                    .black54)),
-                                                  ]),
-                                                  TableRow(children: [
-                                                    Text('Hired Status',
-                                                        style:
-                                                            GoogleFonts.poppins(
-                                                                fontSize: 12,
-                                                                color: Colors
-                                                                    .black54)),
-                                                    const Text(':',
-                                                        textAlign:
-                                                            TextAlign.center),
-                                                    Text(
-                                                        purchasedBy[
-                                                                'hired_status'] ??
-                                                            '',
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                        style:
-                                                            GoogleFonts.poppins(
-                                                                fontSize: 12,
-                                                                color: Colors
-                                                                    .black54)),
-                                                  ]),
-                                                ],
-                                              ),
-                                            ],
+                                            );
+                                          },
+                                          child: Text(
+                                            'Call',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colorfile.textColor,
+                                            ),
+                                          ),
+                                          style: TextButton.styleFrom(
+                                            foregroundColor:
+                                                Colorfile.textColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12, vertical: 8),
                                           ),
                                         ),
-                                      _buildCallTab(job),
-                                      _buildChatTab(job),
-                                      _proposalTab(job),
-                                    ],
-                                  ),
+                                        Container(
+                                          height: 2,
+                                          width:
+                                              40, // Adjust width to match button text width
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              transform: GradientRotation(127.3 *
+                                                  3.1415927 /
+                                                  180), // Convert degrees to radians
+                                              colors: [
+                                                Color(0xFFB7D7F9), // #B7D7F9
+                                                Color(0xFFE6ACCB), // #E6ACCB
+                                              ],
+                                              stops: [0.1329, 1.4914],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // Chat Button
+                                    Stack(
+                                      alignment: Alignment.bottomCenter,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            final chats = job['project_chats']
+                                                    as List<dynamic>? ??
+                                                [];
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ChatList(
+                                                  projectId: job['project_id']
+                                                      .toString(),
+                                                  chatSender: job['user_id']
+                                                          ?.toString() ??
+                                                      '',
+                                                  chatReceiver:
+                                                      job['chat_receiver']
+                                                              ?.toString() ??
+                                                          '',
+                                                  chats: chats,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Text(
+                                            'Chat',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colorfile.textColor,
+                                            ),
+                                          ),
+                                          style: TextButton.styleFrom(
+                                            foregroundColor:
+                                                Colorfile.textColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12, vertical: 8),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 2,
+                                          width:
+                                              40, // Adjust width to match button text width
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              transform: GradientRotation(127.3 *
+                                                  3.1415927 /
+                                                  180), // Convert degrees to radians
+                                              colors: [
+                                                Color(0xFFB7D7F9), // #B7D7F9
+                                                Color(0xFFE6ACCB), // #E6ACCB
+                                              ],
+                                              stops: [0.1329, 1.4914],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // Proposal Button
+                                    Stack(
+                                      alignment: Alignment.bottomCenter,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            final proposals =
+                                                job['project_proposals']
+                                                        as List<dynamic>? ??
+                                                    [];
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AllProposals(
+                                                  projectId: job['project_id']
+                                                      .toString(),
+                                                  proposals: proposals,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Text(
+                                            'Proposal',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colorfile.textColor,
+                                            ),
+                                          ),
+                                          style: TextButton.styleFrom(
+                                            foregroundColor:
+                                                Colorfile.textColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12, vertical: 8),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 2,
+                                          width:
+                                              60, // Adjust width to match button text width
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              transform: GradientRotation(127.3 *
+                                                  3.1415927 /
+                                                  180), // Convert degrees to radians
+                                              colors: [
+                                                Color(0xFFB7D7F9), // #B7D7F9
+                                                Color(0xFFE6ACCB), // #E6ACCB
+                                              ],
+                                              stops: [0.1329, 1.4914],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

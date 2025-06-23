@@ -342,7 +342,7 @@ class _SkillsNewState extends State<SkillsNew> {
             title: Text(
               'Skills',
               style: GoogleFonts.poppins(
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: Colors.black,
               ),

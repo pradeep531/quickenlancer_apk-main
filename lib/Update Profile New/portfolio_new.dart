@@ -386,7 +386,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
             title: Text(
               'Portfolio',
               style: GoogleFonts.poppins(
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: Colors.black,
               ),

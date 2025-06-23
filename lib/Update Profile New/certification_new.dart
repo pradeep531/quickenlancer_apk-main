@@ -462,26 +462,60 @@ class _CertificationNewState extends State<CertificationNew> {
                       GestureDetector(
                         onTap: _pickFiles,
                         child: Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
+                            color: Colors.white,
                             border: Border.all(
-                                color: Colorfile.textColor.withOpacity(0.2),
-                                width: 1),
+                              color: Colors.grey.withOpacity(0.2),
+                              width: 1,
+                            ),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
-                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Icon(Icons.upload,
-                                  color: Colorfile.textColor, size: 20),
-                              SizedBox(width: 8),
                               Text(
-                                'Upload Files',
+                                'Choose File',
                                 style: GoogleFonts.poppins(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Colorfile.textColor,
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: _pickFiles,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey.shade50,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 8),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    side: BorderSide(
+                                      color: Colors.grey.shade300,
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  elevation: 0,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.upload,
+                                      color: Color(0xFF757575),
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'Choose File',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xFF757575),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
