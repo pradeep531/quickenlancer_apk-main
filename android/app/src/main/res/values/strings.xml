@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="google_client_id">36873877135-l723ac401rq49fcv5r2vdm0ald463cq4.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">2370167549954042</string>
+    <string name="fb_login_protocol_scheme">fb2370167549954042</string>
+    <string name="facebook_client_token">YOUR_FACEBOOK_CLIENT_TOKEN</string> <!-- Replace with actual Client Token -->
+    <string name="linkedin_client_id">77hlq88j8tc8tv</string>
 </resources>

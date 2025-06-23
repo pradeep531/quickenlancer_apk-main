@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Permissions (INTERNET already present, adding ACCESS_NETWORK_STATE) -->
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -9,7 +9,7 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 
-    <!-- Queries element (already present, no changes needed) -->
+    <!-- Queries -->
     <queries>
         <intent>
             <action android:name="android.intent.action.VIEW" />
@@ -21,11 +21,20 @@
         android:label="quickenlancer_apk"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-        <!-- Add meta-data for Google Client ID -->
+        <!-- Google Client ID -->
         <meta-data
             android:name="com.google.android.gms.signin.client_id"
             android:value="@string/google_client_id" />
 
+        <!-- Facebook Meta-Data -->
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.facebook.sdk.ClientToken"
+            android:value="@string/facebook_client_token" />
+
+        <!-- Main Activity -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -35,9 +44,7 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"> <!-- Added to enforce portrait mode -->
-            
-            <!-- Specifies an Android theme to apply to this Activity -->
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
@@ -47,19 +54,35 @@
             </intent-filter>
         </activity>
 
-        <!-- Optional: Add Google Sign-In activity for handling sign-in flow -->
+        <!-- Google Sign-In Activity -->
         <activity
             android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
             android:exported="false"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <!-- Don't delete the meta-data below (Flutter embedding) -->
+        <!-- Facebook Activities -->
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="quickenlancer_apk" />
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+
+        <!-- Flutter Embedding -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
 
-    <!-- Queries element for PROCESS_TEXT (already present, no changes needed) -->
+    <!-- Queries for PROCESS_TEXT -->
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT" />
