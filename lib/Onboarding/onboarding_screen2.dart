@@ -54,7 +54,7 @@ class OnboardingScreen2 extends StatelessWidget {
           SizedBox(height: 20),
           Text(
             "Find the Best Match",
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 24,
               fontWeight: FontWeight.w700,
               color: Color(0xFF466AA5),
@@ -64,7 +64,7 @@ class OnboardingScreen2 extends StatelessWidget {
           SizedBox(height: 10),
           Text(
             "Search and filter profiles to find the ideal fit for your needs.  Look for profiles that showcase relevant experience in similar projects or industries.",
-            style: GoogleFonts.montserrat(fontSize: 16, height: 1.5),
+            style: GoogleFonts.poppins(fontSize: 16, height: 1.5),
             textAlign: TextAlign.center,
           ),
           // Progress Dots (below image)

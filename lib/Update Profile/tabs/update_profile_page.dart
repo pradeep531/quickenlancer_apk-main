@@ -76,7 +76,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       appBar: AppBar(
         title: Text(
           'Update Profile',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             color: Colors.black87,
             fontSize: 20,
             fontWeight: FontWeight.w600,
@@ -141,7 +141,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                 title: _isSidebarExpanded
                                     ? Text(
                                         tabs[index]['title'],
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           color: _currentTab == index
                                               ? const Color(0xFF2563EB)
                                               : Colors.grey[800],
@@ -181,7 +181,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                         children: [
                           Text(
                             tabs[_currentTab]['title'],
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 24,
                               fontWeight: FontWeight.w600,
                               color: Colors.black87,
@@ -207,7 +207,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                           //             setState(() => _currentTab -= 1),
                           //         child: Text(
                           //           'Back',
-                          //           style: GoogleFonts.montserrat(
+                          //           style: GoogleFonts.poppins(
                           //             color: Colors.grey[600],
                           //             fontSize: 14,
                           //             fontWeight: FontWeight.w500,
@@ -230,7 +230,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                           //             SnackBar(
                           //               content: Text(
                           //                 'Profile updated successfully',
-                          //                 style: GoogleFonts.montserrat(
+                          //                 style: GoogleFonts.poppins(
                           //                   fontSize: 14,
                           //                   fontWeight: FontWeight.w500,
                           //                   color: Colors.white,

@@ -296,7 +296,7 @@ class _BuyCallTabState extends State<Buycalltab> {
                                               horizontal: 16.0, vertical: 8.0),
                                           child: Text(
                                             '$itemCount',
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w500),
                                           ),
@@ -339,7 +339,7 @@ class _BuyCallTabState extends State<Buycalltab> {
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
                         'Total: ${currency == 'INR' ? '₹' : '\$'}${_calculateTotalAmount().toStringAsFixed(2)}',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Colorfile.textColor,
@@ -366,7 +366,7 @@ class _BuyCallTabState extends State<Buycalltab> {
                               )
                             : Text(
                                 'Update Profile To Buy Token',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white,
@@ -389,7 +389,7 @@ class _BuyCallTabState extends State<Buycalltab> {
             children: [
               Text(
                 'Buy Hassle Free Call',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   color: Colorfile.textColor,
@@ -398,7 +398,7 @@ class _BuyCallTabState extends State<Buycalltab> {
               SizedBox(height: 5),
               Text(
                 'With Hassle-Free Chat, you can purchase bulk chats that grant you pre-approved access to projects. This allows you to seamlessly connect with project partners without encountering any obstacles in the process.',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colorfile.textColor,
@@ -452,7 +452,7 @@ class _BuyCallTabState extends State<Buycalltab> {
                         Text(
                           labels[index],
                           style: TextStyle(
-                            fontFamily: 'Montserrat',
+                            fontFamily: 'poppins',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             height: 1.43,
@@ -498,7 +498,7 @@ class _BuyCallTabState extends State<Buycalltab> {
                         Text(
                           labels[index],
                           style: TextStyle(
-                            fontFamily: 'Montserrat',
+                            fontFamily: 'poppins',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             height: 1.43,

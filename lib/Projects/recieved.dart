@@ -110,8 +110,8 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
       log('Failed to launch phone dialer: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Unable to open phone dialer',
-              style: GoogleFonts.montserrat()),
+          content:
+              Text('Unable to open phone dialer', style: GoogleFonts.poppins()),
           backgroundColor: Colors.red,
         ),
       );
@@ -134,7 +134,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
         SnackBar(
           content: Text(
             'Unable to open image',
-            style: GoogleFonts.montserrat(),
+            style: GoogleFonts.poppins(),
           ),
           backgroundColor: Colors.red,
         ),
@@ -176,7 +176,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
             SnackBar(
               content: Text(
                 'Notification Sent!',
-                style: GoogleFonts.montserrat(),
+                style: GoogleFonts.poppins(),
               ),
               backgroundColor: Colors.green,
             ),
@@ -193,7 +193,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
         SnackBar(
           content: Text(
             'Failed to send notification',
-            style: GoogleFonts.montserrat(),
+            style: GoogleFonts.poppins(),
           ),
           backgroundColor: Colors.red,
         ),
@@ -212,7 +212,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
       builder: (context) => AlertDialog(
         title: Text(
           title,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             color: Colorfile.textColor,
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -225,7 +225,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(
                     'Close',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       color: Colors.blue,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
@@ -248,7 +248,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
         children: [
           Text(
             'No Time availability for this project',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               color: Colorfile.textColor,
               fontSize: 12,
             ),
@@ -318,7 +318,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
           SnackBar(
             content: Text(
               'Failed to initiate call',
-              style: GoogleFonts.montserrat(),
+              style: GoogleFonts.poppins(),
             ),
             backgroundColor: Colors.red,
           ),
@@ -345,7 +345,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                         const SizedBox(height: 10),
                         Text(
                           'No Data Found',
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                             color: Colors.grey,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -406,7 +406,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                             children: [
                               Text(
                                 job['project_name'] ?? 'No Title',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   color: Colorfile.textColor,
                                   fontSize: 15,
                                   fontWeight: FontWeight.w600,
@@ -424,7 +424,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                     children: [
                                       Text(
                                         'Posted On',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           color: Colors.black54,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -451,7 +451,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                                 }
                                               }()
                                             : 'N/A',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           color: Colors.black54,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -463,7 +463,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                     children: [
                                       Text(
                                         'How to Pay',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           color: Colors.black54,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -480,7 +480,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                             : job['project_type'] == '1'
                                                 ? 'Hourly'
                                                 : 'N/A',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           color: Colors.black54,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -492,7 +492,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                     children: [
                                       Text(
                                         'Requirement Type',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           color: Colors.black54,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -509,7 +509,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                             : job['requirement_type'] == '1'
                                                 ? 'Hot'
                                                 : 'N/A',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           color: Colors.black54,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -521,7 +521,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                     children: [
                                       Text(
                                         'Looking For',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           color: Colors.black54,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -538,7 +538,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                             : job['looking_for'] == '2'
                                                 ? 'Freelancer'
                                                 : 'Company/Freelancer',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           color: Colors.black54,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
@@ -552,7 +552,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                       children: [
                                         Text(
                                           'Maximum Proposal Cost',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             color: Colors.black54,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
@@ -568,7 +568,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                           proposals['max_mston_amount']
                                                   ?.toString() ??
                                               'N/A',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             color: Colors.black54,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
@@ -580,7 +580,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                       children: [
                                         Text(
                                           'Minimum Proposal Cost',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             color: Colors.black54,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
@@ -596,7 +596,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                           proposals['min_mston_amount']
                                                   ?.toString() ??
                                               'N/A',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             color: Colors.black54,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
@@ -608,7 +608,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                       children: [
                                         Text(
                                           'Average Proposal Cost',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             color: Colors.black54,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
@@ -624,7 +624,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                           proposals['average_mston_amount']
                                                   ?.toString() ??
                                               'N/A',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             color: Colors.black54,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
@@ -636,7 +636,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                       children: [
                                         Text(
                                           'Total Proposal',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             color: Colors.black54,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
@@ -652,7 +652,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                           proposals['total_proposal']
                                                   ?.toString() ??
                                               'N/A',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             color: Colors.black54,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
@@ -668,7 +668,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                 children: [
                                   Text(
                                     job['amount'] ?? 'No Amount',
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       color: Colors.black54,
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
@@ -716,7 +716,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                             result.isEmpty
                                                 ? 'No availability specified'
                                                 : result,
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                               color: Colorfile.textColor,
                                               fontSize: 12,
                                             ),
@@ -729,7 +729,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                         children: [
                                           TextSpan(
                                             text: 'Availability Time: ',
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                               color: Colorfile.textColor,
                                               fontSize: 12,
                                               fontWeight: FontWeight.bold,
@@ -756,7 +756,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                                     true
                                                 ? 'Schedule'
                                                 : 'Add Schedule',
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                               color: Colorfile.textColor,
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
@@ -775,7 +775,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                 descriptionExpandedMap[projectId] == true
                                     ? 'Description: ${job['description']?.replaceAll(RegExp(r'<[^>]+>'), '') ?? 'No Description'}'
                                     : 'Description: ${(job['description']?.replaceAll(RegExp(r'<[^>]+>'), '') ?? 'No Description').length > 100 ? (job['description']?.replaceAll(RegExp(r'<[^>]+>'), '') ?? 'No Description').substring(0, 100) + '...' : job['description']?.replaceAll(RegExp(r'<[^>]+>'), '') ?? 'No Description'}',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   color: Colorfile.textColor,
                                   fontSize: 11,
                                   fontWeight: FontWeight.w500,
@@ -818,7 +818,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                             ),
                                             child: Text(
                                               skill['skill'] ?? '',
-                                              style: GoogleFonts.montserrat(
+                                              style: GoogleFonts.poppins(
                                                 fontSize: 11,
                                                 fontWeight: FontWeight.w500,
                                                 color: Colorfile.textColor,
@@ -848,7 +848,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                           children: [
                                             Text(
                                               '${purchasedBy['f_name'] ?? ''} ${purchasedBy['l_name'] ?? ''}',
-                                              style: GoogleFonts.montserrat(
+                                              style: GoogleFonts.poppins(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colorfile.textColor,
@@ -878,7 +878,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                                 const SizedBox(width: 4),
                                                 Text(
                                                   '${purchasedBy['city_name'] ?? ''}, ${purchasedBy['country_name'] ?? ''}',
-                                                  style: GoogleFonts.montserrat(
+                                                  style: GoogleFonts.poppins(
                                                     fontSize: 12,
                                                     color: Colors.black54,
                                                   ),
@@ -921,8 +921,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                                   title: 'Send Notification',
                                                   content: Text(
                                                     'Do you want to send a chat notification?',
-                                                    style:
-                                                        GoogleFonts.montserrat(
+                                                    style: GoogleFonts.poppins(
                                                       color:
                                                           Colorfile.textColor,
                                                       fontSize: 12,
@@ -935,8 +934,8 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                                               .pop(),
                                                       child: Text(
                                                         'No',
-                                                        style: GoogleFonts
-                                                            .montserrat(
+                                                        style:
+                                                            GoogleFonts.poppins(
                                                           color: Colors.blue,
                                                           fontSize: 12,
                                                           fontWeight:
@@ -960,8 +959,8 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                                       },
                                                       child: Text(
                                                         'Yes',
-                                                        style: GoogleFonts
-                                                            .montserrat(
+                                                        style:
+                                                            GoogleFonts.poppins(
                                                           color: Colors.blue,
                                                           fontSize: 12,
                                                           fontWeight:
@@ -1004,7 +1003,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                       children: [
                                         Text(
                                           'Hired on',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             fontSize: 12,
                                             color: Colors.black54,
                                           ),
@@ -1036,7 +1035,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                                 }()
                                               : 'N/A',
                                           textAlign: TextAlign.right,
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             fontSize: 12,
                                             color: Colors.black54,
                                           ),
@@ -1047,7 +1046,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                       children: [
                                         Text(
                                           'Hired Status',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                               fontSize: 12,
                                               color: Colors.black54),
                                         ),
@@ -1056,7 +1055,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                         Text(
                                           purchasedBy['hired_status'] ?? 'N/A',
                                           textAlign: TextAlign.right,
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                               fontSize: 12,
                                               color: Colors.black54),
                                         ),
@@ -1067,7 +1066,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                         children: [
                                           Text(
                                             'Project Attachments',
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                                 fontSize: 12,
                                                 color: Colors.black54),
                                           ),
@@ -1098,7 +1097,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                   children: [
                                     Text(
                                       'Activity Timeline',
-                                      style: GoogleFonts.montserrat(
+                                      style: GoogleFonts.poppins(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                         color: Colorfile.textColor,
@@ -1140,7 +1139,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                               children: [
                                                 Text(
                                                   'Last Chat',
-                                                  style: GoogleFonts.montserrat(
+                                                  style: GoogleFonts.poppins(
                                                     fontSize: 12,
                                                     fontWeight: FontWeight.w500,
                                                     color: Colors.black54,
@@ -1148,7 +1147,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                                 ),
                                                 Text(
                                                   purchasedBy['last_chat_text'],
-                                                  style: GoogleFonts.montserrat(
+                                                  style: GoogleFonts.poppins(
                                                     fontSize: 12,
                                                     color: Colors.black54,
                                                   ),
@@ -1175,7 +1174,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                               children: [
                                                 Text(
                                                   'Last Call',
-                                                  style: GoogleFonts.montserrat(
+                                                  style: GoogleFonts.poppins(
                                                     fontSize: 12,
                                                     fontWeight: FontWeight.w500,
                                                     color: Colors.black54,
@@ -1183,7 +1182,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                                 ),
                                                 Text(
                                                   purchasedBy['last_call_text'],
-                                                  style: GoogleFonts.montserrat(
+                                                  style: GoogleFonts.poppins(
                                                     fontSize: 12,
                                                     color: Colors.black54,
                                                   ),
@@ -1197,7 +1196,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                                         purchasedBy['last_call_text'] == null)
                                       Text(
                                         'No recent activity',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontSize: 12,
                                           color: Colors.grey,
                                         ),
@@ -1208,7 +1207,7 @@ class _ReceivedProjectsTabState extends State<ReceivedProjectsTab> {
                               ] else ...[
                                 Text(
                                   'No owner details available',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                     color: Colors.grey,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,

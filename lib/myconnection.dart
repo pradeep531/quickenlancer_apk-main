@@ -26,7 +26,7 @@ class InviteFriends extends StatelessWidget {
             ),
             Text(
               'My Connection',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
                 color: Colors.black,
@@ -67,12 +67,12 @@ class InviteFriends extends StatelessWidget {
                         ),
                       ),
                       child: TextField(
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w500,
                         ),
                         decoration: InputDecoration(
                           hintText: 'Search',
-                          hintStyle: GoogleFonts.montserrat(
+                          hintStyle: GoogleFonts.poppins(
                             fontWeight: FontWeight.w500,
                           ),
                           border: InputBorder.none,

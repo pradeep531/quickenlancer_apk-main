@@ -17,8 +17,7 @@ class LanguagePageNew extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Languages',
-          style:
-              GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.w600),
+          style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.white,
         leading: IconButton(
@@ -159,16 +158,16 @@ class _LanguageFormState extends State<LanguageForm> {
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         title: Text('Delete $languageName?',
-            style: GoogleFonts.montserrat(fontSize: 16)),
+            style: GoogleFonts.poppins(fontSize: 16)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancel', style: GoogleFonts.montserrat()),
+            child: Text('Cancel', style: GoogleFonts.poppins()),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text('Delete',
-                style: GoogleFonts.montserrat(color: Colors.red)),
+            child:
+                Text('Delete', style: GoogleFonts.poppins(color: Colors.red)),
           ),
         ],
       ),
@@ -220,7 +219,7 @@ class _LanguageFormState extends State<LanguageForm> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('$e', style: GoogleFonts.montserrat()),
+          content: Text('$e', style: GoogleFonts.poppins()),
           backgroundColor: Colors.red,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
@@ -273,7 +272,7 @@ class _LanguageFormState extends State<LanguageForm> {
             children: [
               Text(
                 'Language Name*',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Colorfile.textColor,

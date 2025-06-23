@@ -226,7 +226,7 @@ class _PortfolioFormState extends State<PortfolioForm> {
                 children: [
                   Text(
                     'Project Skills',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                       color: Colors.blueGrey[900],
@@ -258,7 +258,7 @@ class _PortfolioFormState extends State<PortfolioForm> {
                         isExpanded: true,
                         hint: Text(
                           'Select skills',
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                             color: Colors.grey[600],
                             fontSize: 16,
                           ),
@@ -282,7 +282,7 @@ class _PortfolioFormState extends State<PortfolioForm> {
                                       Expanded(
                                         child: Text(
                                           skill,
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             fontSize: 15,
                                             color: Colors.blueGrey[800],
                                           ),
@@ -309,7 +309,7 @@ class _PortfolioFormState extends State<PortfolioForm> {
                           .map((skill) => Chip(
                                 label: Text(
                                   skill,
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 14,
                                     color: Colors.white,
                                   ),
@@ -356,7 +356,7 @@ class _PortfolioFormState extends State<PortfolioForm> {
                 padding: const EdgeInsets.only(top: 12),
                 child: Text(
                   _projectLogo!.path.split('/').last,
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                     color: Colors.grey[600],
                     fontSize: 13,
                     fontWeight: FontWeight.w400,

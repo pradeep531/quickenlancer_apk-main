@@ -174,21 +174,21 @@ class _LanguageFormState extends State<LanguageForm> {
       builder: (context) => AlertDialog(
         title: Text(
           'Delete Language',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
         ),
         content: Text(
           'Are you sure you want to delete "$languageName"?',
-          style: GoogleFonts.montserrat(fontSize: 14),
+          style: GoogleFonts.poppins(fontSize: 14),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: Text(
               'Cancel',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 color: Colors.grey[600],
               ),
@@ -198,7 +198,7 @@ class _LanguageFormState extends State<LanguageForm> {
             onPressed: () => Navigator.of(context).pop(true),
             child: Text(
               'Delete',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 color: Colors.redAccent,
               ),
@@ -220,7 +220,7 @@ class _LanguageFormState extends State<LanguageForm> {
           width: 80,
           child: Text(
             label,
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 12,
               fontWeight: FontWeight.w500,
               color: Colors.grey[600],
@@ -239,7 +239,7 @@ class _LanguageFormState extends State<LanguageForm> {
         const SizedBox(width: 8),
         Text(
           '${value.round()}%',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 12,
             fontWeight: FontWeight.w500,
             color: Colors.grey[800],
@@ -264,7 +264,7 @@ class _LanguageFormState extends State<LanguageForm> {
           SnackBar(
             content: Text(
               'User ID or auth token missing',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
@@ -281,7 +281,7 @@ class _LanguageFormState extends State<LanguageForm> {
           SnackBar(
             content: Text(
               'No language added',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
@@ -346,7 +346,7 @@ class _LanguageFormState extends State<LanguageForm> {
           SnackBar(
             content: Text(
               'Failed to save language: ${response.body}',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
@@ -361,7 +361,7 @@ class _LanguageFormState extends State<LanguageForm> {
         SnackBar(
           content: Text(
             'Error: $e',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colors.white,
@@ -390,7 +390,7 @@ class _LanguageFormState extends State<LanguageForm> {
               SharedWidgets.textField(_languageNameController, 'Language Name'),
               Text(
                 'Skills',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
                 ),
@@ -398,7 +398,7 @@ class _LanguageFormState extends State<LanguageForm> {
               CheckboxListTile(
                 title: Text(
                   'Reading',
-                  style: GoogleFonts.montserrat(fontSize: 14),
+                  style: GoogleFonts.poppins(fontSize: 14),
                 ),
                 value: _reading,
                 onChanged: (value) => setState(() => _reading = value!),
@@ -408,7 +408,7 @@ class _LanguageFormState extends State<LanguageForm> {
               CheckboxListTile(
                 title: Text(
                   'Writing',
-                  style: GoogleFonts.montserrat(fontSize: 14),
+                  style: GoogleFonts.poppins(fontSize: 14),
                 ),
                 value: _writing,
                 onChanged: (value) => setState(() => _writing = value!),
@@ -418,7 +418,7 @@ class _LanguageFormState extends State<LanguageForm> {
               CheckboxListTile(
                 title: Text(
                   'Speaking',
-                  style: GoogleFonts.montserrat(fontSize: 14),
+                  style: GoogleFonts.poppins(fontSize: 14),
                 ),
                 value: _speaking,
                 onChanged: (value) => setState(() => _speaking = value!),
@@ -429,7 +429,7 @@ class _LanguageFormState extends State<LanguageForm> {
                 children: [
                   Text(
                     'Proficiency',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
@@ -437,7 +437,7 @@ class _LanguageFormState extends State<LanguageForm> {
                   const SizedBox(width: 8),
                   Text(
                     '${_proficiency.round()}%',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                       color: Colors.grey[800],
@@ -482,7 +482,7 @@ class _LanguageFormState extends State<LanguageForm> {
                       SnackBar(
                         content: Text(
                           'Please enter a language name and select at least one skill',
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
@@ -509,7 +509,7 @@ class _LanguageFormState extends State<LanguageForm> {
                     children: [
                       Text(
                         'Languages',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
                           color: Colors.grey[800],
@@ -540,7 +540,7 @@ class _LanguageFormState extends State<LanguageForm> {
                                         Expanded(
                                           child: Text(
                                             '${lang['name']}',
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -573,7 +573,7 @@ class _LanguageFormState extends State<LanguageForm> {
                                         return Chip(
                                           label: Text(
                                             skillName,
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                               fontSize: 12,
                                               color: Colors.white,
                                             ),
@@ -604,7 +604,7 @@ class _LanguageFormState extends State<LanguageForm> {
                 const SizedBox(height: 16),
                 Text(
                   'Existing Languages',
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                   ),

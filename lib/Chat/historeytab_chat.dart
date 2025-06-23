@@ -158,7 +158,7 @@ class _HistoryTabState extends State<HistoryTab> {
                     SizedBox(height: 16),
                     Text(
                       'No Data Available',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
                         color: Colors.grey,
@@ -208,7 +208,7 @@ class _HistoryTabState extends State<HistoryTab> {
                                         children: [
                                           Text(
                                             'Payment Status',
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w500,
                                               color: Color(0xFF424752),
@@ -218,7 +218,7 @@ class _HistoryTabState extends State<HistoryTab> {
                                           SizedBox(height: 4),
                                           Text(
                                             'NA',
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w500,
                                               color: Color(0xFF424752),
@@ -227,7 +227,7 @@ class _HistoryTabState extends State<HistoryTab> {
                                           // Text(
                                           //   _formatDate(
                                           //       historyData.allocatedOn),
-                                          //   style: GoogleFonts.montserrat(
+                                          //   style: GoogleFonts.poppins(
                                           //     fontSize: 13,
                                           //     fontWeight: FontWeight.w500,
                                           //     color: Color(0xFF424752),
@@ -248,7 +248,7 @@ class _HistoryTabState extends State<HistoryTab> {
                                         children: [
                                           Text(
                                             'Purchased On',
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w500,
                                               color: Color(0xFF424752),
@@ -258,7 +258,7 @@ class _HistoryTabState extends State<HistoryTab> {
                                           Text(
                                             _formatDate(
                                                 historyData.purchasedOn),
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w500,
                                               color: Color(0xFF424752),
@@ -282,7 +282,7 @@ class _HistoryTabState extends State<HistoryTab> {
                                     children: [
                                       // Text(
                                       //   'Token No. : ${historyData.tokenNo}',
-                                      //   style: GoogleFonts.montserrat(
+                                      //   style: GoogleFonts.poppins(
                                       //     fontSize: 13,
                                       //     fontWeight: FontWeight.w600,
                                       //     color: Colorfile.textColor,
@@ -291,7 +291,7 @@ class _HistoryTabState extends State<HistoryTab> {
                                       // SizedBox(height: 8),
                                       Text(
                                         'Allocated Project: ${historyData.allocatedProject}',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w500,
                                           color: Colorfile.textColor,
@@ -300,7 +300,7 @@ class _HistoryTabState extends State<HistoryTab> {
                                       SizedBox(height: 8),
                                       Text(
                                         historyData.projectDescription,
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
                                           color: Color(0xFF424752),
@@ -332,7 +332,7 @@ class _HistoryTabState extends State<HistoryTab> {
                   SizedBox(height: 16),
                   Text(
                     'No Data Available',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                       color: Colors.grey,

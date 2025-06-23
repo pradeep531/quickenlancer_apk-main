@@ -260,8 +260,7 @@ class _HireFreelancerFilterBottomSheetState
                                     .any((s) => s['id'] == skill['id']);
                                 return CheckboxListTile(
                                   title: Text(skill['skill'],
-                                      style:
-                                          GoogleFonts.montserrat(fontSize: 14)),
+                                      style: GoogleFonts.poppins(fontSize: 14)),
                                   value: isSelected,
                                   onChanged: (_) {
                                     setDialogState(() => _toggleSkill(skill));
@@ -281,7 +280,7 @@ class _HireFreelancerFilterBottomSheetState
                         borderRadius: BorderRadius.circular(6)),
                   ),
                   child: Text('Done',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                           fontSize: 14, fontWeight: FontWeight.w600)),
                 ),
               ],
@@ -374,7 +373,7 @@ class _HireFreelancerFilterBottomSheetState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Filters',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                         fontSize: 20, fontWeight: FontWeight.w700)),
                 IconButton(
                     icon: const Icon(Icons.close, color: Color(0xFF666666)),
@@ -405,9 +404,9 @@ class _HireFreelancerFilterBottomSheetState
                     final suggestion = locationSuggestions[index];
                     return ListTile(
                       title: Text(suggestion['name'],
-                          style: GoogleFonts.montserrat(fontSize: 14)),
+                          style: GoogleFonts.poppins(fontSize: 14)),
                       subtitle: Text(suggestion['state_name'] ?? '',
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                               fontSize: 12, color: Colors.grey)),
                       onTap: () {
                         setState(() {
@@ -500,7 +499,7 @@ class _HireFreelancerFilterBottomSheetState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Skills & Keywords',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                   fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           GestureDetector(
@@ -518,7 +517,7 @@ class _HireFreelancerFilterBottomSheetState
                       selectedSkills.isEmpty
                           ? 'Search'
                           : '${selectedSkills.length} skill(s) selected',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: selectedSkills.isEmpty
@@ -538,7 +537,7 @@ class _HireFreelancerFilterBottomSheetState
                 children: selectedSkills
                     .map((skill) => Chip(
                           label: Text(skill['skill'],
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.poppins(
                                   fontSize: 12, color: Colors.white)),
                           backgroundColor: const Color(0xFF1A1A1A),
                           deleteIcon: const Icon(Icons.close,
@@ -563,7 +562,7 @@ class _HireFreelancerFilterBottomSheetState
         children: [
           Text(
             'Currency',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 15,
               fontWeight: FontWeight.w600,
             ),
@@ -594,7 +593,7 @@ class _HireFreelancerFilterBottomSheetState
                           visualDensity: VisualDensity(vertical: -2),
                           title: Text(
                             currency['lable'],
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
                               color: const Color(0xFF1A1A1A),
@@ -628,7 +627,7 @@ class _HireFreelancerFilterBottomSheetState
         children: [
           Text(
             'Language',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 15,
               fontWeight: FontWeight.w600,
             ),
@@ -654,7 +653,7 @@ class _HireFreelancerFilterBottomSheetState
                 visualDensity: VisualDensity(vertical: -2),
                 title: Text(
                   language['name'],
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                     color: const Color(0xFF1A1A1A),
@@ -688,7 +687,7 @@ class _HireFreelancerFilterBottomSheetState
         children: [
           Text(
             label,
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 15,
               fontWeight: FontWeight.w600,
             ),
@@ -704,7 +703,7 @@ class _HireFreelancerFilterBottomSheetState
             controller: controller,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: GoogleFonts.montserrat(
+              hintStyle: GoogleFonts.poppins(
                 color: const Color(0xFF191E3E),
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -728,7 +727,7 @@ class _HireFreelancerFilterBottomSheetState
                     )
                   : null,
             ),
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 14,
               color: const Color(0xFF1A1A1A),
               fontWeight: FontWeight.w500,
@@ -763,7 +762,7 @@ class _HireFreelancerFilterBottomSheetState
         children: [
           Text(
             label,
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 15,
               fontWeight: FontWeight.w600,
             ),
@@ -790,7 +789,7 @@ class _HireFreelancerFilterBottomSheetState
                 visualDensity: VisualDensity(vertical: -2),
                 title: Text(
                   item,
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                     color: const Color(0xFF1A1A1A),
@@ -838,7 +837,7 @@ class _HireFreelancerFilterBottomSheetState
       ),
       onPressed: onPressed,
       child: Text(text,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
               fontSize: 14, fontWeight: FontWeight.w600, color: textColor)),
     );
   }

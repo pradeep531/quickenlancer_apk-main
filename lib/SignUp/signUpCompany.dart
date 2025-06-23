@@ -103,7 +103,7 @@ class _SignUpCompanyPageState extends State<Signupcompany> {
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
                   'Register As Company',
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     color: Colorfile.textColor,
@@ -126,7 +126,7 @@ class _SignUpCompanyPageState extends State<Signupcompany> {
                   ),
                   Text(
                     'By signing up, you agree to our terms of use and\nprivacy policy.',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 11,
                       color: Colorfile.textColor,
                     ),
@@ -147,7 +147,7 @@ class _SignUpCompanyPageState extends State<Signupcompany> {
                   },
                   child: Text(
                     'Next',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 16,
                       color: Colors.white,
                     ),
@@ -172,7 +172,7 @@ class _SignUpCompanyPageState extends State<Signupcompany> {
                       padding: EdgeInsets.all(16.0),
                       child: Text(
                         'Or',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 14,
                           color: Colorfile.lightgrey,
                           fontWeight: FontWeight.w500,
@@ -230,7 +230,7 @@ class _SignUpCompanyPageState extends State<Signupcompany> {
                 children: [
                   Text(
                     "Already have an account? ",
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 16,
                       color: Colorfile.darkgrey,
                       fontWeight: FontWeight.w500,
@@ -247,7 +247,7 @@ class _SignUpCompanyPageState extends State<Signupcompany> {
                     },
                     child: Text(
                       "SignIn",
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 16,
                         color: Colorfile.textColor,
                         fontWeight: FontWeight.w500,
@@ -272,7 +272,7 @@ class _SignUpCompanyPageState extends State<Signupcompany> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
             label,
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: Colorfile.textColor,
@@ -286,7 +286,7 @@ class _SignUpCompanyPageState extends State<Signupcompany> {
             obscureText: isPassword,
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: GoogleFonts.montserrat(
+              hintStyle: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: Colorfile.lightgrey,

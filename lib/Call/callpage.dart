@@ -174,7 +174,7 @@ class _CallpageState extends State<Buycallpage> {
         return AlertDialog(
           title: Text(
             'Confirm Purchase',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.w600,
               color: Colorfile.textColor,
@@ -182,7 +182,7 @@ class _CallpageState extends State<Buycallpage> {
           ),
           content: Text(
             'Are you sure you want to purchase?',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colorfile.textColor,
@@ -195,7 +195,7 @@ class _CallpageState extends State<Buycallpage> {
               },
               child: Text(
                 'No',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Colors.red,
@@ -209,7 +209,7 @@ class _CallpageState extends State<Buycallpage> {
               },
               child: Text(
                 'Yes',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Colors.green,
@@ -230,7 +230,7 @@ class _CallpageState extends State<Buycallpage> {
         backgroundColor: Color(0xFFFFFFFF),
         title: Text(
           'Unlock Your Call',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.w600,
             height: 23.4 / 18,
@@ -257,7 +257,7 @@ class _CallpageState extends State<Buycallpage> {
               ),
               child: Text(
                 'By unlocking call you can easily connect',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
                   height: 26 / 15,
@@ -317,7 +317,7 @@ class _CallpageState extends State<Buycallpage> {
                           ),
                           title: Text(
                             'Buy Call for this Project',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
                               height: 20 / 13,
@@ -328,7 +328,7 @@ class _CallpageState extends State<Buycallpage> {
                           ),
                           subtitle: Text(
                             'You can buy calls just for this project.',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
                               height: 20 / 11,
@@ -405,7 +405,7 @@ class _CallpageState extends State<Buycallpage> {
                           ),
                           title: Text(
                             'Buy hassle free call for multiple projects',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
                               height: 20 / 13,
@@ -416,7 +416,7 @@ class _CallpageState extends State<Buycallpage> {
                           ),
                           subtitle: Text(
                             'Simplify payments with a call bundle avoid multiple transactions.',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
                               height: 20 / 11,
@@ -462,7 +462,7 @@ class _CallpageState extends State<Buycallpage> {
                             children: [
                               TextSpan(
                                 text: 'Warning: ',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: Colorfile.textColor,
@@ -471,7 +471,7 @@ class _CallpageState extends State<Buycallpage> {
                               TextSpan(
                                 text:
                                     'Your profile is currently incomplete with regard to KYC, and this could potentially result in a negative impact, leading to it being labeled as unverified by the project owner. We kindly ask you to undergo the KYC process for completion.',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Colorfile.textColor,
@@ -525,7 +525,7 @@ class _CallpageState extends State<Buycallpage> {
                                 )
                               : Text(
                                   'Unlock Your Call Now',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white,

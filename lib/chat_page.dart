@@ -322,7 +322,7 @@ class _ChatPageState extends State<ChatPage> {
           ),
           title: Text(
             receiverName.isNotEmpty ? receiverName : 'My Connection',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               color: Colorfile.textColor,
               fontWeight: FontWeight.w600,
               fontSize: 18.0,
@@ -380,7 +380,7 @@ class _ChatPageState extends State<ChatPage> {
                               child: Text.rich(
                                 TextSpan(
                                   text: '$receiverName - $projectName',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                     color: Colorfile.textColor,
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.w600,
@@ -437,7 +437,7 @@ class _ChatPageState extends State<ChatPage> {
                                 Expanded(
                                   child: Text(
                                     '$receiverName - $projectName',
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       color: Colorfile.textColor,
                                       fontSize: 16.0,
                                       fontWeight: FontWeight.w600,
@@ -451,7 +451,7 @@ class _ChatPageState extends State<ChatPage> {
                             const SizedBox(height: 8.0),
                             Text(
                               'Posted on: ${_formatDate(projectCreatedOn)} | Budget: $currencyLabel $projectAmount',
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.poppins(
                                 color: Colorfile.textColor,
                                 fontSize: 12.0,
                                 fontWeight: FontWeight.w600,
@@ -471,7 +471,7 @@ class _ChatPageState extends State<ChatPage> {
                     ? Center(
                         child: Text(
                           'No messages are there',
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                             fontSize: 16.0,
                             color: Colors.grey[600],
                             fontWeight: FontWeight.w500,
@@ -531,15 +531,14 @@ class _ChatPageState extends State<ChatPage> {
                                   ),
                                   child: Text(
                                     message['text']! as String,
-                                    style:
-                                        GoogleFonts.montserrat(fontSize: 13.0),
+                                    style: GoogleFonts.poppins(fontSize: 13.0),
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4.0),
                                   child: Text(
                                     time,
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 8.0,
                                       color: Colors.grey[600],
                                     ),
@@ -587,7 +586,7 @@ class _ChatPageState extends State<ChatPage> {
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 12.0),
                         ),
-                        style: GoogleFonts.montserrat(),
+                        style: GoogleFonts.poppins(),
                       ),
                     ),
                     const SizedBox(width: 8.0),

@@ -158,7 +158,7 @@ class _BuyChatpageState extends State<Buychatpage> {
         return AlertDialog(
           title: Text(
             'Confirm Purchase',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.w600,
               color: Colorfile.textColor,
@@ -166,7 +166,7 @@ class _BuyChatpageState extends State<Buychatpage> {
           ),
           content: Text(
             'Are you sure you want to purchase?',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colorfile.textColor,
@@ -179,7 +179,7 @@ class _BuyChatpageState extends State<Buychatpage> {
               },
               child: Text(
                 'No',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Colors.red,
@@ -193,7 +193,7 @@ class _BuyChatpageState extends State<Buychatpage> {
               },
               child: Text(
                 'Yes',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Colors.green,
@@ -214,7 +214,7 @@ class _BuyChatpageState extends State<Buychatpage> {
         backgroundColor: Color(0xFFFFFFFF),
         title: Text(
           'Unlock Your Chat',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.w600,
             height: 23.4 / 18,
@@ -241,7 +241,7 @@ class _BuyChatpageState extends State<Buychatpage> {
               ),
               child: Text(
                 'By unlocking chat you can easily chat',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
                   height: 26 / 15,
@@ -302,7 +302,7 @@ class _BuyChatpageState extends State<Buychatpage> {
                           ),
                           title: Text(
                             'Buy Chat for this Project',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
                               height: 20 / 13,
@@ -313,7 +313,7 @@ class _BuyChatpageState extends State<Buychatpage> {
                           ),
                           subtitle: Text(
                             'You can buy a chat just for this project.',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
                               height: 20 / 11,
@@ -391,7 +391,7 @@ class _BuyChatpageState extends State<Buychatpage> {
                           ),
                           title: Text(
                             'Buy hassle free chat for multiple projects',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
                               height: 20 / 13,
@@ -402,7 +402,7 @@ class _BuyChatpageState extends State<Buychatpage> {
                           ),
                           subtitle: Text(
                             'Simplify payments with a chat bundle avoid multiple transactions.',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
                               height: 20 / 11,
@@ -448,7 +448,7 @@ class _BuyChatpageState extends State<Buychatpage> {
                             children: [
                               TextSpan(
                                 text: 'Warning: ',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: Colorfile.textColor,
@@ -457,7 +457,7 @@ class _BuyChatpageState extends State<Buychatpage> {
                               TextSpan(
                                 text:
                                     'Your profile is currently incomplete with regard to KYC, and this could potentially result in a negative impact, leading to it being labeled as unverified by the project owner. We kindly ask you to undergo the KYC process for completion.',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Colorfile.textColor,
@@ -511,7 +511,7 @@ class _BuyChatpageState extends State<Buychatpage> {
                                 )
                               : Text(
                                   'Unlock Your Chat Now',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white,

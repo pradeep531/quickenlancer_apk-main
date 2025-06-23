@@ -230,7 +230,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
   }
 
   Widget _buildSkeletonScreen(double screenWidth, double screenHeight) {
-    final montserrat = GoogleFonts.montserrat().fontFamily;
+    final poppins = GoogleFonts.poppins().fontFamily;
     return SingleChildScrollView(
       child: Stack(
         children: [
@@ -396,7 +396,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
   Widget build(context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final montserrat = GoogleFonts.montserrat().fontFamily;
+    final poppins = GoogleFonts.poppins().fontFamily;
     final textColor = Colorfile.textColor;
     final currency = basicDetails?['currency'] as String? ?? 'INR';
 
@@ -405,7 +405,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
         appBar: AppBar(
           title: Text(
             'Freelancer Profile',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontWeight: FontWeight.w600,
               fontSize: 18,
               color: textColor,
@@ -478,7 +478,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
             Text(
               label,
               style: TextStyle(
-                  fontSize: 12, color: textColor, fontFamily: montserrat),
+                  fontSize: 12, color: textColor, fontFamily: poppins),
             ),
           ],
         );
@@ -489,7 +489,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
             fontSize: 15,
             fontWeight: FontWeight.w600,
             color: textColor,
-            fontFamily: montserrat,
+            fontFamily: poppins,
           ),
         );
 
@@ -501,7 +501,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey,
-              fontFamily: montserrat,
+              fontFamily: poppins,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -511,7 +511,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
       appBar: AppBar(
         title: Text(
           'Freelancer Profile',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontWeight: FontWeight.w600,
             fontSize: 18,
             color: textColor,
@@ -683,7 +683,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                         style: TextStyle(
                             fontSize: 12,
                             color: Colors.black54,
-                            fontFamily: montserrat),
+                            fontFamily: poppins),
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       _divider(),
@@ -740,7 +740,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.bold,
                                                 color: textColor,
-                                                fontFamily: montserrat,
+                                                fontFamily: poppins,
                                               ),
                                               softWrap: true,
                                             ),
@@ -763,7 +763,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                                                 style: TextStyle(
                                                   fontSize: screenWidth * 0.04,
                                                   color: Colors.black,
-                                                  fontFamily: montserrat,
+                                                  fontFamily: poppins,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -777,7 +777,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                                         style: TextStyle(
                                           fontSize: 11,
                                           color: Colors.black54,
-                                          fontFamily: montserrat,
+                                          fontFamily: poppins,
                                         ),
                                         maxLines: 5,
                                         softWrap: true,
@@ -934,7 +934,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                                               style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.bold,
-                                                fontFamily: montserrat,
+                                                fontFamily: poppins,
                                               ),
                                             ),
                                             Html(
@@ -947,7 +947,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                                                 '*': Style(
                                                   fontSize: FontSize(12),
                                                   color: Colors.grey,
-                                                  fontFamily: montserrat,
+                                                  fontFamily: poppins,
                                                 ),
                                                 'p':
                                                     Style(margin: Margins.zero),
@@ -1029,7 +1029,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                                               style: TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w600,
-                                                fontFamily: montserrat,
+                                                fontFamily: poppins,
                                               ),
                                             ),
                                             SizedBox(
@@ -1088,7 +1088,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                                       padding: EdgeInsets.all(8),
                                       child: Text(
                                         'Skill',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 13,
                                           color: textColor,
@@ -1099,7 +1099,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                                       padding: EdgeInsets.all(8),
                                       child: Text(
                                         'Cost',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 13,
                                           color: textColor,
@@ -1118,7 +1118,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                                               padding: EdgeInsets.all(8),
                                               child: Text(
                                                 skill['skill'] as String,
-                                                style: GoogleFonts.montserrat(
+                                                style: GoogleFonts.poppins(
                                                     fontSize: 11,
                                                     color: textColor),
                                               ),
@@ -1127,7 +1127,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                                               padding: EdgeInsets.all(8),
                                               child: Text(
                                                 '$currency ${skill['rate'] ?? 'N/A'}',
-                                                style: GoogleFonts.montserrat(
+                                                style: GoogleFonts.poppins(
                                                     fontSize: 11,
                                                     color: textColor),
                                               ),
@@ -1174,7 +1174,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                                             horizontal: 5, vertical: 8),
                                         child: Text(
                                           section['title'] as String,
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 13,
                                             color: textColor,
@@ -1208,8 +1208,8 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                                                     child: Text(
                                                       cert['name'] as String? ??
                                                           '',
-                                                      style: GoogleFonts
-                                                          .montserrat(
+                                                      style:
+                                                          GoogleFonts.poppins(
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         fontSize: 11,
@@ -1233,8 +1233,8 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                                                               data[0] != null
                                                           ? data[0] as String
                                                           : 'N/A',
-                                                      style: GoogleFonts
-                                                          .montserrat(
+                                                      style:
+                                                          GoogleFonts.poppins(
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         fontSize: 11,
@@ -1282,7 +1282,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                           fontSize: screenWidth * 0.05,
                           fontWeight: FontWeight.bold,
                           color: textColor,
-                          fontFamily: montserrat,
+                          fontFamily: poppins,
                         ),
                       ),
                       Row(
@@ -1303,7 +1303,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
                             style: TextStyle(
                               fontSize: screenWidth * 0.04,
                               color: Colors.black54,
-                              fontFamily: montserrat,
+                              fontFamily: poppins,
                             ),
                           ),
                         ],

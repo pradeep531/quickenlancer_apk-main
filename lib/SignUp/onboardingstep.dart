@@ -309,7 +309,7 @@ class _OnboardingSignUpScreenState extends State<OnboardingSignup> {
                   children: [
                     Text(
                       "Already have an account? ",
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: Colorfile.darkgrey,
                         fontWeight: FontWeight.w500,
@@ -332,7 +332,7 @@ class _OnboardingSignUpScreenState extends State<OnboardingSignup> {
                       },
                       child: Text(
                         "SignIn",
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 12,
                           color: Colorfile.textColor,
                           fontWeight: FontWeight.w500,

@@ -52,7 +52,7 @@ class OnboardingScreen1 extends StatelessWidget {
           SizedBox(height: 20),
           Text(
             "Post a Project",
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 24,
               fontWeight: FontWeight.w700,
               color: Color(0xFF466AA5),
@@ -62,7 +62,7 @@ class OnboardingScreen1 extends StatelessWidget {
           SizedBox(height: 10),
           Text(
             "Provide a detailed overview of your project, including objectives, deliverables, and any specific requirements to attract the best talent.",
-            style: GoogleFonts.montserrat(fontSize: 16, height: 1.5),
+            style: GoogleFonts.poppins(fontSize: 16, height: 1.5),
             textAlign: TextAlign.center,
           ),
           // Progress Dots (below image)

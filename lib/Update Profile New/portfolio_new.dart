@@ -28,7 +28,7 @@ class SharedWidgets {
       children: [
         Text(
           label,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: Colors.black,
@@ -40,13 +40,13 @@ class SharedWidgets {
           keyboardType: keyboardType,
           maxLines: maxLines ?? 1,
           validator: validator,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 14,
             color: Colors.black,
           ),
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: GoogleFonts.montserrat(
+            hintStyle: GoogleFonts.poppins(
               fontSize: 14,
               color: Colors.grey[600],
             ),
@@ -100,7 +100,7 @@ class SharedWidgets {
             SnackBar(
               content: Text(
                 'No file selected',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
@@ -117,7 +117,7 @@ class SharedWidgets {
           SnackBar(
             content: Text(
               'Error picking file: $e',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
@@ -166,7 +166,7 @@ class StyledButton extends StatelessWidget {
           ],
           Text(
             text,
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: Colors.white,
@@ -331,7 +331,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
       SnackBar(
         content: Text(
           message,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: Colors.white,
@@ -385,7 +385,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
             ),
             title: Text(
               'Portfolio',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
                 color: Colors.black,
@@ -433,7 +433,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
                   const SizedBox(height: 24),
                   Text(
                     'Project Skill *',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colors.black87,
@@ -446,7 +446,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
                       searchFieldProps: TextFieldProps(
                         decoration: InputDecoration(
                           hintText: 'Search skills...',
-                          hintStyle: GoogleFonts.montserrat(
+                          hintStyle: GoogleFonts.poppins(
                             fontSize: 14,
                             color: Colors.grey.shade600,
                             fontWeight: FontWeight.w400,
@@ -500,7 +500,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
                         ),
                         child: Text(
                           item,
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight:
                                 isSelected ? FontWeight.w600 : FontWeight.w400,
@@ -512,7 +512,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
                     dropdownDecoratorProps: DropDownDecoratorProps(
                       dropdownSearchDecoration: InputDecoration(
                         labelText: 'Select Project Skills *',
-                        labelStyle: GoogleFonts.montserrat(
+                        labelStyle: GoogleFonts.poppins(
                           fontSize: 14,
                           color: Colors.grey.shade700,
                           fontWeight: FontWeight.w500,
@@ -591,7 +591,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
                   const SizedBox(height: 24),
                   Text(
                     'Upload Logo',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colors.black87,
@@ -627,7 +627,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
                               padding: const EdgeInsets.only(left: 8.0),
                               child: Text(
                                 'Upload Project Logo',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.grey.shade600,
@@ -657,7 +657,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
                               ),
                               child: Text(
                                 'Choose File',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.blue.shade700,
@@ -689,7 +689,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
                               Expanded(
                                 child: Text(
                                   _projectLogo!.path.split('/').last,
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                     color: Colors.grey.shade600,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w400,
@@ -706,7 +706,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
                   const SizedBox(height: 24),
                   Text(
                     'Project Description',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colors.black87,
@@ -762,7 +762,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
                                 border: InputBorder.none,
                                 hintText: 'Describe your project...',
                                 errorText: _descriptionXssError,
-                                errorStyle: GoogleFonts.montserrat(
+                                errorStyle: GoogleFonts.poppins(
                                     fontSize: 12, color: Colors.red)),
                             onChanged: (value) {
                               setState(() {
@@ -779,7 +779,7 @@ class _PortfolioFormState extends State<PortfolioNew> {
                   // const SizedBox(height: 24),
                   // Text(
                   //   'Project Description',
-                  //   style: GoogleFonts.montserrat(
+                  //   style: GoogleFonts.poppins(
                   //     fontSize: 14,
                   //     fontWeight: FontWeight.w500,
                   //     color: Colors.black87,

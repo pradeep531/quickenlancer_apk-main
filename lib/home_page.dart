@@ -219,18 +219,23 @@ class _MyHomePageState extends State<MyHomePage> {
     if (index != 0 && isLoggedIn != 1) {
       showDialog(
         context: context,
+        barrierColor: Colors.black.withOpacity(0.6), // Darker, smoother overlay
         builder: (BuildContext context) {
           return AlertDialog(
             backgroundColor: Colors.white,
+            surfaceTintColor:
+                Colors.white, // Prevents unwanted tint on elevation
+            elevation: 8.0, // Subtle shadow for depth
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
+              borderRadius: BorderRadius.circular(20.0), // Softer corners
             ),
             title: Text(
               'Login Required',
               style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0,
+                fontWeight: FontWeight.w700,
+                fontSize: 22.0,
                 color: Colors.black87,
+                letterSpacing: 0.5, // Improved readability
               ),
             ),
             content: Text(
@@ -238,30 +243,35 @@ class _MyHomePageState extends State<MyHomePage> {
               style: TextStyle(
                 fontSize: 16.0,
                 color: Colors.black54,
-                height: 1.5,
+                height: 1.6, // Increased line height for clarity
+                fontWeight: FontWeight.w400,
               ),
             ),
             actionsPadding:
-                EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(); // Close dialog
                 },
                 child: Text(
-                  'No',
+                  'Cancel',
                   style: TextStyle(
                     fontSize: 16.0,
-                    color: Colors.grey[600],
+                    color: Colors.grey[700],
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 style: TextButton.styleFrom(
                   padding:
-                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                  foregroundColor: Colors.grey[700], // Ripple effect color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
                 ),
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop(); // Close dialog
                   Navigator.push(
@@ -270,20 +280,22 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 },
                 child: Text(
-                  'Yes',
+                  'Log In',
                   style: TextStyle(
                     fontSize: 16.0,
-                    color: Colors.blue[700],
+                    color: Colors.white,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                style: TextButton.styleFrom(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colorfile.textColor, // Vibrant primary color
                   padding:
-                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                  backgroundColor: Colors.blue[50],
+                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
+                  elevation: 2.0, // Subtle button elevation
+                  shadowColor: Colorfile.textColor, // Soft shadow
                 ),
               ),
             ],
@@ -453,7 +465,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         elevation: 3, // Shadow elevation
                         // Shadow color
-                        textStyle: GoogleFonts.montserrat(
+                        textStyle: GoogleFonts.poppins(
                           fontSize: size.width * 0.042,
                           fontWeight: FontWeight.w600,
                         ),
@@ -490,7 +502,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       _lastName?.isNotEmpty == true)
                                   ? '$_firstName $_lastName'.trim()
                                   : 'Not Available', // Show "Not Available" if names are empty
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.poppins(
                                 fontSize: size.width * 0.042,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.black,
@@ -553,13 +565,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       child: TextField(
         controller: _searchController,
-        style: GoogleFonts.montserrat(
+        style: GoogleFonts.poppins(
           fontSize: size.width * 0.038,
           fontWeight: FontWeight.w500,
         ),
         decoration: InputDecoration(
           hintText: 'Search projects...',
-          hintStyle: GoogleFonts.montserrat(
+          hintStyle: GoogleFonts.poppins(
             fontSize: size.width * 0.038,
             fontWeight: FontWeight.w500,
             color: Colors.grey,
@@ -904,7 +916,7 @@ class _ListContainerState extends State<ListContainer> {
                             children: [
                               Text(
                                 job.projectName,
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   fontSize: size.width * 0.040,
                                   fontWeight: FontWeight.w600,
                                   color: Colorfile.textColor,
@@ -935,7 +947,7 @@ class _ListContainerState extends State<ListContainer> {
                                   const SizedBox(width: 6),
                                   Text(
                                     '${job.country} | ${job.requirementType == '0' ? 'Cold 🧊' : 'Hot 🔥'}',
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       fontSize: size.width * 0.032,
                                       fontWeight: FontWeight.w500,
                                       color: Colorfile.textColor,
@@ -945,7 +957,7 @@ class _ListContainerState extends State<ListContainer> {
                               ),
                               Text(
                                 getLookingForText(job.lookingFor),
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   fontSize: size.width * 0.032,
                                   fontWeight: FontWeight.w500,
                                   color: Colorfile.textColor,
@@ -1047,7 +1059,7 @@ class _ListContainerState extends State<ListContainer> {
                                     ),
                                     child: Text(
                                       tag,
-                                      style: GoogleFonts.montserrat(
+                                      style: GoogleFonts.poppins(
                                         fontSize: size.width * 0.030,
                                         fontWeight: FontWeight.w500,
                                         color: Colorfile.textColor,
@@ -1065,7 +1077,7 @@ class _ListContainerState extends State<ListContainer> {
                             children: [
                               Text(
                                 '${job.currency} ${job.amount}',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   fontSize: size.width * 0.036,
                                   fontWeight: FontWeight.w600,
                                   color: Colorfile.textColor,
@@ -1073,7 +1085,7 @@ class _ListContainerState extends State<ListContainer> {
                               ),
                               Text(
                                 job.projectType == '0' ? 'Fixed' : 'Hourly',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   fontSize: size.width * 0.036,
                                   fontWeight: FontWeight.w600,
                                   color: Colorfile.textColor,
@@ -1437,66 +1449,76 @@ class _ListContainerState extends State<ListContainer> {
   Future<bool?> _showConfirmationDialog(BuildContext context) async {
     return showDialog<bool>(
       context: context,
+      barrierColor: Colors.black.withOpacity(0.6), // Darker, smoother overlay
       builder: (BuildContext context) {
         return AlertDialog(
-          // Customize dialog shape and background
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white, // Prevents unwanted tint on elevation
+          elevation: 8.0, // Subtle shadow for depth
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(20.0), // Softer corners
           ),
-          backgroundColor: Colors.white, // Light background
-          elevation: 8.0, // Shadow for depth
-          // Title styling
           title: const Text(
             'Sign In Required',
             style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
+              fontSize: 22.0, // Slightly larger for prominence
+              fontWeight: FontWeight.w700, // Bolder for hierarchy
               color: Colors.black87,
+              letterSpacing: 0.5, // Improved readability
             ),
           ),
-          // Content styling
           content: const Text(
             'You need to sign in to continue. Would you like to proceed to the sign-in page?',
             style: TextStyle(
               fontSize: 16.0,
               color: Colors.black54,
-              height: 1.5, // Line spacing
+              height: 1.6, // Increased line spacing for clarity
+              fontWeight: FontWeight.w400, // Lighter for readability
             ),
           ),
-          // Actions (buttons)
+          actionsPadding: EdgeInsets.symmetric(
+              horizontal: 16.0, vertical: 12.0), // Consistent spacing
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(false); // Return false for "No"
+                Navigator.of(context).pop(false); // Return false for "Cancel"
               },
               child: const Text(
-                'No',
+                'Cancel', // More explicit than "No"
                 style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.grey, // Subtle color for cancel
                   fontWeight: FontWeight.w600,
                 ),
               ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true); // Return true for "Yes"
-              },
               style: TextButton.styleFrom(
-                backgroundColor: Colors.blueAccent, // Button background
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 8.0,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                foregroundColor: Colors.grey, // Ripple effect color
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(10.0), // Rounded corners
                 ),
               ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Return true for "Log In"
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colorfile
+                    .textColor, // Vibrant primary color (replacing Colorfile.textColor)
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(10.0), // Matching rounded corners
+                ),
+                elevation: 2.0, // Subtle button elevation
+                // Soft shadow
+              ),
               child: const Text(
-                'Yes',
+                'Log In', // More specific than "Yes"
                 style: TextStyle(
                   fontSize: 16.0,
-                  color: Colors.white, // White text for contrast
+                  color: Colors.white, // High contrast
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -1592,7 +1614,7 @@ class _ListContainerState extends State<ListContainer> {
                                 dontAskAgain = value ?? false;
                               });
                             },
-                            activeColor: Colors.teal.shade400,
+                            activeColor: Colorfile.textColor,
                             checkColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6),
@@ -1833,7 +1855,7 @@ class _ListContainerState extends State<ListContainer> {
                   ],
                   Text(
                     label,
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: size.width * 0.032,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,

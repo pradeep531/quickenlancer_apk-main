@@ -749,7 +749,7 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Upload ID Proof *',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: Colorfile.textColor)),
@@ -771,7 +771,7 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
                           (_idProofFile == null
                               ? 'Choose file'
                               : _idProofFile!.path.split('/').last),
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                           fontSize: 14,
                           color: _idProofFileError != null
                               ? Colors.red
@@ -788,8 +788,8 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
             ),
             const SizedBox(height: 8),
             Text('Image size < 100KB (JPG, JPEG, PNG)',
-                style: GoogleFonts.montserrat(
-                    fontSize: 12, color: Colors.blueGrey)),
+                style:
+                    GoogleFonts.poppins(fontSize: 12, color: Colors.blueGrey)),
             if (_idProofFile != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
@@ -804,7 +804,7 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
                         fit: BoxFit.cover,
                         errorBuilder: (_, __, ___) => Center(
                             child: Text('Invalid image',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                     fontSize: 12, color: Colors.red)))),
                   ),
                 ),
@@ -819,7 +819,7 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Record Verification *',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: Colorfile.textColor)),
@@ -832,7 +832,7 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
                     borderRadius: BorderRadius.circular(8)),
                 child: Center(
                     child: Text(_cameraError!,
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                             fontSize: 14, color: Colors.red),
                         textAlign: TextAlign.center)),
               )
@@ -887,7 +887,7 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
                             color: Colors.black54,
                             borderRadius: BorderRadius.circular(4)),
                         child: Text(_formatDuration(_recordingSeconds),
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                                 fontSize: 12, color: Colors.white)),
                       ),
                     ),
@@ -901,7 +901,7 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
                     borderRadius: BorderRadius.circular(8)),
                 child: Center(
                     child: Text('Initializing camera...',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                             fontSize: 14, color: Colorfile.textColor))),
               ),
             const SizedBox(height: 12),
@@ -946,7 +946,7 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
                 enabled: false,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  labelStyle: GoogleFonts.montserrat(
+                  labelStyle: GoogleFonts.poppins(
                       fontSize: 14, color: Colorfile.textColor),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -955,7 +955,7 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide(color: Colors.grey.shade300)),
                 ),
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 14, color: Colorfile.textColor),
               ),
               const SizedBox(height: 16),
@@ -1060,18 +1060,17 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('₹1',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colorfile.textColor)),
             const SizedBox(height: 12),
             Text('Confirm Payment',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 16, fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
             Text('Complete KYC with a nominal payment.',
-                style:
-                    GoogleFonts.montserrat(fontSize: 12, color: Colors.grey)),
+                style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey)),
           ],
         ),
       ),
@@ -1113,7 +1112,7 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
                 _handleBackPress(context), // Only call _handleBackPress
           ),
           title: Text('KYC Verification',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                   color: Colorfile.textColor,
                   fontSize: 18,
                   fontWeight: FontWeight.w600)),
@@ -1146,7 +1145,7 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
                                 children: [
                                   Expanded(
                                       child: Text('Why Quickenlancer KYC?',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                               color: Colorfile.textColor,
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold))),
@@ -1172,7 +1171,7 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
                               ),
                               const SizedBox(height: 8),
                               Text('Secure and verified user identities.',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                       color: Colorfile.textColor,
                                       fontSize: 10)),
                             ],
@@ -1217,13 +1216,13 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
                                             color: Colors.white))),
                               ),
                               title: Text('Secure Verification',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
                                       color: Colorfile.textColor)),
                               subtitle: Text(
                                   'Ensure a trusted platform experience.',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w500)),
                             ),
@@ -1328,13 +1327,13 @@ class _KYCVerificationPageState extends State<KYCVerificationPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(title,
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: Colorfile.textColor)),
             const SizedBox(height: 8),
             Text(subtitle,
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
                     color: Colorfile.textColor)),
@@ -1376,7 +1375,7 @@ class StyledButton extends StatelessWidget {
           onPressed: onPressed,
           icon: Icon(icon, color: Colors.black),
           label: Text(text,
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Colors.black,
                   fontWeight: FontWeight.w500)),

@@ -59,7 +59,7 @@ class _SideBarDrawerState extends State<SideBarDrawer> {
                 ),
                 Positioned(
                   bottom: -screenHeight * 0.08,
-                  left: screenWidth * 0.520 - (screenWidth * 0.3),
+                  left: screenWidth * 0.450 - (screenWidth * 0.3),
                   child: Column(
                     children: [
                       Container(

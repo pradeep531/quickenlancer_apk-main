@@ -244,8 +244,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                                     .any((s) => s['id'] == skill['id']);
                                 return CheckboxListTile(
                                   title: Text(skill['skill'],
-                                      style:
-                                          GoogleFonts.montserrat(fontSize: 14)),
+                                      style: GoogleFonts.poppins(fontSize: 14)),
                                   value: isSelected,
                                   onChanged: (_) {
                                     setDialogState(() => _toggleSkill(skill));
@@ -265,7 +264,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                         borderRadius: BorderRadius.circular(6)),
                   ),
                   child: Text('Done',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                           fontSize: 14, fontWeight: FontWeight.w600)),
                 ),
               ],
@@ -348,7 +347,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Filters',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                         fontSize: 20, fontWeight: FontWeight.w700)),
                 IconButton(
                     icon: const Icon(Icons.close, color: Color(0xFF666666)),
@@ -378,9 +377,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                     final suggestion = locationSuggestions[index];
                     return ListTile(
                       title: Text(suggestion['name'],
-                          style: GoogleFonts.montserrat(fontSize: 14)),
+                          style: GoogleFonts.poppins(fontSize: 14)),
                       subtitle: Text(suggestion['state_name'] ?? '',
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                               fontSize: 12, color: Colors.grey)),
                       onTap: () {
                         setState(() {
@@ -471,7 +470,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Skills & Keywords',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                   fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           GestureDetector(
@@ -489,7 +488,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                       selectedSkills.isEmpty
                           ? 'Select skills'
                           : '${selectedSkills.length} skill(s) selected',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                           fontSize: 14,
                           color: selectedSkills.isEmpty
                               ? const Color(0xFF999999)
@@ -508,7 +507,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 children: selectedSkills
                     .map((skill) => Chip(
                           label: Text(skill['skill'],
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.poppins(
                                   fontSize: 12, color: Colors.white)),
                           backgroundColor: const Color(0xFF1A1A1A),
                           deleteIcon: const Icon(Icons.close,
@@ -532,7 +531,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Currency',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                   fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           isLoadingCurrencies
@@ -571,7 +570,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                             ),
                             child: Text(
                               currency['lable'],
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.poppins(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w500,
                                   color: isSelected
@@ -595,14 +594,14 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label,
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                   fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           TextField(
             controller: controller,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: GoogleFonts.montserrat(color: const Color(0xFF999999)),
+              hintStyle: GoogleFonts.poppins(color: const Color(0xFF999999)),
               filled: true,
               fillColor: const Color(0xFFF5F5F5),
               contentPadding:
@@ -619,7 +618,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                       onPressed: clearCallback)
                   : null,
             ),
-            style: GoogleFonts.montserrat(fontSize: 14),
+            style: GoogleFonts.poppins(fontSize: 14),
             onChanged: onChanged,
           ),
         ],
@@ -648,7 +647,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label,
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                   fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           Wrap(
@@ -683,7 +682,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   ),
                   child: Text(
                     item,
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                         color: isSelected
@@ -715,7 +714,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       ),
       onPressed: onPressed,
       child: Text(text,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
               fontSize: 14, fontWeight: FontWeight.w600, color: textColor)),
     );
   }

@@ -40,7 +40,7 @@ class _NewpasswordPageState extends State<Newpassword> {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     'Create New Password',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
                       color: Colorfile.textColor,
@@ -51,7 +51,7 @@ class _NewpasswordPageState extends State<Newpassword> {
                   padding: const EdgeInsets.only(left: 16.0),
                   child: Text(
                     'Create your new password to login',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colorfile.morelightgrey,
@@ -81,7 +81,7 @@ class _NewpasswordPageState extends State<Newpassword> {
                     },
                     child: Text(
                       'Continue',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 16,
                         color: Colors.white,
                       ),
@@ -115,7 +115,7 @@ class _NewpasswordPageState extends State<Newpassword> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
             label,
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: Colorfile.textColor,
@@ -129,7 +129,7 @@ class _NewpasswordPageState extends State<Newpassword> {
             obscureText: isPassword,
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: GoogleFonts.montserrat(
+              hintStyle: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: Colorfile.lightgrey,

@@ -54,7 +54,7 @@ class OnboardingScreen3 extends StatelessWidget {
           SizedBox(height: 20),
           Text(
             "Hire & Engage Directly",
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 24,
               fontWeight: FontWeight.w700,
               color: Color(0xFF466AA5),
@@ -64,7 +64,7 @@ class OnboardingScreen3 extends StatelessWidget {
           SizedBox(height: 10),
           Text(
             "Connect and start your collaboration seamlessly. Start your project today and achieve exceptional results through efficient and effective hiring.",
-            style: GoogleFonts.montserrat(fontSize: 16, height: 1.5),
+            style: GoogleFonts.poppins(fontSize: 16, height: 1.5),
             textAlign: TextAlign.center,
           ),
           // Progress Dots (below image)

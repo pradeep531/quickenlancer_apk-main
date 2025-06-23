@@ -796,7 +796,7 @@ class _ProfileFormState extends State<ProfileForm> {
                 padding: const EdgeInsets.only(top: 12),
                 child: Text(
                   _profileImage!.path.split('/').last,
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                     color: Colors.grey[600],
                     fontSize: 13,
                     fontWeight: FontWeight.w400,

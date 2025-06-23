@@ -103,7 +103,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
   void _showSnackBar(String message, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-          content: Text(message, style: GoogleFonts.montserrat()),
+          content: Text(message, style: GoogleFonts.poppins()),
           backgroundColor: color),
     );
   }
@@ -127,7 +127,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
           children: [
             Expanded(
               child: Text(title,
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
                       color: Colors.black87)),
@@ -139,7 +139,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
           ],
         ),
         content: DefaultTextStyle(
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
               color: Colors.black.withOpacity(0.6), fontSize: 15, height: 1.5),
           child: content,
         ),
@@ -220,7 +220,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                 decoration: const BoxDecoration(
                     color: Colors.grey, shape: BoxShape.circle),
                 child: Text('$count',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontSize: 9,
                         fontWeight: FontWeight.bold)),
@@ -239,7 +239,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
             Padding(
               padding: const EdgeInsets.all(16),
               child: Text('No ${type}s available',
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                       color: Colors.black54,
                       fontSize: 12,
                       fontWeight: FontWeight.w500)),
@@ -270,12 +270,12 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                             children: [
                               Text(
                                   '${item['f_name'] ?? ''} ${item['l_name'] ?? ''}',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600)),
                               Text(
                                   '${type == 'call' ? 'Last Call' : type == 'chat' ? 'Last Chat' : 'Sent'} On: ${item['sent_on_text'] ?? 'N/A'}',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                       color: Colorfile.textColor,
                                       fontSize: 11,
                                       fontWeight: FontWeight.w500)),
@@ -324,7 +324,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                                                   : type == 'chat'
                                                       ? 'Chat'
                                                       : 'Milestone',
-                                              style: GoogleFonts.montserrat(
+                                              style: GoogleFonts.poppins(
                                                   fontSize: 10)),
                                         ],
                                       ),
@@ -355,7 +355,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                                                   const EdgeInsets.symmetric(
                                                       horizontal: 16)),
                                           child: Text('Hire Me',
-                                              style: GoogleFonts.montserrat(
+                                              style: GoogleFonts.poppins(
                                                   fontSize: 11,
                                                   fontWeight: FontWeight.w500,
                                                   color: Colorfile.textColor)),
@@ -390,7 +390,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text('View All',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                             fontSize: 14, fontWeight: FontWeight.w600)),
                     const SizedBox(width: 8),
                     const Icon(Icons.arrow_forward, size: 16),
@@ -406,7 +406,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
 
   @override
   Widget build(BuildContext context) {
-    final jobTextStyle = GoogleFonts.montserrat(
+    final jobTextStyle = GoogleFonts.poppins(
         fontSize: 11,
         fontWeight: FontWeight.w600,
         height: 1.47,
@@ -424,7 +424,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
       appBar: AppBar(
         title: Text(
           'Posted Details',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 20,
             fontWeight: FontWeight.w600,
             color: Colors.black,
@@ -465,14 +465,14 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                     children: [
                       Text(
                         'Total Views',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                             fontSize: 16,
                             color: Colors.black,
                             fontWeight: FontWeight.w600),
                       ),
                       Text(
                         '15',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                             fontSize: 16,
                             color: Colors.black,
                             fontWeight: FontWeight.w600),
@@ -502,7 +502,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(project['project_name'] ?? 'No Title',
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
                               color: Colors.black)),
@@ -568,7 +568,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                                         _showDialog(
                                           title: 'Project Availability',
                                           content: Text('No availability set.',
-                                              style: GoogleFonts.montserrat(
+                                              style: GoogleFonts.poppins(
                                                   fontSize: 14,
                                                   color: Colors.black
                                                       .withOpacity(0.6))),
@@ -589,7 +589,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                                                             6)),
                                               ),
                                               child: Text('Cancel',
-                                                  style: GoogleFonts.montserrat(
+                                                  style: GoogleFonts.poppins(
                                                       color: const Color(
                                                           0xFF0288D1),
                                                       fontSize: 14,
@@ -613,7 +613,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                                                             6)),
                                               ),
                                               child: Text('Add',
-                                                  style: GoogleFonts.montserrat(
+                                                  style: GoogleFonts.poppins(
                                                       color: const Color(
                                                           0xFF0288D1),
                                                       fontSize: 14,
@@ -787,7 +787,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                                         text: 'Status: ', style: jobTextStyle),
                                     TextSpan(
                                       text: project['button_label'],
-                                      style: GoogleFonts.montserrat(
+                                      style: GoogleFonts.poppins(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
                                           color: project['project_status'] ==
@@ -840,7 +840,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                         ),
                         child: Text(
                           'Note: Approval is currently pending. The proposal/milestone will proceed upon receiving the necessary authorization from the designated stakeholders.',
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                             fontSize: 9,
                             fontWeight: FontWeight.w500,
                             color: const Color(0xFF8B8636),
@@ -862,7 +862,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                                         color: const Color(0xFFE8F1FC),
                                         borderRadius: BorderRadius.circular(4)),
                                     child: Text(skill['skill'] ?? '',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                             fontSize: 11,
                                             fontWeight: FontWeight.w500,
                                             color: Colors.black)),
@@ -874,7 +874,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                         descriptionExpanded
                             ? 'Description: ${project['description']?.replaceAll(RegExp(r'<[^>]+>'), '') ?? 'No Description'}'
                             : 'Description: ${(project['description']?.replaceAll(RegExp(r'<[^>]+>'), '') ?? 'No Description').length > 100 ? project['description'].replaceAll(RegExp(r'<[^>]+>'), '').substring(0, 100) + '...' : project['description']?.replaceAll(RegExp(r'<[^>]+>'), '') ?? 'No Description'}',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                             color: Colors.black,
                             fontSize: 11,
                             fontWeight: FontWeight.w500),
@@ -902,7 +902,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                                 title: 'Attachment',
                                 content: imagePath.isEmpty
                                     ? Text('No attachments available',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.black))
@@ -927,8 +927,8 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                                               child: Row(
                                                 children: [
                                                   Text('Document ${index + 1}',
-                                                      style: GoogleFonts
-                                                          .montserrat(
+                                                      style:
+                                                          GoogleFonts.poppins(
                                                               fontSize: 12,
                                                               fontWeight:
                                                                   FontWeight
@@ -942,7 +942,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                                                       content: Text(
                                                           'Download this file?',
                                                           style: GoogleFonts
-                                                              .montserrat(
+                                                              .poppins(
                                                                   fontSize: 12,
                                                                   color: Colors
                                                                       .black)),
@@ -952,7 +952,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                                                               Navigator.pop(
                                                                   context),
                                                           child: Text('No',
-                                                              style: GoogleFonts.montserrat(
+                                                              style: GoogleFonts.poppins(
                                                                   color: Colors
                                                                       .blue,
                                                                   fontSize: 12,
@@ -969,7 +969,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                                                             _downloadImage(url);
                                                           },
                                                           child: Text('Yes',
-                                                              style: GoogleFonts.montserrat(
+                                                              style: GoogleFonts.poppins(
                                                                   color: Colors
                                                                       .blue,
                                                                   fontSize: 12,
@@ -1004,7 +1004,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                                 children: [
                                   Text(
                                       '${imagePath.length} Attachment${imagePath.length == 1 ? '' : 's'}',
-                                      style: GoogleFonts.montserrat(
+                                      style: GoogleFonts.poppins(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.black)),
@@ -1029,9 +1029,9 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                         controller: _tabController,
                         labelColor: Colors.black,
                         unselectedLabelColor: Colors.black54,
-                        labelStyle: GoogleFonts.montserrat(
+                        labelStyle: GoogleFonts.poppins(
                             fontSize: 12, fontWeight: FontWeight.w600),
-                        unselectedLabelStyle: GoogleFonts.montserrat(
+                        unselectedLabelStyle: GoogleFonts.poppins(
                             fontSize: 12, fontWeight: FontWeight.w500),
                         labelPadding:
                             const EdgeInsets.symmetric(horizontal: 6.0),
@@ -1069,7 +1069,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Project Description',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: Colors.black)),
@@ -1080,7 +1080,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                     '(1) DRIVERS will sign up for an account to perform pick-up items from customers.\n'
                     '(2) CUSTOMERS will sign up for an account to request a pick-up for an item.\n'
                     '(3) Once the DRIVER accepts the request from the CUSTOMER, the app will navigate the driver where to deliver the package.',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                         height: 1.6,
@@ -1095,7 +1095,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage>
                         borderRadius: BorderRadius.circular(4)),
                     child: Text(
                         'List of Freelancers Who Have Bidded This Project',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: Colors.black)),

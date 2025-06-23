@@ -97,7 +97,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
   InputDecoration _textFieldDecoration(String label) {
     return InputDecoration(
       labelText: label,
-      labelStyle: GoogleFonts.montserrat(
+      labelStyle: GoogleFonts.poppins(
         color: Colors.grey[600],
         fontSize: 13,
         fontWeight: FontWeight.w500,
@@ -133,7 +133,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
         decoration: _textFieldDecoration(label),
         keyboardType: keyboardType,
         maxLines: maxLines ?? 1,
-        style: GoogleFonts.montserrat(
+        style: GoogleFonts.poppins(
           fontSize: 15,
           fontWeight: FontWeight.w400,
           color: Colors.black87,
@@ -155,7 +155,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
         decoration: _textFieldDecoration(label),
         items: items,
         onChanged: onChanged,
-        style: GoogleFonts.montserrat(
+        style: GoogleFonts.poppins(
           fontSize: 15,
           fontWeight: FontWeight.w400,
           color: Colors.black87,
@@ -191,7 +191,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
             ],
             Text(
               text,
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 color: Colors.white,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
@@ -250,7 +250,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
                 padding: const EdgeInsets.only(top: 12),
                 child: Text(
                   _profileImage!.path.split('/').last,
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                     color: Colors.grey[600],
                     fontSize: 13,
                     fontWeight: FontWeight.w400,
@@ -279,7 +279,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
             if (_selectedSkill != null) ...[
               Text(
                 'Rate your skill',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 15, fontWeight: FontWeight.w500),
               ),
               Padding(
@@ -288,7 +288,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
                   controller: _skillRatingController,
                   decoration: _textFieldDecoration('Skill Rating'),
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                     fontSize: 15,
                     fontWeight: FontWeight.w400,
                     color: Colors.black87,
@@ -319,7 +319,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
                           _selectedSkill == null
                               ? 'Please select a skill'
                               : 'Skill already added',
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
@@ -335,7 +335,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
             ..._skills.map((skill) => ListTile(
                   title: Text(
                     '${skill['name']} (Rating: ${skill['rating']})',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                         fontSize: 15, fontWeight: FontWeight.w400),
                   ),
                   trailing: IconButton(
@@ -385,7 +385,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
                 padding: const EdgeInsets.only(top: 12),
                 child: Text(
                   _projectLogo!.path.split('/').last,
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                     color: Colors.grey[600],
                     fontSize: 13,
                     fontWeight: FontWeight.w400,
@@ -405,7 +405,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
             _textField(_languageNameController, 'Language Name'),
             Text(
               'Reading Proficiency',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),
@@ -432,7 +432,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
             ),
             Text(
               'Writing Proficiency',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),
@@ -459,7 +459,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
             ),
             Text(
               'Speaking Proficiency',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),
@@ -507,7 +507,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
                     SnackBar(
                       content: Text(
                         'Please enter a language name',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
@@ -533,7 +533,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
                   children: [
                     Text(
                       'Languages',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                         color: Colors.grey[800],
@@ -564,7 +564,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
                                       Expanded(
                                         child: Text(
                                           '${lang['name']}',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -636,7 +636,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
                     Expanded(
                       child: Text(
                         _certificateFile!.path.split('/').last,
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           color: Colors.grey[600],
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
@@ -675,7 +675,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
                   children: [
                     Text(
                       'Certifications',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                         color: Colors.grey[800],
@@ -707,7 +707,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
                                   Expanded(
                                     child: Text(
                                       cert,
-                                      style: GoogleFonts.montserrat(
+                                      style: GoogleFonts.poppins(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -770,7 +770,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
           width: 80,
           child: Text(
             label,
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 12,
               fontWeight: FontWeight.w500,
               color: Colors.grey[600],
@@ -789,7 +789,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
         const SizedBox(width: 8),
         Text(
           '${value.round()}%',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 12,
             fontWeight: FontWeight.w500,
             color: Colors.grey[800],
@@ -807,7 +807,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
       appBar: AppBar(
         title: Text(
           'Update Profile',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             color: Colors.black87,
             fontSize: 20,
             fontWeight: FontWeight.w600,
@@ -875,7 +875,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
                                 title: _isSidebarExpanded
                                     ? Text(
                                         tabs[index]['title'],
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           color: _currentTab == index
                                               ? const Color(0xFF2563EB)
                                               : Colors.grey[800],
@@ -916,7 +916,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
                         children: [
                           Text(
                             tabs[_currentTab]['title'],
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 24,
                               fontWeight: FontWeight.w600,
                               color: Colors.black87,
@@ -942,7 +942,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
                                       setState(() => _currentTab -= 1),
                                   child: Text(
                                     'Back',
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       color: Colors.grey[600],
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
@@ -965,7 +965,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePages> {
                                       SnackBar(
                                         content: Text(
                                           'Profile updated successfully',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500,
                                             color: Colors.white,

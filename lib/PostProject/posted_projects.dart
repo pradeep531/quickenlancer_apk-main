@@ -24,7 +24,7 @@ class _PostedProjectsPageState extends State<PostedProjects> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text('Posted Project',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
                 color: Colorfile.textColor,
                 fontSize: 18,
                 fontWeight: FontWeight.w600)),
@@ -87,7 +87,7 @@ class _ListContainerState extends State<ListContainer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(job['title'],
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                         color: Colorfile.textColor,
                         fontSize: 15,
                         fontWeight: FontWeight.w600)),
@@ -96,7 +96,7 @@ class _ListContainerState extends State<ListContainer> {
                     isDescriptionExpanded
                         ? 'Description: ${job['description']}'
                         : 'Description: ${job['description'].substring(0, 100)}...',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                         color: Colorfile.textColor,
                         fontSize: 11,
                         fontWeight: FontWeight.w500)),
@@ -117,7 +117,7 @@ class _ListContainerState extends State<ListContainer> {
                                 color: Color(0xFFE8F1FC),
                                 borderRadius: BorderRadius.circular(4)),
                             child: Text(tag,
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w500,
                                     color: Colorfile.textColor)),
@@ -150,7 +150,7 @@ class _ListContainerState extends State<ListContainer> {
                               SizedBox(width: 8),
                               Text(
                                 'Attachment',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   color: Colorfile.textColor,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
@@ -172,7 +172,7 @@ class _ListContainerState extends State<ListContainer> {
                           ),
                           child: Text(
                             'Waiting for Approval',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               color: Color(0xFF5C8A3C),
                               fontWeight: FontWeight.w500,
                               fontSize: 12,
@@ -202,7 +202,7 @@ class _ListContainerState extends State<ListContainer> {
                                 children: [
                                   Text(
                                     'Vaibhav Danve',
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                       color: Colorfile.textColor,
@@ -215,7 +215,7 @@ class _ListContainerState extends State<ListContainer> {
                                       SizedBox(width: 4),
                                       Text(
                                         'Gondia, India',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontSize: 12,
                                           color: Colors.black54,
                                         ),
@@ -249,7 +249,7 @@ class _ListContainerState extends State<ListContainer> {
                           TableRow(
                             children: [
                               Text('Hired on',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                       fontSize:
                                           12.0, // Changed to 12px equivalent
                                       color: Colors.black54)),
@@ -257,7 +257,7 @@ class _ListContainerState extends State<ListContainer> {
                               Text(job['hiredOn'],
                                   textAlign: TextAlign
                                       .right, // Aligning data to the right
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                       fontSize:
                                           12.0, // Changed to 12px equivalent
                                       color: Colors.black54))
@@ -266,7 +266,7 @@ class _ListContainerState extends State<ListContainer> {
                           TableRow(
                             children: [
                               Text('Hired Status',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                       fontSize:
                                           12.0, // Changed to 12px equivalent
                                       color: Colors.black54)),
@@ -274,7 +274,7 @@ class _ListContainerState extends State<ListContainer> {
                               Text(job['hiredStatus'],
                                   textAlign: TextAlign
                                       .right, // Aligning data to the right
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                       fontSize:
                                           12.0, // Changed to 12px equivalent
                                       color: Colors.black54))
@@ -284,7 +284,7 @@ class _ListContainerState extends State<ListContainer> {
                             TableRow(
                               children: [
                                 Text('Project Attachments',
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                         fontSize:
                                             12.0, // Changed to 12px equivalent
                                         color: Colors.black54)),

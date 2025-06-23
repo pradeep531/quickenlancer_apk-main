@@ -126,14 +126,15 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final montserrat = GoogleFonts.montserrat().fontFamily;
+    final poppins = GoogleFonts.poppins().fontFamily;
     final textColor = Colorfile.textColor;
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         title: Text(
           'Update Profile',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontWeight: FontWeight.w600,
             fontSize: 18,
             color: textColor,
@@ -269,7 +270,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 fontSize: screenWidth * 0.05,
                                 fontWeight: FontWeight.bold,
                                 color: textColor,
-                                fontFamily: montserrat,
+                                fontFamily: poppins,
                               ),
                             ),
                             Row(
@@ -292,7 +293,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   style: TextStyle(
                                     fontSize: screenWidth * 0.04,
                                     color: Colors.black54,
-                                    fontFamily: montserrat,
+                                    fontFamily: poppins,
                                   ),
                                 ),
                               ],
@@ -301,7 +302,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         SizedBox(height: screenHeight * 0.03),
                         _buildEditOption(
-                          imagePath: 'assets/Group 237841.png',
+                          imagePath: 'assets/profileicon.png',
                           label: 'Profile',
                           onTap: () => Navigator.push(
                             context,
@@ -312,7 +313,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           isTappable: !isLoading, // Disable tap during loading
                         ),
                         _buildEditOption(
-                          imagePath: 'assets/Group 237841.png',
+                          imagePath: 'assets/skillsicon.png',
                           label: 'Skills',
                           onTap: () => Navigator.push(
                             context,
@@ -323,7 +324,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           isTappable: !isLoading,
                         ),
                         _buildEditOption(
-                          imagePath: 'assets/Group 237841.png',
+                          imagePath: 'assets/portfolioicon.png',
                           label: 'Portfolio',
                           isTappable: !isLoading,
                           onTap: () => Navigator.push(
@@ -334,7 +335,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                         _buildEditOption(
-                          imagePath: 'assets/Group 237841.png',
+                          imagePath: 'assets/languageicon.png',
                           label: 'Language',
                           isTappable: !isLoading,
                           onTap: () => Navigator.push(
@@ -345,7 +346,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                         _buildEditOption(
-                          imagePath: 'assets/Group 237841.png',
+                          imagePath: 'assets/certificateicon.png',
                           label: 'Certification',
                           isTappable: !isLoading,
                           onTap: () => Navigator.push(
@@ -356,7 +357,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                         _buildEditOption(
-                          imagePath: 'assets/Group 237841.png',
+                          imagePath: 'assets/experienceicon.png',
                           label: 'Experience',
                           isTappable: !isLoading,
                           onTap: () => Navigator.push(
@@ -367,7 +368,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                         _buildEditOption(
-                          imagePath: 'assets/Group 237841.png',
+                          imagePath: 'assets/passwordicon.png',
                           label: 'Change Password',
                           isTappable: !isLoading,
                           onTap: () => Navigator.push(
@@ -405,7 +406,7 @@ class _ProfilePageState extends State<ProfilePage> {
     required bool isTappable,
   }) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final montserrat = GoogleFonts.montserrat().fontFamily;
+    final poppins = GoogleFonts.poppins().fontFamily;
     final textColor = Colorfile.textColor;
 
     return GestureDetector(
@@ -439,7 +440,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 label,
                 style: TextStyle(
                   fontSize: 15,
-                  fontFamily: montserrat,
+                  fontFamily: poppins,
                   color: isTappable ? textColor : Colors.grey,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1.0,

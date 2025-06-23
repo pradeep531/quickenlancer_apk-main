@@ -483,7 +483,7 @@ class _PostProjectState extends State<PostProject> {
                         : null,
                     errorText: _skillsSearchXssError,
                     errorStyle:
-                        GoogleFonts.montserrat(fontSize: 12, color: Colors.red),
+                        GoogleFonts.poppins(fontSize: 12, color: Colors.red),
                   ),
                   onChanged: (value) {
                     setDialogState(() {
@@ -508,8 +508,7 @@ class _PostProjectState extends State<PostProject> {
                                     int.parse(skill['id'].toString()));
                                 return CheckboxListTile(
                                   title: Text(skill['skill'],
-                                      style:
-                                          GoogleFonts.montserrat(fontSize: 14)),
+                                      style: GoogleFonts.poppins(fontSize: 14)),
                                   value: isSelected,
                                   onChanged: (_) {
                                     setDialogState(() => _toggleSkill(skill));
@@ -529,7 +528,7 @@ class _PostProjectState extends State<PostProject> {
                         borderRadius: BorderRadius.circular(6)),
                   ),
                   child: Text('Done',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                           fontSize: 14, fontWeight: FontWeight.w600)),
                 ),
               ],
@@ -570,7 +569,7 @@ class _PostProjectState extends State<PostProject> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Choose skills *',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colorfile.textColor)),
@@ -593,7 +592,7 @@ class _PostProjectState extends State<PostProject> {
                     selectedSkillIds.isEmpty
                         ? 'Hire freelancer by skills'
                         : '${selectedSkillIds.length} skill(s) selected',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                         fontSize: 14,
                         color: selectedSkillIds.isEmpty
                             ? Color(0xFF999999)
@@ -609,7 +608,7 @@ class _PostProjectState extends State<PostProject> {
               padding: EdgeInsets.only(top: 4),
               child: Text(
                 _skillsError!,
-                style: GoogleFonts.montserrat(fontSize: 12, color: Colors.red),
+                style: GoogleFonts.poppins(fontSize: 12, color: Colors.red),
               ),
             ),
           if (selectedSkillIds.isNotEmpty)
@@ -624,7 +623,7 @@ class _PostProjectState extends State<PostProject> {
                       orElse: () => {'skill': 'Unknown', 'id': skillId});
                   return Chip(
                     label: Text(skill['skill'],
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                             fontSize: 12, color: Colors.white)),
                     backgroundColor: Color(0xFF1A1A1A),
                     deleteIcon:
@@ -647,7 +646,7 @@ class _PostProjectState extends State<PostProject> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Other skills',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colorfile.textColor)),
@@ -666,8 +665,7 @@ class _PostProjectState extends State<PostProject> {
               contentPadding:
                   EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               errorText: _otherSkillsXssError,
-              errorStyle:
-                  GoogleFonts.montserrat(fontSize: 12, color: Colors.red),
+              errorStyle: GoogleFonts.poppins(fontSize: 12, color: Colors.red),
             ),
             onChanged: (value) {
               setState(() {
@@ -686,7 +684,7 @@ class _PostProjectState extends State<PostProject> {
                 children: _otherSkills.map((skill) {
                   return Chip(
                     label: Text(skill,
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                             fontSize: 12, color: Colors.white)),
                     backgroundColor: Color(0xFF1A1A1A),
                     deleteIcon:
@@ -708,7 +706,7 @@ class _PostProjectState extends State<PostProject> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Upload project documents (if any)',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colorfile.textColor)),
@@ -725,7 +723,7 @@ class _PostProjectState extends State<PostProject> {
               children: [
                 Text(
                   _files.isEmpty ? 'Choose files to upload' : 'Files selected',
-                  style: GoogleFonts.montserrat(fontSize: 14),
+                  style: GoogleFonts.poppins(fontSize: 14),
                 ),
                 TextButton(
                   onPressed: _pickFile,
@@ -738,7 +736,7 @@ class _PostProjectState extends State<PostProject> {
                   ),
                   child: Text(
                     'Choose Files',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 12,
                       color: Color(0xFF757575),
                     ),
@@ -756,7 +754,7 @@ class _PostProjectState extends State<PostProject> {
                 children: _files.map((file) {
                   return Chip(
                     label: Text(file.name,
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                             fontSize: 12, color: Colors.white)),
                     backgroundColor: Color(0xFF1A1A1A),
                     deleteIcon:
@@ -784,7 +782,7 @@ class _PostProjectState extends State<PostProject> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Select Currency *',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colorfile.textColor)),
@@ -820,7 +818,7 @@ class _PostProjectState extends State<PostProject> {
                         child: Center(
                           child: Text(
                             '${currency['currency']} (${currency['lable']})',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                                 color:
@@ -836,7 +834,7 @@ class _PostProjectState extends State<PostProject> {
               padding: EdgeInsets.only(top: 4),
               child: Text(
                 _currencyError!,
-                style: GoogleFonts.montserrat(fontSize: 12, color: Colors.red),
+                style: GoogleFonts.poppins(fontSize: 12, color: Colors.red),
               ),
             ),
         ],
@@ -866,7 +864,7 @@ class _PostProjectState extends State<PostProject> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(option['label'],
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: Colors.black)),
@@ -925,7 +923,7 @@ class _PostProjectState extends State<PostProject> {
                                 size: 16),
                             SizedBox(width: 8),
                             Text(item['label'],
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                     color: selectedIndex == index
@@ -935,7 +933,7 @@ class _PostProjectState extends State<PostProject> {
                         )
                       : Center(
                           child: Text(item['label'],
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.poppins(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                   color: selectedIndex == index
@@ -951,7 +949,7 @@ class _PostProjectState extends State<PostProject> {
             padding: EdgeInsets.only(top: 4),
             child: Text(
               error,
-              style: GoogleFonts.montserrat(fontSize: 12, color: Colors.red),
+              style: GoogleFonts.poppins(fontSize: 12, color: Colors.red),
             ),
           ),
         SizedBox(height: 15),
@@ -981,7 +979,7 @@ class _PostProjectState extends State<PostProject> {
         children: [
           Text(
             'Review and Post',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: Colors.black87,
@@ -997,7 +995,7 @@ class _PostProjectState extends State<PostProject> {
                   children: [
                     Text(
                       'Project Name',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: Colors.black87,
@@ -1008,7 +1006,7 @@ class _PostProjectState extends State<PostProject> {
                       _projectNameController.text.isEmpty
                           ? 'Not set'
                           : _projectNameController.text,
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
                         color: Colors.black54,
@@ -1027,7 +1025,7 @@ class _PostProjectState extends State<PostProject> {
                   children: [
                     Text(
                       'Description',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: Colors.black87,
@@ -1036,7 +1034,7 @@ class _PostProjectState extends State<PostProject> {
                     const SizedBox(height: 4),
                     LayoutBuilder(
                       builder: (context, constraints) {
-                        final textStyle = GoogleFonts.montserrat(
+                        final textStyle = GoogleFonts.poppins(
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
                           color: Colors.black54,
@@ -1079,7 +1077,7 @@ class _PostProjectState extends State<PostProject> {
                               },
                               child: Text(
                                 isExpanded ? 'Read less' : 'Read more',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                   color: Colors.blue,
@@ -1100,7 +1098,7 @@ class _PostProjectState extends State<PostProject> {
                   children: [
                     Text(
                       'Skills',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: Colors.black87,
@@ -1110,7 +1108,7 @@ class _PostProjectState extends State<PostProject> {
                     selectedSkillIds.isEmpty
                         ? Text(
                             'None',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
                               color: Colors.black54,
@@ -1132,7 +1130,7 @@ class _PostProjectState extends State<PostProject> {
                                 ),
                                 child: Text(
                                   skill,
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w400,
                                     color: Colors.black54,
@@ -1151,7 +1149,7 @@ class _PostProjectState extends State<PostProject> {
                   children: [
                     Text(
                       'Other Skills',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: Colors.black87,
@@ -1161,7 +1159,7 @@ class _PostProjectState extends State<PostProject> {
                     _otherSkills.isEmpty
                         ? Text(
                             'None',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
                               color: Colors.black54,
@@ -1181,7 +1179,7 @@ class _PostProjectState extends State<PostProject> {
                                 ),
                                 child: Text(
                                   skill,
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w400,
                                     color: Colors.black54,
@@ -1228,7 +1226,7 @@ class _PostProjectState extends State<PostProject> {
                                 children: [
                                   Text(
                                     'Requirement Type: ',
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,
                                       color: Colorfile.textColor,
@@ -1240,7 +1238,7 @@ class _PostProjectState extends State<PostProject> {
                                           ? 'Not set'
                                           : options[0]['items']
                                               [selectedRequiredType]['label'],
-                                      style: GoogleFonts.montserrat(
+                                      style: GoogleFonts.poppins(
                                         fontSize: 11,
                                         fontWeight: FontWeight.w600,
                                         color: Colorfile.textColor,
@@ -1264,7 +1262,7 @@ class _PostProjectState extends State<PostProject> {
                                 children: [
                                   Text(
                                     'Connect Type: ',
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,
                                       color: Colorfile.textColor,
@@ -1276,7 +1274,7 @@ class _PostProjectState extends State<PostProject> {
                                           ? 'Not set'
                                           : options[2]['items']
                                               [selectedConnectType]['label'],
-                                      style: GoogleFonts.montserrat(
+                                      style: GoogleFonts.poppins(
                                         fontSize: 11,
                                         fontWeight: FontWeight.w600,
                                         color: Colorfile.textColor,
@@ -1305,7 +1303,7 @@ class _PostProjectState extends State<PostProject> {
                                 children: [
                                   Text(
                                     'Looking For: ',
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,
                                       color: Colorfile.textColor,
@@ -1317,7 +1315,7 @@ class _PostProjectState extends State<PostProject> {
                                           ? 'Not set'
                                           : options[1]['items']
                                               [selectedLookingFor]['label'],
-                                      style: GoogleFonts.montserrat(
+                                      style: GoogleFonts.poppins(
                                         fontSize: 11,
                                         fontWeight: FontWeight.w600,
                                         color: Colorfile.textColor,
@@ -1341,7 +1339,7 @@ class _PostProjectState extends State<PostProject> {
                                 children: [
                                   Text(
                                     'Currency: ',
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,
                                       color: Colorfile.textColor,
@@ -1352,7 +1350,7 @@ class _PostProjectState extends State<PostProject> {
                                       selectedCurrency == null
                                           ? 'Not set'
                                           : '${selectedCurrency!['currency']} (${selectedCurrency!['lable']})',
-                                      style: GoogleFonts.montserrat(
+                                      style: GoogleFonts.poppins(
                                         fontSize: 11,
                                         fontWeight: FontWeight.w600,
                                         color: Colorfile.textColor,
@@ -1381,7 +1379,7 @@ class _PostProjectState extends State<PostProject> {
                                 children: [
                                   Text(
                                     'How To Pay: ',
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,
                                       color: Colorfile.textColor,
@@ -1393,7 +1391,7 @@ class _PostProjectState extends State<PostProject> {
                                           ? 'Not set'
                                           : options[3]['items']
                                               [selectedPaymentType]['label'],
-                                      style: GoogleFonts.montserrat(
+                                      style: GoogleFonts.poppins(
                                         fontSize: 11,
                                         fontWeight: FontWeight.w600,
                                         color: Colorfile.textColor,
@@ -1417,7 +1415,7 @@ class _PostProjectState extends State<PostProject> {
                                 children: [
                                   Text(
                                     'Project Cost: ',
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,
                                       color: Colorfile.textColor,
@@ -1428,7 +1426,7 @@ class _PostProjectState extends State<PostProject> {
                                       _projectCostController.text.isEmpty
                                           ? 'Not set'
                                           : _projectCostController.text,
-                                      style: GoogleFonts.montserrat(
+                                      style: GoogleFonts.poppins(
                                         fontSize: 11,
                                         fontWeight: FontWeight.w600,
                                         color: Colorfile.textColor,
@@ -1455,7 +1453,7 @@ class _PostProjectState extends State<PostProject> {
                   children: [
                     Text(
                       'Uploaded Files',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: Colors.black87,
@@ -1489,7 +1487,7 @@ class _PostProjectState extends State<PostProject> {
                               _files.isEmpty
                                   ? 'None'
                                   : _files.map((f) => f.name).join(', '),
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.poppins(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.black54,
@@ -1521,20 +1519,20 @@ class _PostProjectState extends State<PostProject> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('SETUP YOUR BASIC PROJECT DETAILS',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: Colorfile.textColor)),
             SizedBox(height: 8),
             Text(
                 'Enter the title/name of your project along with the basic details you want freelancers to know before bidding on your project.',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
                     color: Colorfile.textColor)),
             SizedBox(height: 8),
             Text('Enter Your Project Name *',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: Colorfile.textColor)),
@@ -1554,7 +1552,7 @@ class _PostProjectState extends State<PostProject> {
                     EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                 errorText: _projectNameError ?? _projectNameXssError,
                 errorStyle:
-                    GoogleFonts.montserrat(fontSize: 12, color: Colors.red),
+                    GoogleFonts.poppins(fontSize: 12, color: Colors.red),
               ),
               onChanged: (value) {
                 setState(() {
@@ -1567,7 +1565,7 @@ class _PostProjectState extends State<PostProject> {
             ),
             SizedBox(height: 16),
             Text('Project Description',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: Colorfile.textColor)),
@@ -1614,7 +1612,7 @@ class _PostProjectState extends State<PostProject> {
                           border: InputBorder.none,
                           hintText: 'Describe your project...',
                           errorText: _descriptionXssError,
-                          errorStyle: GoogleFonts.montserrat(
+                          errorStyle: GoogleFonts.poppins(
                               fontSize: 12, color: Colors.red)),
                       onChanged: (value) {
                         setState(() {
@@ -1637,14 +1635,14 @@ class _PostProjectState extends State<PostProject> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('SETUP YOUR SKILLS AND DOCUMENTS',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: Colorfile.textColor)),
             SizedBox(height: 8),
             Text(
                 'Select the skills required for your project and upload any relevant documents.',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
                     color: Colorfile.textColor)),
@@ -1652,14 +1650,14 @@ class _PostProjectState extends State<PostProject> {
             _buildSkillsSection(),
             SizedBox(height: 8),
             Text('Example:',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: Colorfile.textColor)),
             SizedBox(height: 8),
             Text(
                 'For website creation, select "Web Design" or "Web Development," or otherwise choose a specific technology.',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
                     color: Colorfile.textColor)),
@@ -1676,14 +1674,14 @@ class _PostProjectState extends State<PostProject> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('SETUP YOUR BUDGET AND PREFERENCES',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: Colors.black)),
             SizedBox(height: 8),
             Text(
                 'Set up the budget for your project and choose your preferences.',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
                     color: Colors.black)),
@@ -1691,7 +1689,7 @@ class _PostProjectState extends State<PostProject> {
             _buildCurrencySelector(),
             ...options.map(_buildOptionSelector),
             Text('Enter your project budget *',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: Colorfile.textColor)),
@@ -1711,7 +1709,7 @@ class _PostProjectState extends State<PostProject> {
                     EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                 errorText: _projectCostError,
                 errorStyle:
-                    GoogleFonts.montserrat(fontSize: 12, color: Colors.red),
+                    GoogleFonts.poppins(fontSize: 12, color: Colors.red),
               ),
               onChanged: (value) {
                 setState(() {
@@ -1734,7 +1732,7 @@ class _PostProjectState extends State<PostProject> {
               icon: Icon(Icons.arrow_back, color: Colorfile.textColor),
               onPressed: () => Navigator.pop(context)),
           title: Text('Post Project',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                   color: Colorfile.textColor,
                   fontSize: 18,
                   fontWeight: FontWeight.w600)),
@@ -1769,7 +1767,7 @@ class _PostProjectState extends State<PostProject> {
                                   Expanded(
                                     child: Text(
                                       'Why Quickenlancer Is The Best To',
-                                      style: GoogleFonts.montserrat(
+                                      style: GoogleFonts.poppins(
                                         color: Colorfile.textColor,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -1803,7 +1801,7 @@ class _PostProjectState extends State<PostProject> {
                               SizedBox(height: 8),
                               Text(
                                 'Quickenlancer offers a swift and effortless project posting method, allowing users to submit their projects.',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   color: Colorfile.textColor,
                                   fontSize: 13,
                                 ),
@@ -1850,7 +1848,7 @@ class _PostProjectState extends State<PostProject> {
                                         ),
                                         title: Text(
                                           'Verified Freelancer',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
                                             color: Colorfile.textColor,
@@ -1858,7 +1856,7 @@ class _PostProjectState extends State<PostProject> {
                                         ),
                                         subtitle: Text(
                                           'Engage with thoroughly vetted and trusted freelancers.',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             fontSize: 11,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -1908,7 +1906,7 @@ class _PostProjectState extends State<PostProject> {
                                       ),
                                       title: Text(
                                         'Verified Company',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
                                           color: Colorfile.textColor,
@@ -1916,7 +1914,7 @@ class _PostProjectState extends State<PostProject> {
                                       ),
                                       subtitle: Text(
                                         'Engage with thoroughly vetted and trusted freelancers.',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontSize: 11,
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -1965,7 +1963,7 @@ class _PostProjectState extends State<PostProject> {
                                       ),
                                       title: Text(
                                         'Direct Call Approach',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
                                           color: Colorfile.textColor,
@@ -1973,7 +1971,7 @@ class _PostProjectState extends State<PostProject> {
                                       ),
                                       subtitle: Text(
                                         'Communicate directly with freelancers and companies via calls.',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontSize: 11,
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -2022,7 +2020,7 @@ class _PostProjectState extends State<PostProject> {
                                       ),
                                       title: Text(
                                         'No Commission for Posting Projects',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
                                           color: Colorfile.textColor,
@@ -2030,7 +2028,7 @@ class _PostProjectState extends State<PostProject> {
                                       ),
                                       subtitle: Text(
                                         'Post your projects for free without any hidden fees.',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontSize: 11,
                                           fontWeight: FontWeight.w500,
                                         ),

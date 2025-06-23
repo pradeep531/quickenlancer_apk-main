@@ -94,7 +94,7 @@ class _AllProjectsState extends State<AllProjects> {
           backgroundColor: Colors.white,
           title: Text(
             'My Projects',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 18,
               fontWeight: FontWeight.w600,
               height: 23.4 / 18,
@@ -115,7 +115,7 @@ class _AllProjectsState extends State<AllProjects> {
             indicatorWeight: 3.0,
             labelColor: Colorfile.textColor,
             unselectedLabelColor: Colors.grey,
-            labelStyle: GoogleFonts.montserrat(
+            labelStyle: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),

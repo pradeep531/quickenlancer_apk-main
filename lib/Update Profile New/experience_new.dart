@@ -176,12 +176,11 @@ class _ExperienceNewState extends State<ExperienceNew> {
           'Update Experience',
           style: TextStyle(
             color: Colors.grey[900],
-            fontWeight: FontWeight.w700,
-            fontSize: 22,
-            letterSpacing: 0.5,
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
           ),
         ),
-        centerTitle: true,
+        centerTitle: false,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1.0),
           child: Container(

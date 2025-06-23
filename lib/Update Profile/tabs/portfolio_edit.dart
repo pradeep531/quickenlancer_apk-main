@@ -26,7 +26,7 @@ class SharedWidgets {
       children: [
         Text(
           label,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: Colors.black,
@@ -38,13 +38,13 @@ class SharedWidgets {
           keyboardType: keyboardType,
           maxLines: maxLines ?? 1,
           validator: validator,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 14,
             color: Colors.black,
           ),
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: GoogleFonts.montserrat(
+            hintStyle: GoogleFonts.poppins(
               fontSize: 14,
               color: Colors.grey[600],
             ),
@@ -121,7 +121,7 @@ class StyledButton extends StatelessWidget {
           ],
           Text(
             text,
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: Colors.white,
@@ -352,7 +352,7 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
       SnackBar(
         content: Text(
           message,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: Colors.white,
@@ -396,7 +396,7 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
             ),
             title: Text(
               'Portfolio',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
                 color: Colors.black,
@@ -452,7 +452,7 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                     children: [
                       Text(
                         'Project Skills *',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
                           color: textColor,
@@ -465,7 +465,7 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                           searchFieldProps: TextFieldProps(
                             decoration: InputDecoration(
                               hintText: 'Search skills...',
-                              hintStyle: GoogleFonts.montserrat(
+                              hintStyle: GoogleFonts.poppins(
                                 fontSize: 14,
                                 color: Colors.grey.shade600,
                                 fontWeight: FontWeight.w400,
@@ -520,7 +520,7 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                             ),
                             child: Text(
                               item,
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: isSelected
                                     ? FontWeight.w600
@@ -535,7 +535,7 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                         dropdownDecoratorProps: DropDownDecoratorProps(
                           dropdownSearchDecoration: InputDecoration(
                             labelText: 'Select Project Skills *',
-                            labelStyle: GoogleFonts.montserrat(
+                            labelStyle: GoogleFonts.poppins(
                               fontSize: 14,
                               color: Colors.grey.shade700,
                               fontWeight: FontWeight.w500,
@@ -614,7 +614,7 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                               .map((skill) => Chip(
                                     label: Text(
                                       skill,
-                                      style: GoogleFonts.montserrat(
+                                      style: GoogleFonts.poppins(
                                         fontSize: 14,
                                         color: Colors.white,
                                       ),
@@ -662,7 +662,7 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                         children: [
                           Text(
                             'Choose files to upload',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: const Color(0xFFA5A5A5),
@@ -691,7 +691,7 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                               children: [
                                 Text(
                                   'Choose File',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w500,
                                     color: const Color(0xFF757575),
@@ -707,7 +707,7 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                         if (_projectLogo != null)
                           Text(
                             _projectLogo!.path.split('/').last,
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               color: Colors.grey[600],
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
@@ -771,7 +771,7 @@ class _PortfolioFormState extends State<PortfolioFormEdit> {
                     ),
                     child: Text(
                       'Save',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,

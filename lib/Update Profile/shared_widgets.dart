@@ -9,7 +9,7 @@ class SharedWidgets {
       {String? Function(String?)? validator}) {
     return InputDecoration(
       labelText: label,
-      labelStyle: GoogleFonts.montserrat(
+      labelStyle: GoogleFonts.poppins(
         color: Colors.grey[600],
         fontSize: 13,
         fontWeight: FontWeight.w500,
@@ -49,7 +49,7 @@ class SharedWidgets {
         maxLines: maxLines ?? 1,
         validator: validator,
         enabled: enabled, // Pass enabled to TextFormField
-        style: GoogleFonts.montserrat(
+        style: GoogleFonts.poppins(
           fontSize: 15,
           fontWeight: FontWeight.w400,
           color: Colors.black87,
@@ -74,7 +74,7 @@ class SharedWidgets {
         keyboardType: keyboardType,
         maxLines: maxLines ?? 1,
         validator: validator, // Pass validator to TextFormField
-        style: GoogleFonts.montserrat(
+        style: GoogleFonts.poppins(
           fontSize: 15,
           fontWeight: FontWeight.w400,
           color: Colors.black87,
@@ -99,7 +99,7 @@ class SharedWidgets {
           showSearchBox: true,
           searchFieldProps: TextFieldProps(
             decoration: textFieldDecoration('Search'),
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 15,
               fontWeight: FontWeight.w400,
               color: Colors.black87,
@@ -113,7 +113,7 @@ class SharedWidgets {
         ),
         dropdownDecoratorProps: DropDownDecoratorProps(
           dropdownSearchDecoration: textFieldDecoration(label),
-          baseStyle: GoogleFonts.montserrat(
+          baseStyle: GoogleFonts.poppins(
             fontSize: 15,
             fontWeight: FontWeight.w400,
             color: Colors.black87,
@@ -175,7 +175,7 @@ class StyledButton extends StatelessWidget {
             ],
             Text(
               text,
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 color: Colors.white,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,

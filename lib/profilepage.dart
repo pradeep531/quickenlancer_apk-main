@@ -58,7 +58,7 @@ class _ProfilePageState extends State<ProfilePage2> {
             children: <Widget>[
               Text(
                 'Are you sure you want to logout?',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w600,
                   fontSize: 18,
                 ),
@@ -104,7 +104,7 @@ class _ProfilePageState extends State<ProfilePage2> {
       appBar: AppBar(
         title: Text(
           'Profile',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontWeight: FontWeight.w600, // Font weight 600
             fontSize: 18, // Font size 18px
             height: 1.3, // Line height 130%
@@ -206,7 +206,7 @@ class _ProfilePageState extends State<ProfilePage2> {
                       SizedBox(width: 10),
                       Text(
                         'Edit Profile',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
                           color: Color(0xFF424752),
@@ -234,7 +234,7 @@ class _ProfilePageState extends State<ProfilePage2> {
                       SizedBox(width: 10),
                       Text(
                         'Logout',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
                           color: Color(0xFF424752),

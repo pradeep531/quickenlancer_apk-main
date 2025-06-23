@@ -23,7 +23,7 @@ class ChatList extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Chat List',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.w600,
             color: Colorfile.textColor,
@@ -44,7 +44,7 @@ class ChatList extends StatelessWidget {
           ? Center(
               child: Text(
                 'No chats available',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   color: Colors.black45,
                   fontSize: 14, // Match CallsList font size
                   fontWeight: FontWeight.w400,
@@ -98,7 +98,7 @@ class ChatList extends StatelessWidget {
                               children: [
                                 Text(
                                   '${chat['f_name'] ?? ''} ${chat['l_name'] ?? ''}',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                     color: Colors.black87,
                                     fontSize: 14, // Match CallsList font
                                     fontWeight: FontWeight
@@ -108,7 +108,7 @@ class ChatList extends StatelessWidget {
                                 const SizedBox(height: 2),
                                 Text(
                                   'Last Chat: ${chat['sent_on_text'] ?? 'N/A'}',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                     color: Colorfile
                                         .textColor, // Match CallsList color
                                     fontSize: 11, // Match CallsList font
@@ -128,7 +128,7 @@ class ChatList extends StatelessWidget {
                                             SnackBar(
                                               content: Text(
                                                 'Chat with ${chat['f_name'] ?? ''} ${chat['l_name'] ?? ''}',
-                                                style: GoogleFonts.montserrat(),
+                                                style: GoogleFonts.poppins(),
                                               ),
                                               backgroundColor: Colors.green,
                                             ),
@@ -161,7 +161,7 @@ class ChatList extends StatelessWidget {
                                             const SizedBox(width: 4),
                                             Text(
                                               'Chat',
-                                              style: GoogleFonts.montserrat(
+                                              style: GoogleFonts.poppins(
                                                 fontSize:
                                                     12, // Match CallsList font
                                                 fontWeight: FontWeight.w500,
@@ -184,8 +184,7 @@ class ChatList extends StatelessWidget {
                                               SnackBar(
                                                 content: Text(
                                                   'Hire Me action triggered',
-                                                  style:
-                                                      GoogleFonts.montserrat(),
+                                                  style: GoogleFonts.poppins(),
                                                 ),
                                                 backgroundColor: Colors.green,
                                               ),
@@ -226,7 +225,7 @@ class ChatList extends StatelessWidget {
                                                     const EdgeInsets.all(8.0),
                                                 child: Text(
                                                   'Hire Me',
-                                                  style: GoogleFonts.montserrat(
+                                                  style: GoogleFonts.poppins(
                                                     fontSize:
                                                         12, // Match CallsList font
                                                     fontWeight: FontWeight.w500,

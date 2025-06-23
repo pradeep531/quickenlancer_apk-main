@@ -180,7 +180,7 @@
 //   void _showSnackBar(String message, Color color) {
 //     ScaffoldMessenger.of(context).showSnackBar(
 //       SnackBar(
-//           content: Text(message, style: GoogleFonts.montserrat()),
+//           content: Text(message, style: GoogleFonts.poppins()),
 //           backgroundColor: color),
 //     );
 //   }
@@ -194,7 +194,7 @@
 //       context: context,
 //       builder: (context) => AlertDialog(
 //         title: Text(title,
-//             style: GoogleFonts.montserrat(
+//             style: GoogleFonts.poppins(
 //                 color: Colorfile.textColor,
 //                 fontSize: 16,
 //                 fontWeight: FontWeight.w600)),
@@ -204,7 +204,7 @@
 //                 TextButton(
 //                     onPressed: () => Navigator.pop(context),
 //                     child: Text('Close',
-//                         style: GoogleFonts.montserrat(
+//                         style: GoogleFonts.poppins(
 //                             color: Colors.blue,
 //                             fontSize: 12,
 //                             fontWeight: FontWeight.w500)))
@@ -219,12 +219,12 @@
 //       title: 'Your availability for this project',
 //       content: Text('No Time availability for this project.',
 //           style:
-//               GoogleFonts.montserrat(color: Colorfile.textColor, fontSize: 12)),
+//               GoogleFonts.poppins(color: Colorfile.textColor, fontSize: 12)),
 //       actions: [
 //         TextButton(
 //             onPressed: () => Navigator.pop(context),
 //             child: Text('Cancel',
-//                 style: GoogleFonts.montserrat(
+//                 style: GoogleFonts.poppins(
 //                     color: Colors.blue,
 //                     fontSize: 12,
 //                     fontWeight: FontWeight.w500))),
@@ -238,7 +238,7 @@
 //                         ScheduleAvailabilityPage(projectId: projectId)));
 //           },
 //           child: Text('Add availability',
-//               style: GoogleFonts.montserrat(
+//               style: GoogleFonts.poppins(
 //                   color: Colors.blue,
 //                   fontSize: 12,
 //                   fontWeight: FontWeight.w500)),
@@ -263,7 +263,7 @@
 //                     color: Colors.grey, shape: BoxShape.circle),
 //                 constraints: const BoxConstraints(minWidth: 14, minHeight: 14),
 //                 child: Text('$count',
-//                     style: GoogleFonts.montserrat(
+//                     style: GoogleFonts.poppins(
 //                         color: Colors.white,
 //                         fontSize: 9,
 //                         fontWeight: FontWeight.bold),
@@ -285,7 +285,7 @@
 //               padding: const EdgeInsets.all(16),
 //               child: Text(
 //                 'No calls available',
-//                 style: GoogleFonts.montserrat(
+//                 style: GoogleFonts.poppins(
 //                   color: Colors.black54,
 //                   fontSize: 12,
 //                   fontWeight: FontWeight.w500,
@@ -320,7 +320,7 @@
 //                             children: [
 //                               Text(
 //                                 '${call['f_name'] ?? ''} ${call['l_name'] ?? ''}',
-//                                 style: GoogleFonts.montserrat(
+//                                 style: GoogleFonts.poppins(
 //                                   color: Colors.black87,
 //                                   fontSize: 16,
 //                                   fontWeight: FontWeight.w600,
@@ -329,7 +329,7 @@
 //                               const SizedBox(height: 4),
 //                               Text(
 //                                 'Last Call On: ${call['sent_on_text'] ?? 'N/A'}',
-//                                 style: GoogleFonts.montserrat(
+//                                 style: GoogleFonts.poppins(
 //                                   color: Colors.black54,
 //                                   fontSize: 12,
 //                                   fontWeight: FontWeight.w500,
@@ -366,7 +366,7 @@
 //                                           const SizedBox(width: 4),
 //                                           Text(
 //                                             'Call',
-//                                             style: GoogleFonts.montserrat(
+//                                             style: GoogleFonts.poppins(
 //                                               fontSize: 10,
 //                                               fontWeight: FontWeight.w500,
 //                                             ),
@@ -404,7 +404,7 @@
 //                                           ),
 //                                           child: Text(
 //                                             'Hire Me',
-//                                             style: GoogleFonts.montserrat(
+//                                             style: GoogleFonts.poppins(
 //                                               color: Colorfile.textColor,
 //                                               fontSize: 10,
 //                                               fontWeight: FontWeight.w500,
@@ -448,7 +448,7 @@
 //                     ),
 //                     child: Text(
 //                       'View All',
-//                       style: GoogleFonts.montserrat(
+//                       style: GoogleFonts.poppins(
 //                         fontSize: 14,
 //                         fontWeight: FontWeight.w500,
 //                       ),
@@ -471,7 +471,7 @@
 //                       children: [
 //                         Text(
 //                           'Send Proposal',
-//                           style: GoogleFonts.montserrat(
+//                           style: GoogleFonts.poppins(
 //                             color: Colors.white,
 //                             fontSize: 14,
 //                             fontWeight: FontWeight.w500,
@@ -506,7 +506,7 @@
 //               padding: const EdgeInsets.all(16),
 //               child: Text(
 //                 'No proposals available',
-//                 style: GoogleFonts.montserrat(
+//                 style: GoogleFonts.poppins(
 //                   color: Colors.black54,
 //                   fontSize: 12,
 //                   fontWeight: FontWeight.w500,
@@ -542,7 +542,7 @@
 //                             children: [
 //                               Text(
 //                                 '${proposal['f_name'] ?? ''} ${proposal['l_name'] ?? ''}',
-//                                 style: GoogleFonts.montserrat(
+//                                 style: GoogleFonts.poppins(
 //                                   color: Colorfile.grey,
 //                                   fontSize: 16,
 //                                   fontWeight: FontWeight.w600,
@@ -551,7 +551,7 @@
 //                               const SizedBox(height: 4),
 //                               Text(
 //                                 'Sent On: ${proposal['sent_on_text'] ?? 'N/A'}',
-//                                 style: GoogleFonts.montserrat(
+//                                 style: GoogleFonts.poppins(
 //                                   color: Colorfile.grey,
 //                                   fontSize: 12,
 //                                   fontWeight: FontWeight.w500,
@@ -583,7 +583,7 @@
 //                                         ),
 //                                         child: Text(
 //                                           'Milestone',
-//                                           style: GoogleFonts.montserrat(
+//                                           style: GoogleFonts.poppins(
 //                                             fontSize: 10,
 //                                             fontWeight: FontWeight.w500,
 //                                           ),
@@ -623,7 +623,7 @@
 //                                               const SizedBox(width: 4),
 //                                               Text(
 //                                                 'Attachment',
-//                                                 style: GoogleFonts.montserrat(
+//                                                 style: GoogleFonts.poppins(
 //                                                   fontSize: 10,
 //                                                   fontWeight: FontWeight.w500,
 //                                                 ),
@@ -668,7 +668,7 @@
 //                     ),
 //                     child: Text(
 //                       'View All',
-//                       style: GoogleFonts.montserrat(
+//                       style: GoogleFonts.poppins(
 //                         fontSize: 14,
 //                         fontWeight: FontWeight.w500,
 //                       ),
@@ -691,7 +691,7 @@
 //                       children: [
 //                         Text(
 //                           'Send Proposal',
-//                           style: GoogleFonts.montserrat(
+//                           style: GoogleFonts.poppins(
 //                             color: Colors.white,
 //                             fontSize: 14,
 //                             fontWeight: FontWeight.w500,
@@ -726,7 +726,7 @@
 //               padding: const EdgeInsets.all(16),
 //               child: Text(
 //                 'No chats available',
-//                 style: GoogleFonts.montserrat(
+//                 style: GoogleFonts.poppins(
 //                   color: Colors.black54,
 //                   fontSize: 12,
 //                   fontWeight: FontWeight.w500,
@@ -761,7 +761,7 @@
 //                             children: [
 //                               Text(
 //                                 '${chat['f_name'] ?? ''} ${chat['l_name'] ?? ''}',
-//                                 style: GoogleFonts.montserrat(
+//                                 style: GoogleFonts.poppins(
 //                                   color: Colors.black87,
 //                                   fontSize: 16,
 //                                   fontWeight: FontWeight.w600,
@@ -770,7 +770,7 @@
 //                               const SizedBox(height: 4),
 //                               Text(
 //                                 'Last Chat On: ${chat['sent_on_text'] ?? 'N/A'}',
-//                                 style: GoogleFonts.montserrat(
+//                                 style: GoogleFonts.poppins(
 //                                   color: Colors.black54,
 //                                   fontSize: 12,
 //                                   fontWeight: FontWeight.w500,
@@ -806,7 +806,7 @@
 //                                           const SizedBox(width: 4),
 //                                           Text(
 //                                             'Chat',
-//                                             style: GoogleFonts.montserrat(
+//                                             style: GoogleFonts.poppins(
 //                                               fontSize: 10,
 //                                               fontWeight: FontWeight.w500,
 //                                             ),
@@ -844,7 +844,7 @@
 //                                           ),
 //                                           child: Text(
 //                                             'Hire Me',
-//                                             style: GoogleFonts.montserrat(
+//                                             style: GoogleFonts.poppins(
 //                                               color: Colorfile.textColor,
 //                                               fontSize: 10,
 //                                               fontWeight: FontWeight.w500,
@@ -894,7 +894,7 @@
 //                     ),
 //                     child: Text(
 //                       'View All',
-//                       style: GoogleFonts.montserrat(
+//                       style: GoogleFonts.poppins(
 //                         fontSize: 14,
 //                         fontWeight: FontWeight.w500,
 //                       ),
@@ -917,7 +917,7 @@
 //                       children: [
 //                         Text(
 //                           'Send Proposal',
-//                           style: GoogleFonts.montserrat(
+//                           style: GoogleFonts.poppins(
 //                             color: Colors.white,
 //                             fontSize: 14,
 //                             fontWeight: FontWeight.w500,
@@ -944,7 +944,7 @@
 
 //   @override
 //   Widget build(BuildContext context) {
-//     final jobTextStyle = GoogleFonts.montserrat(
+//     final jobTextStyle = GoogleFonts.poppins(
 //         color: Colorfile.textColor,
 //         fontSize: 10,
 //         fontWeight: FontWeight.w500,
@@ -964,7 +964,7 @@
 //                             size: 60, color: Colors.grey),
 //                         const SizedBox(height: 10),
 //                         Text('No Data Found',
-//                             style: GoogleFonts.montserrat(
+//                             style: GoogleFonts.poppins(
 //                                 color: Colors.grey,
 //                                 fontSize: 16,
 //                                 fontWeight: FontWeight.w500)),
@@ -1023,7 +1023,7 @@
 //                               crossAxisAlignment: CrossAxisAlignment.start,
 //                               children: [
 //                                 Text(job['project_name'] ?? 'No Title',
-//                                     style: GoogleFonts.montserrat(
+//                                     style: GoogleFonts.poppins(
 //                                         color: Colorfile.textColor,
 //                                         fontSize: 15,
 //                                         fontWeight: FontWeight.w600)),
@@ -1197,7 +1197,7 @@
 //                                                 borderRadius:
 //                                                     BorderRadius.circular(4)),
 //                                             child: Text(skill['skill'] ?? '',
-//                                                 style: GoogleFonts.montserrat(
+//                                                 style: GoogleFonts.poppins(
 //                                                     fontSize: 11,
 //                                                     fontWeight: FontWeight.w500,
 //                                                     color:
@@ -1209,7 +1209,7 @@
 //                                   descriptionExpandedMap[projectId] == true
 //                                       ? 'Description: ${job['description']?.replaceAll(RegExp(r'<[^>]+>'), '') ?? 'No Description'}'
 //                                       : 'Description: ${(job['description']?.replaceAll(RegExp(r'<[^>]+>'), '') ?? 'No Description').length > 100 ? job['description'].replaceAll(RegExp(r'<[^>]+>'), '').substring(0, 100) + '...' : job['description']?.replaceAll(RegExp(r'<[^>]+>'), '') ?? 'No Description'}',
-//                                   style: GoogleFonts.montserrat(
+//                                   style: GoogleFonts.poppins(
 //                                       color: Colorfile.textColor,
 //                                       fontSize: 11,
 //                                       fontWeight: FontWeight.w500),
@@ -1243,10 +1243,10 @@
 //                                   controller: tabControllers[projectId],
 //                                   labelColor: Colorfile.textColor,
 //                                   unselectedLabelColor: Colors.black54,
-//                                   labelStyle: GoogleFonts.montserrat(
+//                                   labelStyle: GoogleFonts.poppins(
 //                                       fontSize: 12,
 //                                       fontWeight: FontWeight.w600),
-//                                   unselectedLabelStyle: GoogleFonts.montserrat(
+//                                   unselectedLabelStyle: GoogleFonts.poppins(
 //                                       fontSize: 12,
 //                                       fontWeight: FontWeight.w500),
 //                                   labelPadding: const EdgeInsets.symmetric(
@@ -1297,7 +1297,7 @@
 //                                                             children: [
 //                                                               Text(
 //                                                                   '${purchasedBy['f_name'] ?? ''} ${purchasedBy['l_name'] ?? ''}',
-//                                                                   style: GoogleFonts.montserrat(
+//                                                                   style: GoogleFonts.poppins(
 //                                                                       fontSize:
 //                                                                           12,
 //                                                                       fontWeight:
@@ -1332,7 +1332,7 @@
 //                                                                       width: 4),
 //                                                                   Text(
 //                                                                       '${purchasedBy['city_name'] ?? ''}, ${purchasedBy['country_name'] ?? ''}',
-//                                                                       style: GoogleFonts.montserrat(
+//                                                                       style: GoogleFonts.poppins(
 //                                                                           fontSize:
 //                                                                               12,
 //                                                                           color:
@@ -1369,7 +1369,7 @@
 //                                                                         'Send Notification',
 //                                                                     content: Text(
 //                                                                         'Do you want to send a chat notification?',
-//                                                                         style: GoogleFonts.montserrat(
+//                                                                         style: GoogleFonts.poppins(
 //                                                                             color:
 //                                                                                 Colorfile.textColor,
 //                                                                             fontSize: 12)),
@@ -1379,7 +1379,7 @@
 //                                                                               context),
 //                                                                           child: Text(
 //                                                                               'No',
-//                                                                               style: GoogleFonts.montserrat(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.w500))),
+//                                                                               style: GoogleFonts.poppins(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.w500))),
 //                                                                       TextButton(
 //                                                                         onPressed:
 //                                                                             () {
@@ -1392,7 +1392,7 @@
 //                                                                         },
 //                                                                         child: Text(
 //                                                                             'Yes',
-//                                                                             style: GoogleFonts.montserrat(
+//                                                                             style: GoogleFonts.poppins(
 //                                                                                 color: Colors.blue,
 //                                                                                 fontSize: 12,
 //                                                                                 fontWeight: FontWeight.w500)),
@@ -1439,7 +1439,7 @@
 //                                                                         'Send Notification',
 //                                                                     content: Text(
 //                                                                         'Do you want to send a call notification?',
-//                                                                         style: GoogleFonts.montserrat(
+//                                                                         style: GoogleFonts.poppins(
 //                                                                             color:
 //                                                                                 Colorfile.textColor,
 //                                                                             fontSize: 12)),
@@ -1449,7 +1449,7 @@
 //                                                                               context),
 //                                                                           child: Text(
 //                                                                               'No',
-//                                                                               style: GoogleFonts.montserrat(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.w500))),
+//                                                                               style: GoogleFonts.poppins(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.w500))),
 //                                                                       TextButton(
 //                                                                         onPressed:
 //                                                                             () {
@@ -1462,7 +1462,7 @@
 //                                                                         },
 //                                                                         child: Text(
 //                                                                             'Yes',
-//                                                                             style: GoogleFonts.montserrat(
+//                                                                             style: GoogleFonts.poppins(
 //                                                                                 color: Colors.blue,
 //                                                                                 fontSize: 12,
 //                                                                                 fontWeight: FontWeight.w500)),
@@ -1486,7 +1486,7 @@
 //                                                       TableRow(children: [
 //                                                         Text('Hired on',
 //                                                             style: GoogleFonts
-//                                                                 .montserrat(
+//                                                                 .poppins(
 //                                                                     fontSize:
 //                                                                         12,
 //                                                                     color: Colors
@@ -1507,7 +1507,7 @@
 //                                                             textAlign:
 //                                                                 TextAlign.right,
 //                                                             style: GoogleFonts
-//                                                                 .montserrat(
+//                                                                 .poppins(
 //                                                                     fontSize:
 //                                                                         12,
 //                                                                     color: Colors
@@ -1516,7 +1516,7 @@
 //                                                       TableRow(children: [
 //                                                         Text('Hired Status',
 //                                                             style: GoogleFonts
-//                                                                 .montserrat(
+//                                                                 .poppins(
 //                                                                     fontSize:
 //                                                                         12,
 //                                                                     color: Colors
@@ -1531,7 +1531,7 @@
 //                                                             textAlign:
 //                                                                 TextAlign.right,
 //                                                             style: GoogleFonts
-//                                                                 .montserrat(
+//                                                                 .poppins(
 //                                                                     fontSize:
 //                                                                         12,
 //                                                                     color: Colors
@@ -1542,7 +1542,7 @@
 //                                                           Text(
 //                                                               'Project Attachments',
 //                                                               style: GoogleFonts
-//                                                                   .montserrat(
+//                                                                   .poppins(
 //                                                                       fontSize:
 //                                                                           12,
 //                                                                       color: Colors
@@ -1585,7 +1585,7 @@
 //                                                                     .isEmpty
 //                                                                 ? Text(
 //                                                                     'No attachments available',
-//                                                                     style: GoogleFonts.montserrat(
+//                                                                     style: GoogleFonts.poppins(
 //                                                                         color: Colorfile
 //                                                                             .textColor,
 //                                                                         fontSize:
@@ -1613,20 +1613,20 @@
 //                                                                             TextButton(
 //                                                                               onPressed: () => _showDialog(
 //                                                                                 title: 'Confirm Download',
-//                                                                                 content: Text('Download this file?', style: GoogleFonts.montserrat(color: Colorfile.textColor, fontSize: 12)),
+//                                                                                 content: Text('Download this file?', style: GoogleFonts.poppins(color: Colorfile.textColor, fontSize: 12)),
 //                                                                                 actions: [
-//                                                                                   TextButton(onPressed: () => Navigator.pop(context), child: Text('No', style: GoogleFonts.montserrat(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.w500))),
+//                                                                                   TextButton(onPressed: () => Navigator.pop(context), child: Text('No', style: GoogleFonts.poppins(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.w500))),
 //                                                                                   TextButton(
 //                                                                                     onPressed: () {
 //                                                                                       Navigator.pop(context);
 //                                                                                       Navigator.pop(context);
 //                                                                                       _downloadImage(url);
 //                                                                                     },
-//                                                                                     child: Text('Yes', style: GoogleFonts.montserrat(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.w500)),
+//                                                                                     child: Text('Yes', style: GoogleFonts.poppins(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.w500)),
 //                                                                                   ),
 //                                                                                 ],
 //                                                                               ),
-//                                                                               child: Text('Download', style: GoogleFonts.montserrat(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.w500)),
+//                                                                               child: Text('Download', style: GoogleFonts.poppins(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.w500)),
 //                                                                             ),
 //                                                                           ],
 //                                                                         );
@@ -1662,7 +1662,7 @@
 //                                                                     width: 8),
 //                                                                 Text(
 //                                                                     'Attachment',
-//                                                                     style: GoogleFonts.montserrat(
+//                                                                     style: GoogleFonts.poppins(
 //                                                                         color: Colorfile
 //                                                                             .textColor,
 //                                                                         fontSize:
@@ -1694,7 +1694,7 @@
 //                                                                       '0'
 //                                                                   ? 'Waiting for Approval'
 //                                                                   : 'Go to Proposals',
-//                                                               style: GoogleFonts.montserrat(
+//                                                               style: GoogleFonts.poppins(
 //                                                                   color: const Color(
 //                                                                       0xFF5C8A3C),
 //                                                                   fontWeight:
@@ -1710,7 +1710,7 @@
 //                                               )
 //                                             : Text(
 //                                                 'No hired information available',
-//                                                 style: GoogleFonts.montserrat(
+//                                                 style: GoogleFonts.poppins(
 //                                                     color: Colors.black54,
 //                                                     fontSize: 12,
 //                                                     fontWeight:

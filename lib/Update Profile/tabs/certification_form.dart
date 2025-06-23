@@ -239,21 +239,21 @@ class _CertificationFormState extends State<CertificationForm> {
       builder: (context) => AlertDialog(
         title: Text(
           'Delete Certification',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
         ),
         content: Text(
           'Are you sure you want to delete "$certName"?',
-          style: GoogleFonts.montserrat(fontSize: 14),
+          style: GoogleFonts.poppins(fontSize: 14),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: Text(
               'Cancel',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 color: Colors.grey[600],
               ),
@@ -263,7 +263,7 @@ class _CertificationFormState extends State<CertificationForm> {
             onPressed: () => Navigator.of(context).pop(true),
             child: Text(
               'Delete',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 color: Colors.redAccent,
               ),
@@ -386,7 +386,7 @@ class _CertificationFormState extends State<CertificationForm> {
               // Header
               Text(
                 'Certifications',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.blue[600],
@@ -399,8 +399,7 @@ class _CertificationFormState extends State<CertificationForm> {
                 controller: _certificationNameController,
                 decoration: InputDecoration(
                   labelText: 'Certification Name',
-                  labelStyle:
-                      GoogleFonts.montserrat(color: Colors.blueGrey[600]),
+                  labelStyle: GoogleFonts.poppins(color: Colors.blueGrey[600]),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.blue[200]!),
                   ),
@@ -413,8 +412,7 @@ class _CertificationFormState extends State<CertificationForm> {
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 ),
-                style:
-                    GoogleFonts.montserrat(fontSize: 14, color: Colors.black87),
+                style: GoogleFonts.poppins(fontSize: 14, color: Colors.black87),
               ),
               SizedBox(height: 12),
 
@@ -424,7 +422,7 @@ class _CertificationFormState extends State<CertificationForm> {
                 icon: Icon(Icons.upload_file, color: Colors.blue[600]),
                 label: Text(
                   'Upload Files',
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                     fontSize: 14,
                     color: Colors.black,
                   ),
@@ -455,7 +453,7 @@ class _CertificationFormState extends State<CertificationForm> {
                           Expanded(
                             child: Text(
                               file.path.split('/').last,
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.poppins(
                                 fontSize: 13,
                                 color: Colors.black87,
                               ),
@@ -483,7 +481,7 @@ class _CertificationFormState extends State<CertificationForm> {
                 icon: Icon(Icons.add, color: Colors.blue[600]),
                 label: Text(
                   'Add',
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                     fontSize: 14,
                     color: Colors.black,
                   ),
@@ -501,7 +499,7 @@ class _CertificationFormState extends State<CertificationForm> {
                 icon: Icon(Icons.save, color: Colors.white),
                 label: Text(
                   'Save',
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                     fontSize: 14,
                     color: Colors.white,
                   ),
@@ -519,7 +517,7 @@ class _CertificationFormState extends State<CertificationForm> {
                   children: [
                     Text(
                       'Added Certifications',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: Colors.blue[600],
@@ -545,7 +543,7 @@ class _CertificationFormState extends State<CertificationForm> {
                                 children: [
                                   Text(
                                     cert['name'],
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black87,
@@ -554,7 +552,7 @@ class _CertificationFormState extends State<CertificationForm> {
                                   if (cert['files'].isNotEmpty)
                                     Text(
                                       '${cert['files'].length} file(s)',
-                                      style: GoogleFonts.montserrat(
+                                      style: GoogleFonts.poppins(
                                         fontSize: 12,
                                         color: Colors.grey[600],
                                       ),
@@ -582,7 +580,7 @@ class _CertificationFormState extends State<CertificationForm> {
                                               Expanded(
                                                 child: Text(
                                                   fileName,
-                                                  style: GoogleFonts.montserrat(
+                                                  style: GoogleFonts.poppins(
                                                     fontSize: 12,
                                                     color: Colors.black87,
                                                   ),

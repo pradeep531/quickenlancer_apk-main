@@ -193,7 +193,7 @@ class _SignInPageState extends State<SignInPage> {
                     SizedBox(height: 20),
                     Text(
                       'Success',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Colors.green[700],
@@ -203,7 +203,7 @@ class _SignInPageState extends State<SignInPage> {
                     Text(
                       'Login successful!\nRedirecting to homepage...',
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 16,
                         color: Colors.grey[600],
                       ),
@@ -308,7 +308,7 @@ class _SignInPageState extends State<SignInPage> {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     'Sign In',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
                       color: Colorfile.textColor,
@@ -319,7 +319,7 @@ class _SignInPageState extends State<SignInPage> {
                   padding: const EdgeInsets.only(left: 16.0),
                   child: Text(
                     'Sign In To Your Account',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colorfile.textColor,
@@ -331,7 +331,7 @@ class _SignInPageState extends State<SignInPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
                     'Email ID',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: Colorfile.textColor,
@@ -359,7 +359,7 @@ class _SignInPageState extends State<SignInPage> {
                           padding: const EdgeInsets.only(top: 4.0),
                           child: Text(
                             _emailError!,
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               color: Colors.red,
                               fontSize: 12,
                             ),
@@ -373,7 +373,7 @@ class _SignInPageState extends State<SignInPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
                     'Password',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: Colorfile.textColor,
@@ -414,7 +414,7 @@ class _SignInPageState extends State<SignInPage> {
                           padding: const EdgeInsets.only(top: 4.0),
                           child: Text(
                             _passwordError!,
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               color: Colors.red,
                               fontSize: 12,
                             ),
@@ -435,7 +435,7 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                     Text(
                       'Remember me',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 14,
                         color: Colorfile.textColor,
                       ),
@@ -455,7 +455,7 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                       child: Text(
                         'Forgot Password?',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           height: 16.5 / 11,
@@ -493,7 +493,7 @@ class _SignInPageState extends State<SignInPage> {
                           )
                         : Text(
                             'Sign In',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 16,
                               color: Colors.white,
                             ),
@@ -508,7 +508,7 @@ class _SignInPageState extends State<SignInPage> {
                       padding: EdgeInsets.all(16.0),
                       child: Text(
                         'Or',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 14,
                           color: Colorfile.lightgrey,
                           fontWeight: FontWeight.w500,
@@ -566,7 +566,7 @@ class _SignInPageState extends State<SignInPage> {
                   children: [
                     Text(
                       "Don't have an account? ",
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 16,
                         color: Colorfile.darkgrey,
                         fontWeight: FontWeight.w500,
@@ -589,7 +589,7 @@ class _SignInPageState extends State<SignInPage> {
                       },
                       child: Text(
                         "SignUp",
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 16,
                           color: Colorfile.textColor,
                           fontWeight: FontWeight.w500,

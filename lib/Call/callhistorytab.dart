@@ -158,7 +158,7 @@ class _CallHistoryTabState extends State<Callhistorytab> {
                     SizedBox(height: 16),
                     Text(
                       'No Data Available',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
                         color: Colors.grey,
@@ -208,7 +208,7 @@ class _CallHistoryTabState extends State<Callhistorytab> {
                                         children: [
                                           Text(
                                             'Payment Status',
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w500,
                                               color: Color(0xFF424752),
@@ -218,7 +218,7 @@ class _CallHistoryTabState extends State<Callhistorytab> {
                                           // Text(
                                           //   _formatDate(
                                           //       historyData.allocatedOn),
-                                          //   style: GoogleFonts.montserrat(
+                                          //   style: GoogleFonts.poppins(
                                           //     fontSize: 13,
                                           //     fontWeight: FontWeight.w500,
                                           //     color: Color(0xFF424752),
@@ -226,7 +226,7 @@ class _CallHistoryTabState extends State<Callhistorytab> {
                                           // ),
                                           Text(
                                             'NA',
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w500,
                                               color: Color(0xFF424752),
@@ -247,7 +247,7 @@ class _CallHistoryTabState extends State<Callhistorytab> {
                                         children: [
                                           Text(
                                             'Purchased On',
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w500,
                                               color: Color(0xFF424752),
@@ -257,7 +257,7 @@ class _CallHistoryTabState extends State<Callhistorytab> {
                                           Text(
                                             _formatDate(
                                                 historyData.purchasedOn),
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w500,
                                               color: Color(0xFF424752),
@@ -281,7 +281,7 @@ class _CallHistoryTabState extends State<Callhistorytab> {
                                     children: [
                                       // Text(
                                       //   'Token No. : ${historyData.tokenNo}',
-                                      //   style: GoogleFonts.montserrat(
+                                      //   style: GoogleFonts.poppins(
                                       //     fontSize: 13,
                                       //     fontWeight: FontWeight.w600,
                                       //     color: Colorfile.textColor,
@@ -290,7 +290,7 @@ class _CallHistoryTabState extends State<Callhistorytab> {
                                       // SizedBox(height: 8),
                                       Text(
                                         'Allocated Project: ${historyData.allocatedProject}',
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w500,
                                           color: Colorfile.textColor,
@@ -299,7 +299,7 @@ class _CallHistoryTabState extends State<Callhistorytab> {
                                       SizedBox(height: 8),
                                       Text(
                                         historyData.projectDescription,
-                                        style: GoogleFonts.montserrat(
+                                        style: GoogleFonts.poppins(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
                                           color: Color(0xFF424752),
@@ -331,7 +331,7 @@ class _CallHistoryTabState extends State<Callhistorytab> {
                   SizedBox(height: 16),
                   Text(
                     'No Data Available',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                       color: Colors.grey,

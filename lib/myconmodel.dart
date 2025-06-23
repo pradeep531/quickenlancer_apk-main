@@ -66,7 +66,7 @@ class Myconnection extends StatelessWidget {
                       children: [
                         Text(
                           name,
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             height: 1.2,
@@ -77,7 +77,7 @@ class Myconnection extends StatelessWidget {
                         SizedBox(height: screenHeight * 0.005),
                         Text(
                           designation,
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                             fontSize: 11,
                             fontWeight: FontWeight.w400,
                             height: 1.2,
@@ -88,7 +88,7 @@ class Myconnection extends StatelessWidget {
                         SizedBox(height: screenHeight * 0.005),
                         Text(
                           project,
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                             fontSize: 10,
                             fontWeight: FontWeight.w400,
                             height: 1.2,
@@ -126,7 +126,7 @@ class Myconnection extends StatelessWidget {
                     ),
                     child: Text(
                       'Chat',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,

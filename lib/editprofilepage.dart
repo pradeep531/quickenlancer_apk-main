@@ -229,7 +229,7 @@ class _ProfilePageState extends State<Editprofilepage> {
   }
 
   Widget _buildSkeletonScreen(double screenWidth, double screenHeight) {
-    final montserrat = GoogleFonts.montserrat().fontFamily;
+    final poppins = GoogleFonts.poppins().fontFamily;
     return SingleChildScrollView(
       child: Stack(
         children: [
@@ -407,7 +407,7 @@ class _ProfilePageState extends State<Editprofilepage> {
   Widget build(context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final montserrat = GoogleFonts.montserrat().fontFamily;
+    final poppins = GoogleFonts.poppins().fontFamily;
     final textColor = Colorfile.textColor;
     final currency = basicDetails?['currency'] as String? ?? 'INR';
 
@@ -416,7 +416,7 @@ class _ProfilePageState extends State<Editprofilepage> {
         appBar: AppBar(
           title: Text(
             'Update Profile',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontWeight: FontWeight.w600,
               fontSize: 18,
               color: textColor,
@@ -488,7 +488,7 @@ class _ProfilePageState extends State<Editprofilepage> {
             Text(
               label,
               style: TextStyle(
-                  fontSize: 12, color: textColor, fontFamily: montserrat),
+                  fontSize: 12, color: textColor, fontFamily: poppins),
             ),
           ],
         );
@@ -499,7 +499,7 @@ class _ProfilePageState extends State<Editprofilepage> {
             fontSize: 15,
             fontWeight: FontWeight.w600,
             color: textColor,
-            fontFamily: montserrat,
+            fontFamily: poppins,
           ),
         );
 
@@ -561,7 +561,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                   style: TextStyle(
                     color: textColor,
                     fontWeight: FontWeight.w500,
-                    fontFamily: montserrat,
+                    fontFamily: poppins,
                     fontSize: 13,
                   ),
                 ),
@@ -574,7 +574,7 @@ class _ProfilePageState extends State<Editprofilepage> {
       appBar: AppBar(
         title: Text(
           'Update Profile',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontWeight: FontWeight.w600,
             fontSize: 18,
             color: textColor,
@@ -701,7 +701,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                         style: TextStyle(
                             fontSize: 12,
                             color: Colors.black54,
-                            fontFamily: montserrat),
+                            fontFamily: poppins),
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       _divider(),
@@ -758,7 +758,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.bold,
                                                 color: textColor,
-                                                fontFamily: montserrat,
+                                                fontFamily: poppins,
                                               ),
                                               softWrap: true,
                                             ),
@@ -781,7 +781,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                                 style: TextStyle(
                                                   fontSize: screenWidth * 0.04,
                                                   color: Colors.black,
-                                                  fontFamily: montserrat,
+                                                  fontFamily: poppins,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -795,7 +795,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                         style: TextStyle(
                                           fontSize: 11,
                                           color: Colors.black54,
-                                          fontFamily: montserrat,
+                                          fontFamily: poppins,
                                         ),
                                         maxLines: 5,
                                         softWrap: true,
@@ -958,7 +958,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.bold,
-                                                  fontFamily: montserrat,
+                                                  fontFamily: poppins,
                                                 ),
                                               ),
                                               IconButton(
@@ -1022,7 +1022,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                             style: TextStyle(
                                               fontSize: 11,
                                               color: Colors.grey,
-                                              fontFamily: montserrat,
+                                              fontFamily: poppins,
                                             ),
                                           ),
                                           SizedBox(height: 10),
@@ -1082,7 +1082,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                               style: TextStyle(
                                                 fontSize: screenWidth * 0.035,
                                                 color: textColor,
-                                                fontFamily: montserrat,
+                                                fontFamily: poppins,
                                               ),
                                             ),
                                           ),
@@ -1151,7 +1151,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                             style: TextStyle(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w600,
-                                              fontFamily: montserrat,
+                                              fontFamily: poppins,
                                             ),
                                           ),
                                           SizedBox(height: screenHeight * 0.01),
@@ -1230,7 +1230,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                   padding: EdgeInsets.all(8),
                                   child: Text(
                                     'Skill',
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 13,
                                       color: textColor,
@@ -1241,7 +1241,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                   padding: EdgeInsets.all(8),
                                   child: Text(
                                     'Cost',
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 13,
                                       color: textColor,
@@ -1260,7 +1260,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                           padding: EdgeInsets.all(8),
                                           child: Text(
                                             skill['skill'] as String,
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                                 fontSize: 11, color: textColor),
                                           ),
                                         ),
@@ -1268,7 +1268,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                           padding: EdgeInsets.all(8),
                                           child: Text(
                                             '$currency ${skill['rate'] ?? 'N/A'}',
-                                            style: GoogleFonts.montserrat(
+                                            style: GoogleFonts.poppins(
                                                 fontSize: 11, color: textColor),
                                           ),
                                         ),
@@ -1315,7 +1315,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                             top: 12.0, left: 8),
                                         child: Text(
                                           section['title'] as String,
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 13,
                                             color: textColor,
@@ -1383,7 +1383,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                                   8), // top padding zero for first item
                                               child: Text(
                                                 cert['name'] as String? ?? '',
-                                                style: GoogleFonts.montserrat(
+                                                style: GoogleFonts.poppins(
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 11,
                                                   color: textColor,
@@ -1413,7 +1413,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                                                         data[0] != null
                                                     ? data[0] as String
                                                     : 'N/A',
-                                                style: GoogleFonts.montserrat(
+                                                style: GoogleFonts.poppins(
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 11,
                                                   color: textColor,
@@ -1473,7 +1473,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                       style: TextStyle(
                         fontSize: screenWidth * 0.04,
                         color: Colors.white,
-                        fontFamily: montserrat,
+                        fontFamily: poppins,
                       ),
                     ),
                   ),
@@ -1490,7 +1490,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                           fontSize: screenWidth * 0.05,
                           fontWeight: FontWeight.bold,
                           color: textColor,
-                          fontFamily: montserrat,
+                          fontFamily: poppins,
                         ),
                       ),
                       Row(
@@ -1511,7 +1511,7 @@ class _ProfilePageState extends State<Editprofilepage> {
                             style: TextStyle(
                               fontSize: screenWidth * 0.04,
                               color: Colors.black54,
-                              fontFamily: montserrat,
+                              fontFamily: poppins,
                             ),
                           ),
                         ],

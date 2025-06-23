@@ -19,7 +19,7 @@ class AllProposals extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'All Proposals',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             color: Colorfile.textColor,
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -50,7 +50,7 @@ class AllProposals extends StatelessWidget {
                   const SizedBox(height: 10),
                   Text(
                     'No Proposals Found',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       color: Colors.black45,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
@@ -97,7 +97,7 @@ class AllProposals extends StatelessWidget {
                             children: [
                               Text(
                                 '${proposal['f_name'] ?? ''} ${proposal['l_name'] ?? ''}',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   color: Colors.black87,
                                   fontSize: 14, // Smaller font
                                   fontWeight: FontWeight.w500, // Lighter weight
@@ -106,7 +106,7 @@ class AllProposals extends StatelessWidget {
                               const SizedBox(height: 2),
                               Text(
                                 'Sent On: ${proposal['sent_on_text'] ?? 'N/A'}',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   color: Colors.black45, // Softer color
                                   fontSize: 11, // Smaller font
                                   fontWeight: FontWeight.w400,
@@ -126,7 +126,7 @@ class AllProposals extends StatelessWidget {
                                             SnackBar(
                                               content: Text(
                                                 'Milestone action triggered',
-                                                style: GoogleFonts.montserrat(),
+                                                style: GoogleFonts.poppins(),
                                               ),
                                               backgroundColor: Colors.green,
                                             ),
@@ -145,7 +145,7 @@ class AllProposals extends StatelessWidget {
                                         ),
                                         child: Text(
                                           'Milestone',
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             fontSize: 12, // Smaller font
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -163,8 +163,7 @@ class AllProposals extends StatelessWidget {
                                               SnackBar(
                                                 content: Text(
                                                   'Hire Me action triggered',
-                                                  style:
-                                                      GoogleFonts.montserrat(),
+                                                  style: GoogleFonts.poppins(),
                                                 ),
                                                 backgroundColor: Colors.green,
                                               ),
@@ -194,7 +193,7 @@ class AllProposals extends StatelessWidget {
                                               const SizedBox(width: 4),
                                               Text(
                                                 'Attachment',
-                                                style: GoogleFonts.montserrat(
+                                                style: GoogleFonts.poppins(
                                                   fontSize: 12, // Smaller font
                                                   fontWeight: FontWeight.w500,
                                                 ),

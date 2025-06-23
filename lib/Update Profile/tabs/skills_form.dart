@@ -185,7 +185,7 @@ class _SkillsFormState extends State<SkillsForm> {
         SnackBar(
           content: Text(
             'Please add at least one skill before saving',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colors.white,
@@ -248,7 +248,7 @@ class _SkillsFormState extends State<SkillsForm> {
             SnackBar(
               content: Text(
                 'Skills saved successfully',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
@@ -284,7 +284,7 @@ class _SkillsFormState extends State<SkillsForm> {
         SnackBar(
           content: Text(
             'Error saving skills: $e',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colors.white,

@@ -88,7 +88,7 @@ Widget CustomTextField(
       decoration: decoration ??
           InputDecoration(
             labelText: label,
-            labelStyle: GoogleFonts.montserrat(
+            labelStyle: GoogleFonts.poppins(
               color: Colors.grey[500],
               fontWeight: FontWeight.w400,
               fontSize: 14,
@@ -133,7 +133,7 @@ Widget NonEditTextField(
       decoration: decoration ??
           InputDecoration(
             labelText: label,
-            labelStyle: GoogleFonts.montserrat(
+            labelStyle: GoogleFonts.poppins(
               color: Colors.grey[500],
               fontWeight: FontWeight.w400,
               fontSize: 14,
@@ -175,7 +175,7 @@ class _ProfilePageState extends State<ProfilePageNew> {
       appBar: AppBar(
         title: Text(
           'Edit Profile',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.w600,
             color: Colorfile.textColor,
@@ -561,7 +561,7 @@ class _ProfileFormState extends State<ProfileForm> {
         SnackBar(
           content: Text(
             message,
-            style: GoogleFonts.montserrat(fontSize: 14),
+            style: GoogleFonts.poppins(fontSize: 14),
           ),
           duration: const Duration(seconds: 3),
           backgroundColor: Colors.grey[800],
@@ -573,18 +573,18 @@ class _ProfileFormState extends State<ProfileForm> {
         builder: (context) => AlertDialog(
           title: Text(
             'Notice',
-            style: GoogleFonts.montserrat(fontWeight: FontWeight.w600),
+            style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
           ),
           content: Text(
             message,
-            style: GoogleFonts.montserrat(fontSize: 14),
+            style: GoogleFonts.poppins(fontSize: 14),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text(
                 'OK',
-                style: GoogleFonts.montserrat(color: Colorfile.textColor),
+                style: GoogleFonts.poppins(color: Colorfile.textColor),
               ),
             ),
           ],
@@ -802,7 +802,7 @@ class _ProfileFormState extends State<ProfileForm> {
             ),
             Text(
               'First Name*',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 color: Colorfile.textColor, // Example: blue color
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
@@ -814,7 +814,7 @@ class _ProfileFormState extends State<ProfileForm> {
                 controller: _firstNameController,
                 decoration: InputDecoration(
                   hintText: 'Enter first name',
-                  hintStyle: GoogleFonts.montserrat(
+                  hintStyle: GoogleFonts.poppins(
                     color: Colors.grey[400],
                     fontWeight: FontWeight.w400,
                     fontSize: 14,
@@ -844,7 +844,7 @@ class _ProfileFormState extends State<ProfileForm> {
             ),
             Text(
               'Last Name*',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 color: Colorfile.textColor, // Example: blue color
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
@@ -856,7 +856,7 @@ class _ProfileFormState extends State<ProfileForm> {
                 controller: _lastNameController,
                 decoration: InputDecoration(
                   hintText: 'Enter last name',
-                  hintStyle: GoogleFonts.montserrat(
+                  hintStyle: GoogleFonts.poppins(
                     color: Colors.grey[400],
                     fontWeight: FontWeight.w400,
                     fontSize: 14,
@@ -886,7 +886,7 @@ class _ProfileFormState extends State<ProfileForm> {
             ),
             Text(
               'Gender*',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 color: Colorfile.textColor, // Example: blue color
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
@@ -898,7 +898,7 @@ class _ProfileFormState extends State<ProfileForm> {
                 child: DropdownButtonFormField<String>(
                   decoration: InputDecoration(
                     hintText: 'Select gender',
-                    hintStyle: GoogleFonts.montserrat(
+                    hintStyle: GoogleFonts.poppins(
                       color: Colors.grey[400],
                       fontWeight: FontWeight.w400,
                       fontSize: 14,
@@ -929,7 +929,7 @@ class _ProfileFormState extends State<ProfileForm> {
                             value: gender,
                             child: Text(
                               gender,
-                              style: GoogleFonts.montserrat(fontSize: 14),
+                              style: GoogleFonts.poppins(fontSize: 14),
                             ),
                           ))
                       .toList(),
@@ -950,7 +950,7 @@ class _ProfileFormState extends State<ProfileForm> {
                 children: [
                   Text(
                     'Email*',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       color: Colorfile.textColor, // Example: blue color
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
@@ -963,7 +963,7 @@ class _ProfileFormState extends State<ProfileForm> {
                   //     readOnly: true, // Makes it view-only
                   //     decoration: InputDecoration(
                   //       hintText: 'Email',
-                  //       hintStyle: GoogleFonts.montserrat(
+                  //       hintStyle: GoogleFonts.poppins(
                   //         color: Colors.grey[400],
                   //         fontWeight: FontWeight.w400,
                   //         fontSize: 14,
@@ -1007,7 +1007,7 @@ class _ProfileFormState extends State<ProfileForm> {
                       ),
                       child: Text(
                         _emailController.text,
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           color: Colors.black87,
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
@@ -1020,7 +1020,7 @@ class _ProfileFormState extends State<ProfileForm> {
             ),
             Text(
               'Country*',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 color: Colorfile.textColor, // Example: blue color
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
@@ -1034,7 +1034,7 @@ class _ProfileFormState extends State<ProfileForm> {
                   searchFieldProps: TextFieldProps(
                     decoration: InputDecoration(
                       hintText: 'Search country',
-                      hintStyle: GoogleFonts.montserrat(
+                      hintStyle: GoogleFonts.poppins(
                         color: Colors.grey[400],
                         fontWeight: FontWeight.w400,
                         fontSize: 14,
@@ -1065,7 +1065,7 @@ class _ProfileFormState extends State<ProfileForm> {
                 dropdownDecoratorProps: DropDownDecoratorProps(
                   dropdownSearchDecoration: InputDecoration(
                     hintText: 'Select country',
-                    hintStyle: GoogleFonts.montserrat(
+                    hintStyle: GoogleFonts.poppins(
                       color: Colors.grey[400],
                       fontWeight: FontWeight.w400,
                       fontSize: 14,
@@ -1114,7 +1114,7 @@ class _ProfileFormState extends State<ProfileForm> {
                 children: [
                   Text(
                     'State*',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       color: Colorfile.textColor, // Example: blue color
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
@@ -1128,7 +1128,7 @@ class _ProfileFormState extends State<ProfileForm> {
                         searchFieldProps: TextFieldProps(
                           decoration: InputDecoration(
                             hintText: 'Search state',
-                            hintStyle: GoogleFonts.montserrat(
+                            hintStyle: GoogleFonts.poppins(
                               color: Colors.grey[400],
                               fontWeight: FontWeight.w400,
                               fontSize: 14,
@@ -1159,7 +1159,7 @@ class _ProfileFormState extends State<ProfileForm> {
                       dropdownDecoratorProps: DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
                           hintText: 'Select state',
-                          hintStyle: GoogleFonts.montserrat(
+                          hintStyle: GoogleFonts.poppins(
                             color: Colors.grey[400],
                             fontWeight: FontWeight.w400,
                             fontSize: 14,
@@ -1210,7 +1210,7 @@ class _ProfileFormState extends State<ProfileForm> {
                 children: [
                   Text(
                     'City*',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       color: Colorfile.textColor, // Example: blue color
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
@@ -1224,7 +1224,7 @@ class _ProfileFormState extends State<ProfileForm> {
                         searchFieldProps: TextFieldProps(
                           decoration: InputDecoration(
                             hintText: 'Search city',
-                            hintStyle: GoogleFonts.montserrat(
+                            hintStyle: GoogleFonts.poppins(
                               color: Colors.grey[400],
                               fontWeight: FontWeight.w400,
                               fontSize: 14,
@@ -1255,7 +1255,7 @@ class _ProfileFormState extends State<ProfileForm> {
                       dropdownDecoratorProps: DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
                           hintText: 'Select city',
-                          hintStyle: GoogleFonts.montserrat(
+                          hintStyle: GoogleFonts.poppins(
                             color: Colors.grey[400],
                             fontWeight: FontWeight.w400,
                             fontSize: 14,
@@ -1299,7 +1299,7 @@ class _ProfileFormState extends State<ProfileForm> {
               ),
             Text(
               'Currency*',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 color: Colorfile.textColor, // Example: blue color
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
@@ -1311,7 +1311,7 @@ class _ProfileFormState extends State<ProfileForm> {
                 child: DropdownButtonFormField<Currency>(
                   decoration: InputDecoration(
                     hintText: 'Select currency',
-                    hintStyle: GoogleFonts.montserrat(
+                    hintStyle: GoogleFonts.poppins(
                       color: Colors.grey[400],
                       fontWeight: FontWeight.w400,
                       fontSize: 14,
@@ -1342,7 +1342,7 @@ class _ProfileFormState extends State<ProfileForm> {
                             value: currency,
                             child: Text(
                               currency.name,
-                              style: GoogleFonts.montserrat(fontSize: 14),
+                              style: GoogleFonts.poppins(fontSize: 14),
                             ),
                           ))
                       .toList(),
@@ -1361,7 +1361,7 @@ class _ProfileFormState extends State<ProfileForm> {
             ),
             Text(
               'Description*',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 color: Colorfile.textColor, // Example: blue color
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
@@ -1373,7 +1373,7 @@ class _ProfileFormState extends State<ProfileForm> {
                 controller: _designationController,
                 decoration: InputDecoration(
                   hintText: 'Enter description',
-                  hintStyle: GoogleFonts.montserrat(
+                  hintStyle: GoogleFonts.poppins(
                     color: Colors.grey[400],
                     fontWeight: FontWeight.w400,
                     fontSize: 14,
@@ -1403,7 +1403,7 @@ class _ProfileFormState extends State<ProfileForm> {
             ),
             Text(
               'Address*',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 color: Colorfile.textColor, // Example: blue color
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
@@ -1416,7 +1416,7 @@ class _ProfileFormState extends State<ProfileForm> {
                 maxLines: 3,
                 decoration: InputDecoration(
                   hintText: 'Enter address',
-                  hintStyle: GoogleFonts.montserrat(
+                  hintStyle: GoogleFonts.poppins(
                     color: Colors.grey[400],
                     fontWeight: FontWeight.w400,
                     fontSize: 14,
@@ -1451,7 +1451,7 @@ class _ProfileFormState extends State<ProfileForm> {
                   children: [
                     TextSpan(
                       text: 'Mobile number* ',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         color: Colorfile.textColor, // Example: blue color
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
@@ -1469,7 +1469,7 @@ class _ProfileFormState extends State<ProfileForm> {
                     child: DropdownButtonFormField<Country>(
                       decoration: InputDecoration(
                         hintText: 'Code',
-                        hintStyle: GoogleFonts.montserrat(
+                        hintStyle: GoogleFonts.poppins(
                           color: Colors.grey[400],
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
@@ -1500,7 +1500,7 @@ class _ProfileFormState extends State<ProfileForm> {
                                 value: country,
                                 child: Text(
                                   country.code,
-                                  style: GoogleFonts.montserrat(fontSize: 14),
+                                  style: GoogleFonts.poppins(fontSize: 14),
                                 ),
                               ))
                           .toList(),
@@ -1541,7 +1541,7 @@ class _ProfileFormState extends State<ProfileForm> {
                 children: [
                   Text(
                     'Upload Profile Picture',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colors.grey.shade600,
@@ -1566,7 +1566,7 @@ class _ProfileFormState extends State<ProfileForm> {
                       _profileImage == null
                           ? 'Upload Picture'
                           : 'Change Picture',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: Colors.blue.shade700,
@@ -1581,7 +1581,7 @@ class _ProfileFormState extends State<ProfileForm> {
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
                   _profileImage!.path.split('/').last,
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                     color: Colors.grey[600],
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
@@ -1601,7 +1601,7 @@ class _ProfileFormState extends State<ProfileForm> {
                     onPressed: _saveForm,
                     child: Text(
                       'Save',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
                         color: Colors.white,

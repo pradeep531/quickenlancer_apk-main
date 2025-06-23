@@ -22,7 +22,7 @@ class CallsList extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Cannot launch phone dialer',
-                style: GoogleFonts.montserrat()),
+                style: GoogleFonts.poppins()),
             backgroundColor: Colors.red,
           ),
         );
@@ -31,8 +31,8 @@ class CallsList extends StatelessWidget {
       debugPrint('Failed to launch phone dialer: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Unable to open phone dialer',
-              style: GoogleFonts.montserrat()),
+          content:
+              Text('Unable to open phone dialer', style: GoogleFonts.poppins()),
           backgroundColor: Colors.red,
         ),
       );
@@ -46,7 +46,7 @@ class CallsList extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Call List',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 18,
             fontWeight: FontWeight.w600,
             color: Colorfile.textColor,
@@ -67,7 +67,7 @@ class CallsList extends StatelessWidget {
           ? Center(
               child: Text(
                 'No calls available',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   color: Colors.black45,
                   fontSize: 14, // Smaller font for subtlety
                   fontWeight: FontWeight.w400,
@@ -119,7 +119,7 @@ class CallsList extends StatelessWidget {
                               children: [
                                 Text(
                                   '${call['f_name'] ?? ''} ${call['l_name'] ?? ''}',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                     color: Colors.black87,
                                     fontSize: 14, // Smaller, cleaner font
                                     fontWeight:
@@ -129,7 +129,7 @@ class CallsList extends StatelessWidget {
                                 const SizedBox(height: 2),
                                 Text(
                                   'Last Call: ${call['sent_on_text'] ?? 'N/A'}',
-                                  style: GoogleFonts.montserrat(
+                                  style: GoogleFonts.poppins(
                                     color: Colorfile.textColor, // Softer color
                                     fontSize: 11, // Smaller font
                                     fontWeight: FontWeight.w500,
@@ -267,7 +267,7 @@ class CallsList extends StatelessWidget {
                                             const SizedBox(width: 4),
                                             Text(
                                               'Call',
-                                              style: GoogleFonts.montserrat(
+                                              style: GoogleFonts.poppins(
                                                 fontSize: 12, // Smaller font
                                                 fontWeight: FontWeight.w500,
                                                 color: Color(0xFF191E3E),
@@ -287,7 +287,7 @@ class CallsList extends StatelessWidget {
                                               SnackBar(
                                                 content: Text(
                                                   'Hire Me action triggered',
-                                                  style: GoogleFonts.montserrat(
+                                                  style: GoogleFonts.poppins(
                                                     color: Colors
                                                         .black, // Black text
                                                   ),
@@ -330,7 +330,7 @@ class CallsList extends StatelessWidget {
                                                     const EdgeInsets.all(8.0),
                                                 child: Text(
                                                   'Hire Me',
-                                                  style: GoogleFonts.montserrat(
+                                                  style: GoogleFonts.poppins(
                                                     fontSize:
                                                         12, // Smaller font
                                                     fontWeight: FontWeight.w500,

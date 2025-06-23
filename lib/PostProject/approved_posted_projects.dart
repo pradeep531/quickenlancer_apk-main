@@ -39,7 +39,7 @@
 //         ),
 //         title: Text(
 //           'Posted Project',
-//           style: GoogleFonts.montserrat(
+//           style: GoogleFonts.poppins(
 //             color: Colorfile.textColor,
 //             fontSize: screenWidth * 0.05,
 //             fontWeight: FontWeight.w600,
@@ -120,7 +120,7 @@
 //                             children: [
 //                               Text(
 //                                 job.title,
-//                                 style: GoogleFonts.montserrat(
+//                                 style: GoogleFonts.poppins(
 //                                   color: Colorfile.textColor,
 //                                   fontSize:
 //                                       screenWidth * 0.05 * textScaleFactor,
@@ -132,7 +132,7 @@
 //                                 isDescriptionExpanded
 //                                     ? 'Description: ${job.description}'
 //                                     : 'Description: ${job.description.substring(0, 100)}...',
-//                                 style: GoogleFonts.montserrat(
+//                                 style: GoogleFonts.poppins(
 //                                   color: Colorfile.textColor,
 //                                   fontSize:
 //                                       screenWidth * 0.032 * textScaleFactor,
@@ -184,7 +184,7 @@
 //                             ),
 //                             child: Text(
 //                               tag,
-//                               style: GoogleFonts.montserrat(
+//                               style: GoogleFonts.poppins(
 //                                 fontSize: screenWidth * 0.04 * textScaleFactor,
 //                                 fontWeight: FontWeight.w500,
 //                                 color: Colorfile.textColor,
@@ -219,7 +219,7 @@
 //                                               0.04, // 4% of screen width
 //                                           fontWeight: FontWeight.bold,
 //                                           color: Colorfile.textColor,
-//                                           fontFamily: GoogleFonts.montserrat()
+//                                           fontFamily: GoogleFonts.poppins()
 //                                               .fontFamily,
 //                                         ),
 //                                       ),
@@ -261,7 +261,7 @@
 //                                           0.035, // 3.5% of screen width
 //                                       color: Colors.black54,
 //                                       fontFamily:
-//                                           GoogleFonts.montserrat().fontFamily,
+//                                           GoogleFonts.poppins().fontFamily,
 //                                     ),
 //                                   ),
 //                                 ],
@@ -281,7 +281,7 @@
 //                                   fontSize: screenWidth * 0.035,
 //                                   color: Colors.black54,
 //                                   fontFamily:
-//                                       GoogleFonts.montserrat().fontFamily,
+//                                       GoogleFonts.poppins().fontFamily,
 //                                 ),
 //                               ),
 //                               Text(
@@ -291,7 +291,7 @@
 //                                   fontSize: screenWidth * 0.035,
 //                                   color: Colors.black54,
 //                                   fontFamily:
-//                                       GoogleFonts.montserrat().fontFamily,
+//                                       GoogleFonts.poppins().fontFamily,
 //                                 ),
 //                               ),
 //                               Text(
@@ -300,7 +300,7 @@
 //                                   fontSize: screenWidth * 0.035,
 //                                   color: Colors.black54,
 //                                   fontFamily:
-//                                       GoogleFonts.montserrat().fontFamily,
+//                                       GoogleFonts.poppins().fontFamily,
 //                                 ),
 //                               ),
 //                             ],
@@ -313,7 +313,7 @@
 //                                   fontSize: screenWidth * 0.035,
 //                                   color: Colors.black54,
 //                                   fontFamily:
-//                                       GoogleFonts.montserrat().fontFamily,
+//                                       GoogleFonts.poppins().fontFamily,
 //                                 ),
 //                               ),
 //                               Text(
@@ -323,7 +323,7 @@
 //                                   fontSize: screenWidth * 0.035,
 //                                   color: Colors.black54,
 //                                   fontFamily:
-//                                       GoogleFonts.montserrat().fontFamily,
+//                                       GoogleFonts.poppins().fontFamily,
 //                                 ),
 //                               ),
 //                               Text(
@@ -332,7 +332,7 @@
 //                                   fontSize: screenWidth * 0.035,
 //                                   color: Colors.black54,
 //                                   fontFamily:
-//                                       GoogleFonts.montserrat().fontFamily,
+//                                       GoogleFonts.poppins().fontFamily,
 //                                 ),
 //                               ),
 //                             ],
@@ -345,7 +345,7 @@
 //                                   fontSize: screenWidth * 0.035,
 //                                   color: Colors.black54,
 //                                   fontFamily:
-//                                       GoogleFonts.montserrat().fontFamily,
+//                                       GoogleFonts.poppins().fontFamily,
 //                                 ),
 //                               ),
 //                               Text(
@@ -355,7 +355,7 @@
 //                                   fontSize: screenWidth * 0.035,
 //                                   color: Colors.black54,
 //                                   fontFamily:
-//                                       GoogleFonts.montserrat().fontFamily,
+//                                       GoogleFonts.poppins().fontFamily,
 //                                 ),
 //                               ),
 //                               Transform.rotate(

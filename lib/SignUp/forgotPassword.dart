@@ -39,7 +39,7 @@ class _ForgotpasswordPageState extends State<Forgotpassword> {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     'Forgot Your Password?',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
                       color: Colorfile.textColor,
@@ -50,7 +50,7 @@ class _ForgotpasswordPageState extends State<Forgotpassword> {
                   padding: const EdgeInsets.only(left: 16.0),
                   child: Text(
                     'Enter your email or your phone number,we will send you confirmation code',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colorfile.morelightgrey,
@@ -62,7 +62,7 @@ class _ForgotpasswordPageState extends State<Forgotpassword> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
                     'Email ID',
-                    style: GoogleFonts.montserrat(
+                    style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: Colorfile.textColor,
@@ -98,7 +98,7 @@ class _ForgotpasswordPageState extends State<Forgotpassword> {
                     },
                     child: Text(
                       'Reset Password',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 16,
                         color: Colors.white,
                       ),

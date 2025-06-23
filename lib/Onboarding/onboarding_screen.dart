@@ -90,7 +90,7 @@ class _OnboardingMainState extends State<OnboardingMain> {
                     child: Center(
                       child: Text(
                         'Get Started',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           color: Colorfile.textColor, // Text color
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
@@ -122,7 +122,7 @@ class _OnboardingMainState extends State<OnboardingMain> {
                       child: Center(
                         child: Text(
                           "Skip",
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                             color: Colorfile.textColor,
                             fontWeight: FontWeight.w600,
                             fontSize: 16,

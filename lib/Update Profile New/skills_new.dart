@@ -204,7 +204,7 @@ class _SkillsNewState extends State<SkillsNew> {
         SnackBar(
           content: Text(
             'Please add at least one new skill before saving',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colors.white,
@@ -262,7 +262,7 @@ class _SkillsNewState extends State<SkillsNew> {
             SnackBar(
               content: Text(
                 'New skills saved successfully',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
@@ -297,7 +297,7 @@ class _SkillsNewState extends State<SkillsNew> {
         SnackBar(
           content: Text(
             'Error saving skills: $e',
-            style: GoogleFonts.montserrat(
+            style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colors.white,
@@ -341,7 +341,7 @@ class _SkillsNewState extends State<SkillsNew> {
             ),
             title: Text(
               'Skills',
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
                 color: Colors.black,
@@ -556,7 +556,7 @@ class _SkillsNewState extends State<SkillsNew> {
                           padding: const EdgeInsets.all(8),
                           child: Text(
                             'Skill',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
                               color: textColor,
@@ -567,7 +567,7 @@ class _SkillsNewState extends State<SkillsNew> {
                           padding: const EdgeInsets.all(8),
                           child: Text(
                             'Cost',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
                               color: textColor,
@@ -579,7 +579,7 @@ class _SkillsNewState extends State<SkillsNew> {
                           padding: const EdgeInsets.all(8),
                           child: Text(
                             'Action',
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
                               color: textColor,
@@ -610,7 +610,7 @@ class _SkillsNewState extends State<SkillsNew> {
                                     ),
                                   Text(
                                     skill['name'] as String,
-                                    style: GoogleFonts.montserrat(
+                                    style: GoogleFonts.poppins(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w500,
                                       color: Colorfile.textColor,
@@ -623,7 +623,7 @@ class _SkillsNewState extends State<SkillsNew> {
                               padding: const EdgeInsets.all(8),
                               child: Text(
                                 '$currency ${skill['rate'].toStringAsFixed(2)}',
-                                style: GoogleFonts.montserrat(
+                                style: GoogleFonts.poppins(
                                   fontSize: 11,
                                   color: Colorfile.textColor,
                                   fontWeight: FontWeight.w500,
@@ -735,7 +735,7 @@ class _SkillsNewState extends State<SkillsNew> {
                 ),
                 child: Text(
                   'Save',
-                  style: GoogleFonts.montserrat(
+                  style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,

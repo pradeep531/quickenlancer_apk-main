@@ -153,7 +153,7 @@ class _NotificationPageState extends State<NotificationPage> {
               ),
               Text(
                 'Notifications',
-                style: GoogleFonts.montserrat(
+                style: GoogleFonts.poppins(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
@@ -296,7 +296,7 @@ class NotificationItem extends StatelessWidget {
                           Expanded(
                             child: Text(
                               message,
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black87,
@@ -306,7 +306,7 @@ class NotificationItem extends StatelessWidget {
                           const SizedBox(width: 12),
                           Text(
                             timeAgo,
-                            style: GoogleFonts.montserrat(
+                            style: GoogleFonts.poppins(
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
                               color: Colors.grey.shade600,
@@ -317,7 +317,7 @@ class NotificationItem extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         subtitle,
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: Colors.grey.shade500,

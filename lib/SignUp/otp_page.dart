@@ -43,7 +43,7 @@ class _OtpPagePageState extends State<OtpPage> {
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
                       'Enter Verification Code?',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
                         color: Colorfile.textColor,
@@ -54,7 +54,7 @@ class _OtpPagePageState extends State<OtpPage> {
                     padding: const EdgeInsets.only(left: 16.0),
                     child: Text(
                       'Enter code that we have sent to your email ID',
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.poppins(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: Colorfile.morelightgrey,
@@ -110,7 +110,7 @@ class _OtpPagePageState extends State<OtpPage> {
                       ),
                       child: Text(
                         'Reset Password',
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 16,
                           color: Colors.white,
                         ),
@@ -123,7 +123,7 @@ class _OtpPagePageState extends State<OtpPage> {
                     children: [
                       Text(
                         "Didn’t receive the code? ",
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 13,
                           color: Colorfile.lightgrey,
                           fontWeight: FontWeight.w500,
@@ -135,7 +135,7 @@ class _OtpPagePageState extends State<OtpPage> {
                         },
                         child: Text(
                           "Resend",
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                             fontSize: 13,
                             color: Colorfile
                                 .darkPrimary, // You can change this color to make it look like a link

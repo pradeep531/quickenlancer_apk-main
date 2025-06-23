@@ -143,7 +143,7 @@ class _HireFreelancerState extends State<HireFreelancer> {
       appBar: AppBar(
         title: Text(
           'Hire Freelancers',
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontWeight: FontWeight.w600,
             fontSize: 18,
             color: Colorfile.textColor,
@@ -266,13 +266,13 @@ class _HireFreelancerState extends State<HireFreelancer> {
       ),
       child: TextField(
         controller: _searchController,
-        style: GoogleFonts.montserrat(
+        style: GoogleFonts.poppins(
           fontSize: size.width * 0.038,
           fontWeight: FontWeight.w500,
         ),
         decoration: InputDecoration(
           hintText: 'Search freelancers...',
-          hintStyle: GoogleFonts.montserrat(
+          hintStyle: GoogleFonts.poppins(
             fontSize: size.width * 0.038,
             fontWeight: FontWeight.w500,
             color: Colors.grey,
@@ -463,7 +463,7 @@ class _HireFreelancerState extends State<HireFreelancer> {
 
   TextStyle _textStyle(
       {double size = 14, Color? color, FontWeight weight = FontWeight.normal}) {
-    return GoogleFonts.montserrat(
+    return GoogleFonts.poppins(
         fontSize: size, color: color ?? Colors.black, fontWeight: weight);
   }
 }
@@ -682,7 +682,7 @@ class _FreelancerCard extends StatelessWidget {
 
   TextStyle _textStyle(
       {double size = 14, Color? color, FontWeight weight = FontWeight.normal}) {
-    return GoogleFonts.montserrat(
+    return GoogleFonts.poppins(
         fontSize: size, color: color ?? Colors.black, fontWeight: weight);
   }
 }
