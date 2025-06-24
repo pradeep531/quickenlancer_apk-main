@@ -5,9 +5,10 @@ import 'package:quickenlancer_apk/Call/callpage.dart';
 import 'package:quickenlancer_apk/Chat/buychat_tab.dart';
 import 'package:quickenlancer_apk/Chat/chatpage.dart';
 import 'package:quickenlancer_apk/Chat/historeytab_chat.dart';
+import 'package:quickenlancer_apk/Colors/colorfile.dart';
 import 'package:quickenlancer_apk/home_page.dart';
 import 'package:quickenlancer_apk/editprofilepage.dart';
-import 'package:quickenlancer_apk/Colors/colorfile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GradientTabIndicator extends Decoration {
   final Gradient gradient;
@@ -46,56 +47,65 @@ class Buychat extends StatefulWidget {
 
 class _BuychatState extends State<Buychat> {
   int _selectedIndex = 3;
+  int? isLoggedIn;
+  String profilePicPath = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeData(); // Call initializeData in initState
+  }
+
+  Future<void> _initializeData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isLoggedIn = prefs.getInt('is_logged_in'); // Store as int?
+      profilePicPath = prefs.getString('profile_pic_path') ?? '';
+    });
+    await _loadPreferences();
+    await _fetchProjects();
+  }
+
+  Future<void> _loadPreferences() async {
+    // Implement your preferences loading logic here
+  }
+
+  Future<void> _fetchProjects() async {
+    // Implement your project fetching logic here
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
 
-    if (index == 0) {
-      // Check if the 3rd index is selected
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const MyHomePage()), // Navigate to the new page
-      );
-    }
-    if (index == 2) {
-      // Check if the 3rd index is selected
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const Buycallpage()), // Navigate to the new page
-      );
-    }
-    if (index == 3) {
-      // Check if the 3rd index is selected
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const Buychatpage()), // Navigate to the new page
-      );
-    }
-    if (index == 4) {
-      // Check if the 3rd index is selected
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const Buycallpage()), // Navigate to the new page
-      );
-    }
-    if (index == 4) {
-      // Check if the 3rd index is selected
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const Editprofilepage()), // Navigate to the new page
-      );
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Buycallpage()),
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Buychatpage()),
+        );
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Editprofilepage()),
+        );
+        break;
+      default:
+        break;
     }
   }
 
@@ -123,7 +133,7 @@ class _BuychatState extends State<Buychat> {
                 colors: [
                   Color(0xFF51A5D1),
                   Color(0xFF82399C),
-                  Color(0xFFF04E80)
+                  Color(0xFFF04E80),
                 ],
               ),
             ),
@@ -140,14 +150,10 @@ class _BuychatState extends State<Buychat> {
             ],
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
-            SingleChildScrollView(
-              child: const BuyChatTab(), // Buy Chat tab content
-            ),
-            SingleChildScrollView(
-              child: const HistoryTab(), // History tab content
-            ),
+            SingleChildScrollView(child: BuyChatTab()),
+            SingleChildScrollView(child: HistoryTab()),
           ],
         ),
         bottomNavigationBar: AnimatedSwitcher(
@@ -156,6 +162,7 @@ class _BuychatState extends State<Buychat> {
             key: ValueKey<int>(_selectedIndex),
             selectedIndex: _selectedIndex,
             onItemTapped: _onItemTapped,
+            isLoggedIn: isLoggedIn,
           ),
         ),
       ),

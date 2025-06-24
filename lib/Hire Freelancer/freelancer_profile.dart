@@ -38,12 +38,14 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
   List<dynamic>? certificates;
   Map<String, dynamic>? counts;
   bool _isLoading = true;
+  int? isLoggedIn;
 
   @override
   void initState() {
     super.initState();
     print('Freelancer ID: ${widget.freelancerId}');
     fetchProfileDetails();
+    _initializeData();
     getKycDetails();
   }
 
@@ -392,6 +394,14 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
     );
   }
 
+  Future<void> _initializeData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isLoggedIn =
+          prefs.getInt('is_logged_in'); // Assign value after async call
+    });
+  }
+
   @override
   Widget build(context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -426,6 +436,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
             key: ValueKey<int>(_selectedIndex),
             selectedIndex: _selectedIndex,
             onItemTapped: _onItemTapped,
+            isLoggedIn: isLoggedIn,
           ),
         ),
       );
@@ -1322,6 +1333,7 @@ class _FreelancerProfilePageState extends State<FreelancerProfile> {
           key: ValueKey<int>(_selectedIndex),
           selectedIndex: _selectedIndex,
           onItemTapped: _onItemTapped,
+          isLoggedIn: isLoggedIn,
         ),
       ),
     );

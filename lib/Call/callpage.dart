@@ -29,10 +29,11 @@ class _CallpageState extends State<Buycallpage> {
   bool _isChecked1 = false;
   bool _isChecked2 = false;
   bool _isLoading = false; // Track loading state for the button
-
+  int? isLoggedIn;
   @override
   void initState() {
     super.initState();
+    _initializeData();
     // Check if id has data, set _isChecked1; if null, set _isChecked2
     if (widget.id != null && widget.id!.isNotEmpty) {
       _isChecked1 = true;
@@ -40,6 +41,14 @@ class _CallpageState extends State<Buycallpage> {
       _isChecked2 = true;
     }
     print('ID: ${widget.id}');
+  }
+
+  Future<void> _initializeData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isLoggedIn =
+          prefs.getInt('is_logged_in'); // Assign value after async call
+    });
   }
 
   void _onItemTapped(int index) {
@@ -547,6 +556,7 @@ class _CallpageState extends State<Buycallpage> {
           key: ValueKey<int>(_selectedIndex),
           selectedIndex: _selectedIndex,
           onItemTapped: _onItemTapped,
+          isLoggedIn: isLoggedIn,
         ),
       ),
     );

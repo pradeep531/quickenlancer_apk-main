@@ -17,10 +17,13 @@ import 'package:quickenlancer_apk/Chat/chatpage.dart';
 import 'package:quickenlancer_apk/side_bar_drawer.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'Hire Freelancer/hire_freelancer.dart';
+import 'PostProject/post_project.dart';
 import 'Projects/project_details.dart';
 import 'SignUp/signIn.dart';
 import 'chat_page.dart';
 import 'editprofilepage.dart';
+import 'hire_company.dart';
 import 'profilepage.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -215,19 +218,38 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _onItemTapped(int index) {
-    // Skip login check for homepage (index 0)
-    if (index != 0 && isLoggedIn != 1) {
+    // Define routes for all cases
+    final routes = {
+      0: MyHomePage(),
+      if (isLoggedIn == 1) ...{
+        1: AllProjects(),
+        2: Buycallpage(),
+        3: Buychatpage(),
+        4: Editprofilepage(),
+      } else ...{
+        1: HireFreelancer(),
+        2: HireCompany(),
+        3: PostProject(),
+      },
+    };
+
+    // Skip login check for Home (index 0) and non-logged-in tabs (indices 1, 2, 3)
+    if (isLoggedIn != 1 &&
+        index != 0 &&
+        index != 1 &&
+        index != 2 &&
+        index != 3) {
+      // Show login dialog for other tabs when not logged in
       showDialog(
         context: context,
-        barrierColor: Colors.black.withOpacity(0.6), // Darker, smoother overlay
+        barrierColor: Colors.black.withOpacity(0.6),
         builder: (BuildContext context) {
           return AlertDialog(
             backgroundColor: Colors.white,
-            surfaceTintColor:
-                Colors.white, // Prevents unwanted tint on elevation
-            elevation: 8.0, // Subtle shadow for depth
+            surfaceTintColor: Colors.white,
+            elevation: 8.0,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0), // Softer corners
+              borderRadius: BorderRadius.circular(20.0),
             ),
             title: Text(
               'Login Required',
@@ -235,7 +257,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 fontWeight: FontWeight.w700,
                 fontSize: 22.0,
                 color: Colors.black87,
-                letterSpacing: 0.5, // Improved readability
+                letterSpacing: 0.5,
               ),
             ),
             content: Text(
@@ -243,7 +265,7 @@ class _MyHomePageState extends State<MyHomePage> {
               style: TextStyle(
                 fontSize: 16.0,
                 color: Colors.black54,
-                height: 1.6, // Increased line height for clarity
+                height: 1.6,
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -252,7 +274,7 @@ class _MyHomePageState extends State<MyHomePage> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // Close dialog
+                  Navigator.of(context).pop();
                 },
                 child: Text(
                   'Cancel',
@@ -265,7 +287,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 style: TextButton.styleFrom(
                   padding:
                       EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-                  foregroundColor: Colors.grey[700], // Ripple effect color
+                  foregroundColor: Colors.grey[700],
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
@@ -273,7 +295,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // Close dialog
+                  Navigator.of(context).pop();
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => SignInPage()),
@@ -288,14 +310,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colorfile.textColor, // Vibrant primary color
+                  backgroundColor: Colorfile.textColor,
                   padding:
                       EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  elevation: 2.0, // Subtle button elevation
-                  shadowColor: Colorfile.textColor, // Soft shadow
+                  elevation: 2.0,
                 ),
               ),
             ],
@@ -305,16 +326,8 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
 
-    final routes = {
-      0: MyHomePage(),
-      1: AllProjects(),
-      2: Buycallpage(),
-      3: Buychatpage(),
-      4: Editprofilepage(),
-    };
-
+    // Navigate to the selected route if it exists
     if (routes.containsKey(index)) {
-      // Only update _selectedIndex if navigation is successful
       setState(() => _selectedIndex = index);
       Navigator.push(
         context,
@@ -550,6 +563,7 @@ class _MyHomePageState extends State<MyHomePage> {
         bottomNavigationBar: MyBottomBar(
           selectedIndex: _selectedIndex,
           onItemTapped: _onItemTapped,
+          isLoggedIn: isLoggedIn,
         ),
       ),
     );

@@ -12,11 +12,17 @@ import 'package:quickenlancer_apk/SignUp/forgotPassword.dart';
 import 'package:quickenlancer_apk/SignUp/signup.dart';
 import 'package:quickenlancer_apk/home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart'; // Added for generating random clientState
+import 'package:uuid/uuid.dart';
 import '../api/network/uri.dart';
 import 'onboardingstep.dart';
+import 'package:file_picker/file_picker.dart';
 
 class SignInPage extends StatefulWidget {
+  final Map<String, dynamic>? projectData; // Add projectData parameter
+  final List<PlatformFile>? files; // Add files parameter
+
+  SignInPage({this.projectData, this.files});
+
   @override
   _SignInPageState createState() => _SignInPageState();
 }
@@ -53,7 +59,7 @@ class _SignInPageState extends State<SignInPage> {
     return _emailError == null && _passwordError == null;
   }
 
-  Future<void> _handleGoogleSignIn() async {
+  Future<bool> _handleGoogleSignIn() async {
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn(
         scopes: ['email', 'profile'],
@@ -64,7 +70,7 @@ class _SignInPageState extends State<SignInPage> {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
         print('Google Sign-In cancelled by user');
-        return;
+        return false;
       }
 
       final GoogleSignInAuthentication googleAuth =
@@ -97,19 +103,21 @@ class _SignInPageState extends State<SignInPage> {
         await _storeSocialLoginData(firebaseUser);
         await initiateSearchProjectData(firebaseUser.uid);
 
-        _showSuccessDialog();
+        return true;
       } else {
         print('Firebase Sign-In failed');
         _showErrorSnackBar('Google login failed');
+        return false;
       }
     } catch (e, stackTrace) {
       print('Google Sign-In Error: $e');
       print('Stack Trace: $stackTrace');
       _showErrorSnackBar('An error occurred during Google login');
+      return false;
     }
   }
 
-  Future<void> _handleFacebookSignIn() async {
+  Future<bool> _handleFacebookSignIn() async {
     try {
       print('Attempting Facebook Sign-In...');
 
@@ -143,76 +151,76 @@ class _SignInPageState extends State<SignInPage> {
           await _storeSocialLoginData(firebaseUser);
           await initiateSearchProjectData(firebaseUser.uid);
 
-          _showSuccessDialog();
+          return true;
         } else {
           print('Firebase Sign-In failed');
           _showErrorSnackBar('Facebook login failed');
+          return false;
         }
       } else if (result.status == LoginStatus.cancelled) {
         print('Facebook Sign-In cancelled by user');
         _showErrorSnackBar('Facebook login cancelled', color: Colors.orange);
+        return false;
       } else {
         print('Facebook Sign-In failed: ${result.message}');
         _showErrorSnackBar('Facebook login failed: ${result.message}');
+        return false;
       }
     } catch (e, stackTrace) {
       print('Facebook Sign-In Error: $e');
       print('Stack Trace: $stackTrace');
       _showErrorSnackBar('An error occurred during Facebook login');
+      return false;
     }
   }
 
-  Future<void> _handleLinkedInSignIn() async {
+  Future<bool> _handleLinkedInSignIn() async {
     try {
       print('Attempting LinkedIn Sign-In...');
 
-      // Generate a random state
       final String state = Uuid().v4();
 
-      Navigator.push(
+      final result = await Navigator.push<bool>(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) => LinkedInUserWidget(
-            clientId: '77hlq88j8tc8tv', // Provided Client ID
-            clientSecret: 'MObMX51CyrYHRcqn', // Provided Client Secret
+            clientId: '77hlq88j8tc8tv',
+            clientSecret: 'MObMX51CyrYHRcqn',
             redirectUrl:
                 'https://www.quickensol.com/quickenlancer-new/linkedin-success',
-            // Random unique state
-            onGetUserProfile: (UserSucceededAction user) {
+            onGetUserProfile: (UserSucceededAction user) async {
               print('LinkedIn Sign-In Successful:');
               print('User ID: ${user.user.name}');
               print('Name: ${user.user.givenName} ${user.user.familyName}');
               print('Access Token: ${user.user.token}');
 
-              // Print email to console (placeholder for API integration)
               final email = user.user.email ?? 'linkedin_user@example.com';
               print('LinkedIn Email: $email');
 
-              // Skip Firebase auth and storage since API will be integrated later
-              _showSuccessDialog();
-
-              // Navigate back to sign-in page
-              Navigator.pop(context);
+              Navigator.pop(context, true); // Return true on success
             },
             onError: (UserFailedAction error) {
               print('LinkedIn Sign-In Error: $error');
               _showErrorSnackBar('LinkedIn login failed');
-              Navigator.pop(context);
+              Navigator.pop(context, false);
             },
             scope: [OpenIdScope(), EmailScope(), ProfileScope()],
           ),
         ),
       );
+
+      return result ?? false;
     } catch (e, stackTrace) {
       print('LinkedIn Sign-In Error: $e');
       print('Stack Trace: $stackTrace');
       _showErrorSnackBar('An error occurred during LinkedIn login');
+      return false;
     }
   }
 
-  Future<void> signIn() async {
+  Future<bool> signIn() async {
     if (!_validateInputs()) {
-      return;
+      return false;
     }
 
     setState(() {
@@ -266,13 +274,15 @@ class _SignInPageState extends State<SignInPage> {
         print('profile_pic_path: ${prefs.getString('profile_pic_path')}');
 
         await initiateSearchProjectData(data['id'] ?? '0');
-        _showSuccessDialog();
+        return true;
       } else {
         _showErrorSnackBar(responseData['message'] ?? 'Login failed');
+        return false;
       }
     } catch (e) {
       print('Error: $e');
       _showErrorSnackBar('An error occurred. Please try again');
+      return false;
     } finally {
       setState(() {
         _isLoading = false;
@@ -340,7 +350,7 @@ class _SignInPageState extends State<SignInPage> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Login successful!\nRedirecting to homepage...',
+                  'Login successful!',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                     fontSize: 16,
@@ -355,47 +365,9 @@ class _SignInPageState extends State<SignInPage> {
       },
     );
 
-    // Future.delayed(Duration(seconds: 2)).then((_) {
-    //   Navigator.pop(context);
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(builder: (context) => MyHomePage()),
-    //   );
-    // });
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => LinkedInUserWidget(
-          clientId: '77hlq88j8tc8tv', // Provided Client ID
-          clientSecret: 'MObMX51CyrYHRcqn', // Provided Client Secret
-          redirectUrl:
-              'https://www.quickensol.com/quickenlancer-new/linkedin-success',
-          // Random unique state
-          onGetUserProfile: (UserSucceededAction user) {
-            print('LinkedIn Sign-In Successful:');
-            print('User ID: ${user.user.name}');
-            print('Name: ${user.user.givenName} ${user.user.familyName}');
-            print('Access Token: ${user.user.token}');
-
-            // Print email to console (placeholder for API integration)
-            final email = user.user.email ?? 'linkedin_user@example.com';
-            print('LinkedIn Email: $email');
-
-            // Skip Firebase auth and storage since API will be integrated later
-            // _showSuccessDialog();
-
-            // Navigate back to sign-in page
-            Navigator.pop(context);
-          },
-          onError: (UserFailedAction error) {
-            print('LinkedIn Sign-In Error: $error');
-            _showErrorSnackBar('LinkedIn login failed');
-            Navigator.pop(context);
-          },
-          scope: [OpenIdScope(), EmailScope(), ProfileScope()],
-        ),
-      ),
-    );
+    Future.delayed(Duration(seconds: 2)).then((_) {
+      Navigator.pop(context); // Close dialog
+    });
   }
 
   void _showErrorSnackBar(String message, {Color? color}) {
@@ -634,7 +606,21 @@ class _SignInPageState extends State<SignInPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: ElevatedButton(
-                    onPressed: _isLoading ? null : signIn,
+                    onPressed: _isLoading
+                        ? null
+                        : () async {
+                            bool success = await signIn();
+                            if (success) {
+                              _showSuccessDialog();
+                              Future.delayed(Duration(seconds: 2)).then((_) {
+                                Navigator.pop(context, {
+                                  'success': true,
+                                  'projectData': widget.projectData,
+                                  'files': widget.files,
+                                });
+                              });
+                            }
+                          },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colorfile.primaryColor,
                       padding: EdgeInsets.symmetric(vertical: 12),
@@ -684,7 +670,19 @@ class _SignInPageState extends State<SignInPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: _handleGoogleSignIn,
+                      onTap: () async {
+                        bool success = await _handleGoogleSignIn();
+                        if (success) {
+                          _showSuccessDialog();
+                          Future.delayed(Duration(seconds: 2)).then((_) {
+                            Navigator.pop(context, {
+                              'success': true,
+                              'projectData': widget.projectData,
+                              'files': widget.files,
+                            });
+                          });
+                        }
+                      },
                       child: ClipOval(
                         child: Image(
                           image: AssetImage('assets/google.png'),
@@ -696,7 +694,19 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                     SizedBox(width: 15),
                     GestureDetector(
-                      onTap: _handleFacebookSignIn,
+                      onTap: () async {
+                        bool success = await _handleFacebookSignIn();
+                        if (success) {
+                          _showSuccessDialog();
+                          Future.delayed(Duration(seconds: 2)).then((_) {
+                            Navigator.pop(context, {
+                              'success': true,
+                              'projectData': widget.projectData,
+                              'files': widget.files,
+                            });
+                          });
+                        }
+                      },
                       child: ClipOval(
                         child: Image(
                           image: AssetImage('assets/facebook.png'),
@@ -708,7 +718,19 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                     SizedBox(width: 15),
                     GestureDetector(
-                      onTap: _handleLinkedInSignIn,
+                      onTap: () async {
+                        bool success = await _handleLinkedInSignIn();
+                        if (success) {
+                          _showSuccessDialog();
+                          Future.delayed(Duration(seconds: 2)).then((_) {
+                            Navigator.pop(context, {
+                              'success': true,
+                              'projectData': widget.projectData,
+                              'files': widget.files,
+                            });
+                          });
+                        }
+                      },
                       child: ClipOval(
                         child: Image(
                           image: AssetImage('assets/linkedin.png'),

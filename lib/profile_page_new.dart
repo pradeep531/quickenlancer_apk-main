@@ -45,11 +45,20 @@ class _ProfilePageState extends State<ProfilePage> {
   List<dynamic>? certificates;
   Map<String, dynamic>? counts;
   bool isLoading = true; // Track loading state
-
+  int? isLoggedIn;
   @override
   void initState() {
     super.initState();
+    _initializeData();
     fetchProfileDetails();
+  }
+
+  Future<void> _initializeData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isLoggedIn =
+          prefs.getInt('is_logged_in'); // Assign value after async call
+    });
   }
 
   Future<void> _onRefresh() async {
@@ -394,6 +403,7 @@ class _ProfilePageState extends State<ProfilePage> {
           key: ValueKey<int>(_selectedIndex),
           selectedIndex: _selectedIndex,
           onItemTapped: _onItemTapped,
+          isLoggedIn: isLoggedIn,
         ),
       ),
     );

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:quickenlancer_apk/PostProject/post_project.dart';
 import 'package:quickenlancer_apk/SignUp/signIn.dart';
 import 'package:quickenlancer_apk/hire_company.dart';
 import 'package:quickenlancer_apk/myconnection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Billing/billing_page.dart';
+import 'Colors/colorfile.dart';
 import 'Hire Freelancer/hire_freelancer.dart';
 import 'notifications.dart';
 
@@ -28,11 +30,13 @@ class _SideBarDrawerState extends State<SideBarDrawer> {
   Future<void> _initializeData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      isLoggedIn = prefs.getInt('is_logged_in');
+      isLoggedIn = prefs.getInt('is_logged_in') ?? 0; // Default to 0 if null
       profilePicPath = prefs.getString('profile_pic_path') ?? '';
       _firstName = prefs.getString('first_name') ?? '';
       _lastName = prefs.getString('last_name') ?? '';
     });
+
+    print('isLoggedIn: $isLoggedIn');
   }
 
   @override
@@ -57,6 +61,7 @@ class _SideBarDrawerState extends State<SideBarDrawer> {
                     bottom: screenHeight * 0.07,
                   ),
                 ),
+                // Show profile only if logged in
                 Positioned(
                   bottom: -screenHeight * 0.08,
                   left: screenWidth * 0.520 - (screenWidth * 0.3),
@@ -85,7 +90,7 @@ class _SideBarDrawerState extends State<SideBarDrawer> {
                           ),
                           padding: EdgeInsets.all(screenWidth * 0.006),
                           child: CircleAvatar(
-                            radius: screenWidth * 0.12, // Responsive radius
+                            radius: screenWidth * 0.12,
                             backgroundColor: Colors.black,
                             child: CircleAvatar(
                               radius: screenWidth * 0.098,
@@ -97,36 +102,81 @@ class _SideBarDrawerState extends State<SideBarDrawer> {
                           ),
                         ),
                       ),
-                      Text(
-                        _firstName.isEmpty && _lastName.isEmpty
-                            ? 'Not Available'
-                            : '$_firstName $_lastName'.trim(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: screenWidth * 0.05, // Responsive font size
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
+                      isLoggedIn == 1
+                          ? Text(
+                              _firstName.isEmpty && _lastName.isEmpty
+                                  ? 'Not Available'
+                                  : '$_firstName $_lastName'.trim(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: screenWidth * 0.05,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.5,
+                              ),
+                            )
+                          : SizedBox(
+                              height: screenHeight * 0.03), // Placeholder space
                     ],
                   ),
-                )
+                ),
               ],
             ),
-            SizedBox(height: screenHeight * 0.10),
+            if (isLoggedIn != 1) // Show Sign In button if not logged in
+              Padding(
+                padding: const EdgeInsets.only(top: 50.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => SignInPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colorfile.textColor,
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      side: BorderSide(
+                        color: Colors.white,
+                        width: 0.5,
+                      ),
+                    ),
+                    elevation: 3,
+                    textStyle: GoogleFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  child: const Text(
+                    'Sign In',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  SizedBox(height: screenHeight * 0.05),
+                  SizedBox(
+                    height: isLoggedIn == 1
+                        ? screenHeight * 0.09
+                        : screenHeight * 0.02,
+                  ),
                   SideBarItem(
                     text: 'Home',
                     onTap: () {},
                   ),
-                  SideBarItem(
-                    text: 'My Projects',
-                    onTap: () {},
-                  ),
+                  if (isLoggedIn == 1) // Show My Projects if logged in
+                    SideBarItem(
+                      text: 'My Projects',
+                      onTap: () {},
+                    ),
                   SideBarItem(
                     text: 'Search Project',
                     onTap: () {
@@ -165,36 +215,40 @@ class _SideBarDrawerState extends State<SideBarDrawer> {
                       );
                     },
                   ),
-                  SideBarItem(
-                    text: 'Billing',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => BillingPage()),
-                      );
-                    },
-                  ),
-                  SideBarItem(
-                    text: 'Notification',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NotificationPage()),
-                      );
-                    },
-                  ),
-                  SideBarItem(
-                    text: 'Logout',
-                    onTap: () {
-                      _showLogoutConfirmation(context);
-                    },
-                  ),
+                  if (isLoggedIn == 1) // Show Billing if logged in
+                    SideBarItem(
+                      text: 'Billing',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BillingPage()),
+                        );
+                      },
+                    ),
+                  if (isLoggedIn == 1) // Show Notification if logged in
+                    SideBarItem(
+                      text: 'Notification',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NotificationPage()),
+                        );
+                      },
+                    ),
+                  if (isLoggedIn == 1) // Show Logout if logged in
+                    SideBarItem(
+                      text: 'Logout',
+                      onTap: () {
+                        _showLogoutConfirmation(context);
+                      },
+                    ),
                 ],
               ),
             ),
             Container(
-              height: screenHeight * 0.2, // Responsive height
+              height: screenHeight * 0.2,
               width: double.infinity,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -243,7 +297,7 @@ class _SideBarDrawerState extends State<SideBarDrawer> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

@@ -52,12 +52,21 @@ class _ProfilePageState extends State<Editprofilepage> {
   List<dynamic>? certificates;
   Map<String, dynamic>? counts;
   bool _isLoading = true; // Loading state for skeleton
-
+  int? isLoggedIn;
   @override
   void initState() {
     super.initState();
+    _initializeData();
     fetchProfileDetails();
     getKycDetails();
+  }
+
+  Future<void> _initializeData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isLoggedIn =
+          prefs.getInt('is_logged_in'); // Assign value after async call
+    });
   }
 
   Future<void> getKycDetails() async {
@@ -437,6 +446,7 @@ class _ProfilePageState extends State<Editprofilepage> {
             key: ValueKey<int>(_selectedIndex),
             selectedIndex: _selectedIndex,
             onItemTapped: _onItemTapped,
+            isLoggedIn: isLoggedIn,
           ),
         ),
       );
@@ -1530,6 +1540,7 @@ class _ProfilePageState extends State<Editprofilepage> {
           key: ValueKey<int>(_selectedIndex),
           selectedIndex: _selectedIndex,
           onItemTapped: _onItemTapped,
+          isLoggedIn: isLoggedIn,
         ),
       ),
     );

@@ -157,6 +157,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
       bottomNavigationBar: MyBottomBar(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
+        isLoggedIn: isLoggedIn,
       ),
     );
   }

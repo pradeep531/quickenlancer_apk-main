@@ -7,6 +7,7 @@ import '../SignUp/signIn.dart';
 import '../editprofilepage.dart';
 import '../home_page.dart';
 import 'all_projects.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PostProjectFinal extends StatefulWidget {
   const PostProjectFinal({Key? key}) : super(key: key);
@@ -17,7 +18,32 @@ class PostProjectFinal extends StatefulWidget {
 
 class _PostProjectFinalState extends State<PostProjectFinal> {
   int _selectedIndex = -1; // Set to -1 to indicate no selection
-  int isLoggedIn = 0;
+  int? isLoggedIn; // Changed to int? for consistency
+  String profilePicPath = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeData(); // Call initializeData in initState
+  }
+
+  Future<void> _initializeData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isLoggedIn = prefs.getInt('is_logged_in'); // Store as int?
+      profilePicPath = prefs.getString('profile_pic_path') ?? '';
+    });
+    await _loadPreferences();
+    await _fetchProjects();
+  }
+
+  Future<void> _loadPreferences() async {
+    // Implement your preferences loading logic here
+  }
+
+  Future<void> _fetchProjects() async {
+    // Implement your project fetching logic here
+  }
 
   void _onItemTapped(int index) {
     final routes = {
@@ -154,6 +180,7 @@ class _PostProjectFinalState extends State<PostProjectFinal> {
       bottomNavigationBar: MyBottomBar(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
+        isLoggedIn: isLoggedIn,
       ),
     );
   }

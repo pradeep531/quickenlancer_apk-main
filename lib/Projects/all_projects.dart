@@ -12,6 +12,7 @@ import 'package:quickenlancer_apk/Projects/posted.dart';
 import 'package:quickenlancer_apk/Projects/recieved.dart';
 import 'package:quickenlancer_apk/home_page.dart';
 import 'package:quickenlancer_apk/editprofilepage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GradientTabIndicator extends Decoration {
   final Gradient gradient;
@@ -50,37 +51,71 @@ class AllProjects extends StatefulWidget {
 
 class _AllProjectsState extends State<AllProjects> {
   int _selectedIndex = 1;
+  int? isLoggedIn;
+  String profilePicPath = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeData(); // Call initializeData in initState
+  }
+
+  Future<void> _initializeData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isLoggedIn = prefs.getInt('is_logged_in'); // Store as int?
+      profilePicPath = prefs.getString('profile_pic_path') ?? '';
+    });
+    await _loadPreferences();
+    await _fetchProjects();
+  }
+
+  Future<void> _loadPreferences() async {
+    // Implement your preferences loading logic here
+  }
+
+  Future<void> _fetchProjects() async {
+    // Implement your project fetching logic here
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
 
-    if (index == 0) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const MyHomePage(),
-        ),
-      );
-    }
-    if (index == 2) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Buycallpage()),
-      );
-    }
-    if (index == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Buychatpage()),
-      );
-    }
-    if (index == 4) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Editprofilepage()),
-      );
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AllProjects()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Buycallpage()),
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Buychatpage()),
+        );
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Editprofilepage()),
+        );
+        break;
+      default:
+        break;
     }
   }
 
@@ -108,7 +143,7 @@ class _AllProjectsState extends State<AllProjects> {
                 colors: [
                   Color(0xFF51A5D1),
                   Color(0xFF82399C),
-                  Color(0xFFF04E80)
+                  Color(0xFFF04E80),
                 ],
               ),
             ),
@@ -125,7 +160,7 @@ class _AllProjectsState extends State<AllProjects> {
             ],
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
             PostedProjectsTab(),
             ReceivedProjectsTab(),
@@ -137,6 +172,7 @@ class _AllProjectsState extends State<AllProjects> {
             key: ValueKey<int>(_selectedIndex),
             selectedIndex: _selectedIndex,
             onItemTapped: _onItemTapped,
+            isLoggedIn: isLoggedIn,
           ),
         ),
       ),
