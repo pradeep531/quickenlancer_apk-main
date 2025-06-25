@@ -9,6 +9,7 @@ import '../../editprofilepage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CertificationNew extends StatefulWidget {
   const CertificationNew({Key? key}) : super(key: key);
@@ -60,6 +61,8 @@ class _CertificationNewState extends State<CertificationNew> {
         headers: headers,
         body: body,
       );
+
+      log('Full API Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
@@ -260,6 +263,30 @@ class _CertificationNewState extends State<CertificationNew> {
     }
   }
 
+  Future<void> _viewCertificationFiles(List<dynamic> files) async {
+    for (var file in files) {
+      if (file is String) {
+        final Uri fileUri = Uri.parse(file);
+        try {
+          if (await canLaunchUrl(fileUri)) {
+            await launchUrl(
+              fileUri,
+              mode: LaunchMode.externalApplication,
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Cannot open file: $file')),
+            );
+          }
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error opening file: $e')),
+          );
+        }
+      }
+    }
+  }
+
   Future<void> _saveForm() async {
     if (_certifications.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -281,7 +308,6 @@ class _CertificationNewState extends State<CertificationNew> {
 
       List<Map<String, dynamic>> certificationsPayload = [];
       for (var cert in _certifications) {
-        // Skip certifications with string URLs (fetched from server) or no files
         if (cert['files'].isEmpty ||
             cert['files'].every((file) => file is String)) {
           debugPrint(
@@ -327,7 +353,6 @@ class _CertificationNewState extends State<CertificationNew> {
         'certifications': certificationsPayload,
       };
 
-      // Print the request body
       debugPrint('Request Body: ${jsonEncode(payload)}');
 
       final response = await http.post(
@@ -339,23 +364,18 @@ class _CertificationNewState extends State<CertificationNew> {
         body: jsonEncode(payload),
       );
 
-      // Print the response body
       debugPrint('Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Certifications saved successfully')),
         );
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => const Editprofilepage()),
-        // );
         setState(() {
           _certifications.clear();
           _certificateFiles.clear();
           _certificationNameController.clear();
         });
-        await _fetchProfileDetails(); // Refresh certifications after saving
+        await _fetchProfileDetails();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -619,113 +639,128 @@ class _CertificationNewState extends State<CertificationNew> {
                     ),
                   ),
                   if (_certifications.isNotEmpty) ...[
-                    SizedBox(height: 32),
+                    SizedBox(height: 16),
                     Text(
-                      'Your Certifications',
+                      'Certificate',
                       style: GoogleFonts.poppins(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: Colorfile.textColor,
                       ),
                     ),
-                    SizedBox(height: 16),
-                    ..._certifications.asMap().entries.map((entry) {
-                      final cert = entry.value;
-                      return Container(
-                        margin: EdgeInsets.only(bottom: 16),
-                        padding: EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colorfile.textColor.withOpacity(0.05),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                              color: Colorfile.textColor.withOpacity(0.1)),
+                    SizedBox(height: 8),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: MediaQuery.of(context).size.width,
+                      ),
+                      child: DataTable(
+                        border: TableBorder.all(
+                          color: const Color(0xFFD9D9D9),
+                          width: 0.5,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(6)),
                         ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.verified,
-                              color: Colorfile.textColor,
-                              size: 24,
-                            ),
-                            SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    cert['name'],
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colorfile.textColor,
-                                    ),
-                                  ),
-                                  if (cert['files'].isNotEmpty) ...[
-                                    SizedBox(height: 8),
-                                    Text(
-                                      '${cert['files'].length} file(s)',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        color: Colorfile.textColor
-                                            .withOpacity(0.5),
-                                      ),
-                                    ),
-                                    SizedBox(height: 8),
-                                    Column(
-                                      children:
-                                          (cert['files'] as List).map((file) {
-                                        final fileName = file is File
-                                            ? file.path.split('/').last
-                                            : (file as String).split('/').last;
-                                        return Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 8),
-                                          child: Row(
-                                            children: [
-                                              Icon(
-                                                fileName.endsWith('.pdf')
-                                                    ? Icons.picture_as_pdf
-                                                    : Icons.image,
-                                                color: Colorfile.textColor
-                                                    .withOpacity(0.5),
-                                                size: 16,
-                                              ),
-                                              SizedBox(width: 8),
-                                              Expanded(
-                                                child: Text(
-                                                  fileName,
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: 12,
-                                                    color: Colorfile.textColor,
-                                                  ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
-                            if (cert['id'] != null)
-                              IconButton(
-                                icon: Icon(Icons.delete_outline,
-                                    color: Colorfile.textColor.withOpacity(0.5),
-                                    size: 24),
-                                onPressed: () => _confirmDeleteCertification(
-                                  cert['id'],
-                                  cert['name'],
+                        columnSpacing: 16,
+                        headingRowColor:
+                            MaterialStateProperty.all(const Color(0xFFF5F7FA)),
+                        columns: [
+                          DataColumn(
+                            label: Padding(
+                              padding: const EdgeInsets.all(6),
+                              child: Text(
+                                'Certificate',
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: Colorfile.textColor,
                                 ),
                               ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                  ],
+                            ),
+                          ),
+                          DataColumn(
+                            label: Padding(
+                              padding: const EdgeInsets.all(6),
+                              child: Text(
+                                'View',
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: Colorfile.textColor,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Padding(
+                              padding: const EdgeInsets.all(6),
+                              child: Text(
+                                'Action',
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: Colorfile.textColor,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ],
+                        rows: _certifications.asMap().entries.map((entry) {
+                          final cert = entry.value;
+                          return DataRow(cells: [
+                            DataCell(
+                              Padding(
+                                padding: const EdgeInsets.all(6),
+                                child: Text(
+                                  cert['name'],
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colorfile.textColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            DataCell(
+                              Padding(
+                                padding: const EdgeInsets.all(6),
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.remove_red_eye_outlined,
+                                    color: Colorfile.textColor,
+                                    size: 18,
+                                  ),
+                                  onPressed: () =>
+                                      _viewCertificationFiles(cert['files']),
+                                ),
+                              ),
+                            ),
+                            DataCell(
+                              cert['id'] != null
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(6),
+                                      child: IconButton(
+                                        icon: Image.asset(
+                                          'assets/delete_icon.png',
+                                          width: 14,
+                                          height: 14,
+                                          color: Colorfile.textColor,
+                                        ),
+                                        onPressed: () =>
+                                            _confirmDeleteCertification(
+                                          cert['id'],
+                                          cert['name'],
+                                        ),
+                                      ),
+                                    )
+                                  : Container(),
+                            ),
+                          ]);
+                        }).toList(),
+                      ),
+                    ),
+                  ]
                 ],
               ),
             ),

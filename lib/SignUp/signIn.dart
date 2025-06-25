@@ -364,10 +364,18 @@ class _SignInPageState extends State<SignInPage> {
         );
       },
     );
-
-    Future.delayed(Duration(seconds: 2)).then((_) {
-      Navigator.pop(context); // Close dialog
-    });
+    // Future.delayed(Duration(seconds: 2)).then((_) {
+    //   Navigator.pop(context); // Close dialog
+    // });
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => const MyHomePage(),
+    //   ),
+    // );
+    // Future.delayed(Duration(seconds: 2)).then((_) {
+    //   Navigator.pop(context); // Close dialog
+    // });
   }
 
   void _showErrorSnackBar(String message, {Color? color}) {
@@ -612,13 +620,17 @@ class _SignInPageState extends State<SignInPage> {
                             bool success = await signIn();
                             if (success) {
                               _showSuccessDialog();
-                              Future.delayed(Duration(seconds: 2)).then((_) {
-                                Navigator.pop(context, {
-                                  'success': true,
-                                  'projectData': widget.projectData,
-                                  'files': widget.files,
-                                });
+                              Navigator.pop(context, {
+                                'success': true,
+                                'projectData': widget.projectData,
+                                'files': widget.files,
                               });
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MyHomePage(),
+                                ),
+                              );
                             }
                           },
                     style: ElevatedButton.styleFrom(
