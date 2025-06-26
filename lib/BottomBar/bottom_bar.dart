@@ -48,11 +48,11 @@ class MyBottomBar extends StatelessWidget {
         : [
             _buildNavItem(
                 'assets/home.png', 'Home', 0, iconSize, textScaleFactor),
-            _buildNavItem('assets/home.png', 'Hire Freelancer', 1, iconSize,
+            _buildNavItem('assets/hirefreelancer.png', 'Hire Freelancer', 1,
+                iconSize, textScaleFactor),
+            _buildNavItem('assets/hirecompany.png', 'Hire Company', 2, iconSize,
                 textScaleFactor),
-            _buildNavItem('assets/home.png', 'Hire Company', 2, iconSize,
-                textScaleFactor),
-            _buildNavItem('assets/home.png', 'Post Project', 3, iconSize,
+            _buildNavItem('assets/postproject.png', 'Post Project', 3, iconSize,
                 textScaleFactor),
           ];
 

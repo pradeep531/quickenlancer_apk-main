@@ -121,19 +121,12 @@ class AllProposals extends StatelessWidget {
                                       height: 32, // Smaller button
                                       child: TextButton(
                                         onPressed: () {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'Milestone action triggered',
-                                                style: GoogleFonts.poppins(),
-                                              ),
-                                              backgroundColor: Colors.green,
-                                            ),
-                                          );
+                                          showMilestoneDialog(
+                                              context); // Call the dialog function
                                         },
                                         style: TextButton.styleFrom(
-                                          foregroundColor: Colorfile.textColor,
+                                          foregroundColor: Color(
+                                              0xFF000000), // Assuming Colorfile.textColor is black
                                           backgroundColor: Colors.grey
                                               .shade100, // Light background
                                           shape: RoundedRectangleBorder(
@@ -214,6 +207,74 @@ class AllProposals extends StatelessWidget {
                 );
               },
             ),
+    );
+  }
+
+  void showMilestoneDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding:
+              EdgeInsets.fromLTRB(16, 8, 16, 4), // Reduced top/bottom padding
+          contentPadding:
+              EdgeInsets.fromLTRB(16, 4, 16, 8), // Reduced top/bottom padding
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Milestone',
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.close,
+                  size: 24,
+                  color: Colors.grey.shade600,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                padding: EdgeInsets.zero, // Remove extra padding around icon
+                constraints:
+                    BoxConstraints(), // Remove default min size constraints
+              ),
+            ],
+          ),
+          content: Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Color(0xFFDADADA), // Border color #DADADA
+                  width: 1, // Border width 1px
+                ),
+                borderRadius: BorderRadius.circular(6), // Border radius of 6px
+              ),
+              padding: EdgeInsets.all(8), // Keep content padding
+              child: Text(
+                'Milestone action initiated! This is a placeholder text for the milestone feature. It serves as a standard description, providing context for the triggered action, much like a specimen text used in design.',
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  height: 1.5, // Line spacing similar to Lorem Ipsum text
+                ),
+              ),
+            ),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.circular(8), // Border radius of 8px for dialog
+            side: BorderSide(
+              color: Color(0xFFDADADA), // Border color #DADADA for dialog
+              width: 1, // Border width 1px for dialog
+            ),
+          ),
+          backgroundColor: Colors.grey.shade50, // Light background
+        );
+      },
     );
   }
 }
